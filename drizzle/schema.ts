@@ -64,6 +64,7 @@ export const matches = mysqlTable("matches", {
   phase: mysqlEnum("phase", ["groups", "round16", "quarters", "semis", "final"]).default("groups").notNull(),
   groupId: int("groupId"), // Apenas para fase de grupos
   round: int("round"), // Rodada (1, 2, 3, etc.)
+  bracketSide: mysqlEnum("bracketSide", ["left", "right"]), // Lado da chave no mata-mata
   matchDate: timestamp("matchDate"),
   location: varchar("location", { length: 255 }),
   played: boolean("played").default(false).notNull(),

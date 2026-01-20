@@ -55,7 +55,7 @@ export default function MataMata() {
                   {/* Oitavas de Final - Lado Esquerdo */}
                   <div className="space-y-4 flex-shrink-0">
                     <h3 className="text-center font-bold text-gold-dark mb-4">Oitavas</h3>
-                    {round16Matches?.slice(0, 4).map((match, index) => (
+                    {round16Matches?.filter(m => m.bracketSide === 'left').map((match, index) => (
                       <BracketMatch 
                         key={match.id} 
                         match={match} 
@@ -68,7 +68,7 @@ export default function MataMata() {
                   {/* Quartas - Lado Esquerdo */}
                   <div className="space-y-8 flex-shrink-0">
                     <h3 className="text-center font-bold text-gold-dark mb-4">Quartas</h3>
-                    {quarterMatches?.slice(0, 2).map((match, index) => (
+                    {quarterMatches?.filter(m => m.bracketSide === 'left').map((match, index) => (
                       <BracketMatch 
                         key={match.id} 
                         match={match} 
@@ -82,7 +82,7 @@ export default function MataMata() {
                   {/* Semi - Lado Esquerdo */}
                   <div className="space-y-16 flex-shrink-0">
                     <h3 className="text-center font-bold text-gold-dark mb-4">Semi</h3>
-                    {semiMatches?.slice(0, 1).map((match, index) => (
+                    {semiMatches?.filter(m => m.bracketSide === 'left').map((match, index) => (
                       <BracketMatch 
                         key={match.id} 
                         match={match} 
@@ -120,7 +120,7 @@ export default function MataMata() {
                   {/* Semi - Lado Direito */}
                   <div className="space-y-16 flex-shrink-0">
                     <h3 className="text-center font-bold text-gold-dark mb-4">Semi</h3>
-                    {semiMatches?.slice(1, 2).map((match, index) => (
+                    {semiMatches?.filter(m => m.bracketSide === 'right').map((match, index) => (
                       <BracketMatch 
                         key={match.id} 
                         match={match} 
@@ -134,7 +134,7 @@ export default function MataMata() {
                   {/* Quartas - Lado Direito */}
                   <div className="space-y-8 flex-shrink-0">
                     <h3 className="text-center font-bold text-gold-dark mb-4">Quartas</h3>
-                    {quarterMatches?.slice(2, 4).map((match, index) => (
+                    {quarterMatches?.filter(m => m.bracketSide === 'right').map((match, index) => (
                       <BracketMatch 
                         key={match.id} 
                         match={match} 
@@ -148,7 +148,7 @@ export default function MataMata() {
                   {/* Oitavas de Final - Lado Direito */}
                   <div className="space-y-4 flex-shrink-0">
                     <h3 className="text-center font-bold text-gold-dark mb-4">Oitavas</h3>
-                    {round16Matches?.slice(4, 8).map((match, index) => (
+                    {round16Matches?.filter(m => m.bracketSide === 'right').map((match, index) => (
                       <BracketMatch 
                         key={match.id} 
                         match={match} 

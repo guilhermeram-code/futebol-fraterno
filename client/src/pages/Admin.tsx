@@ -747,6 +747,7 @@ function MatchesTab() {
   const [round, setRound] = useState("");
   const [matchDate, setMatchDate] = useState("");
   const [location, setLocation] = useState("");
+  const [bracketSide, setBracketSide] = useState<string>("");
 
   const resetForm = () => {
     setHomeTeamId("");
@@ -756,6 +757,7 @@ function MatchesTab() {
     setRound("");
     setMatchDate("");
     setLocation("");
+    setBracketSide("");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -767,7 +769,8 @@ function MatchesTab() {
       groupId: groupId ? parseInt(groupId) : undefined,
       round: round ? parseInt(round) : undefined,
       matchDate: matchDate || undefined,
-      location: location || undefined
+      location: location || undefined,
+      bracketSide: (bracketSide as 'left' | 'right' | undefined) || undefined
     });
   };
 
@@ -845,7 +848,7 @@ function MatchesTab() {
                     </SelectContent>
                   </Select>
                 </div>
-                {phase === "groups" && (
+                {phase === "groups" ? (
                   <div>
                     <Label>Grupo</Label>
                     <Select value={groupId} onValueChange={setGroupId}>
@@ -856,6 +859,19 @@ function MatchesTab() {
                         {groups?.map(g => (
                           <SelectItem key={g.id} value={g.id.toString()}>{g.name}</SelectItem>
                         ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                ) : (
+                  <div>
+                    <Label>Lado da Chave</Label>
+                    <Select value={bracketSide} onValueChange={setBracketSide}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Selecione" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="left">Esquerdo</SelectItem>
+                        <SelectItem value="right">Direito</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -240,6 +240,7 @@ export const appRouter = router({
         round: z.number().optional(),
         matchDate: z.string().optional(),
         location: z.string().optional(),
+        bracketSide: z.enum(['left', 'right']).optional(),
       }))
       .mutation(async ({ input }) => {
         const matchData = {

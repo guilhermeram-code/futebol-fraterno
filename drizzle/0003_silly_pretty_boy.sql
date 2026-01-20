@@ -1,0 +1,1 @@
+ALTER TABLE `matches` ADD `bracketSide` enum('left','right');
