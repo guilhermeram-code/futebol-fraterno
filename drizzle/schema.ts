@@ -141,3 +141,26 @@ export const tournamentSettings = mysqlTable("tournament_settings", {
 
 export type TournamentSetting = typeof tournamentSettings.$inferSelect;
 export type InsertTournamentSetting = typeof tournamentSettings.$inferInsert;
+
+// Tabela de avisos importantes
+export const announcements = mysqlTable("announcements", {
+  id: int("id").autoincrement().primaryKey(),
+  title: varchar("title", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Announcement = typeof announcements.$inferSelect;
+export type InsertAnnouncement = typeof announcements.$inferInsert;
+
+// Tabela de emails admin adicionais
+export const adminEmails = mysqlTable("admin_emails", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type AdminEmail = typeof adminEmails.$inferSelect;
+export type InsertAdminEmail = typeof adminEmails.$inferInsert;

@@ -56,3 +56,15 @@
 
 ## Correções
 - [x] Menu hambúrguer mobile com todas as opções de navegação
+
+## Melhorias Solicitadas
+- [x] Música automática ao entrar no site
+- [x] Música continua entre páginas (não para e recomeça)
+- [x] Registro de gols mais intuitivo com campos obrigatórios
+- [x] Sistema de avisos importantes na home
+- [x] Artilheiros mostram time e loja
+- [x] Controle de acesso admin melhorado
+- [x] Cadastro de novos emails como admin
+- [x] Visual do site melhorado (fundo com detalhes)
+- [x] Logo centralizado no círculo
+- [x] Configurações editáveis do campeonato (logo, nome, subtítulo, organizador, música)- [x] Galeria - Data sem sobrepor a foto- [x] Botão para baixar fotos da galeria

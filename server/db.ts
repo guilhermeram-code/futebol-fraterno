@@ -10,7 +10,9 @@ import {
   cards, InsertCard, Card,
   comments, InsertComment, Comment,
   photos, InsertPhoto, Photo,
-  tournamentSettings, InsertTournamentSetting
+  tournamentSettings, InsertTournamentSetting,
+  announcements, InsertAnnouncement, Announcement,
+  adminEmails, InsertAdminEmail, AdminEmail
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -613,4 +615,65 @@ export async function getRoundStats(round: number) {
     topScorer: roundGoals[0] || null,
     mostCarded: roundCards[0] || null
   };
+}
+
+// ==================== ANNOUNCEMENTS ====================
+export async function createAnnouncement(announcement: InsertAnnouncement) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(announcements).values(announcement);
+  return { id: result[0].insertId };
+}
+
+export async function updateAnnouncement(id: number, announcement: Partial<InsertAnnouncement>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(announcements).set(announcement).where(eq(announcements.id, id));
+}
+
+export async function deleteAnnouncement(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(announcements).where(eq(announcements.id, id));
+}
+
+export async function getAllAnnouncements() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(announcements).orderBy(desc(announcements.createdAt));
+}
+
+export async function getActiveAnnouncements() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(announcements)
+    .where(eq(announcements.active, true))
+    .orderBy(desc(announcements.createdAt));
+}
+
+// ==================== ADMIN EMAILS ====================
+export async function addAdminEmail(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(adminEmails).values({ email });
+  return { id: result[0].insertId };
+}
+
+export async function removeAdminEmail(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(adminEmails).where(eq(adminEmails.id, id));
+}
+
+export async function getAllAdminEmails() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(adminEmails).orderBy(asc(adminEmails.email));
+}
+
+export async function isAdminEmail(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(adminEmails).where(eq(adminEmails.email, email)).limit(1);
+  return result.length > 0;
 }

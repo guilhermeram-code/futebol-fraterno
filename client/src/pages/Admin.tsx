@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,10 @@ import {
   Image,
   MessageSquare,
   Trophy,
-  Upload
+  Upload,
+  Bell,
+  UserPlus,
+  Settings
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 
@@ -113,7 +116,7 @@ export default function Admin() {
 
       <main className="container py-8">
         <Tabs defaultValue="teams" className="w-full">
-          <TabsList className="grid w-full grid-cols-7 mb-6">
+          <TabsList className="grid w-full grid-cols-10 mb-6">
             <TabsTrigger value="teams" className="gap-1 text-xs">
               <Shield className="h-4 w-4 hidden md:block" />
               Times
@@ -141,6 +144,18 @@ export default function Admin() {
             <TabsTrigger value="comments" className="gap-1 text-xs">
               <MessageSquare className="h-4 w-4 hidden md:block" />
               Comentários
+            </TabsTrigger>
+            <TabsTrigger value="announcements" className="gap-1 text-xs">
+              <Bell className="h-4 w-4 hidden md:block" />
+              Avisos
+            </TabsTrigger>
+            <TabsTrigger value="admins" className="gap-1 text-xs">
+              <UserPlus className="h-4 w-4 hidden md:block" />
+              Admins
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="gap-1 text-xs">
+              <Settings className="h-4 w-4 hidden md:block" />
+              Configurações
             </TabsTrigger>
           </TabsList>
 
@@ -170,6 +185,18 @@ export default function Admin() {
 
           <TabsContent value="comments">
             <CommentsTab />
+          </TabsContent>
+
+          <TabsContent value="announcements">
+            <AnnouncementsTab />
+          </TabsContent>
+
+          <TabsContent value="admins">
+            <AdminsTab />
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <SettingsTab />
           </TabsContent>
         </Tabs>
       </main>
@@ -1380,5 +1407,447 @@ function CommentsTab() {
         )}
       </CardContent>
     </Card>
+  );
+}
+
+
+// ==================== ANNOUNCEMENTS TAB ====================
+function AnnouncementsTab() {
+  const utils = trpc.useUtils();
+  const { data: announcements, isLoading } = trpc.announcements.list.useQuery();
+  const createAnnouncement = trpc.announcements.create.useMutation({
+    onSuccess: () => {
+      utils.announcements.list.invalidate();
+      utils.announcements.active.invalidate();
+      toast.success("Aviso criado!");
+      setTitle("");
+      setContent("");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  const updateAnnouncement = trpc.announcements.update.useMutation({
+    onSuccess: () => {
+      utils.announcements.list.invalidate();
+      utils.announcements.active.invalidate();
+      toast.success("Aviso atualizado!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  const deleteAnnouncement = trpc.announcements.delete.useMutation({
+    onSuccess: () => {
+      utils.announcements.list.invalidate();
+      utils.announcements.active.invalidate();
+      toast.success("Aviso excluído!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const handleCreate = () => {
+    if (!title || !content) {
+      toast.error("Preencha título e conteúdo!");
+      return;
+    }
+    createAnnouncement.mutate({ title, content, active: true });
+  };
+
+  const toggleActive = (id: number, currentActive: boolean) => {
+    updateAnnouncement.mutate({ id, active: !currentActive });
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Create Announcement */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bell className="h-5 w-5" />
+            Criar Novo Aviso
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Título</Label>
+            <Input 
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Ex: Alteração de horário"
+            />
+          </div>
+          <div>
+            <Label>Conteúdo</Label>
+            <Input 
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder="Ex: O jogo da rodada 3 foi adiado para..."
+            />
+          </div>
+          <Button 
+            onClick={handleCreate}
+            disabled={createAnnouncement.isPending}
+            className="w-full"
+          >
+            {createAnnouncement.isPending ? "Criando..." : "Criar Aviso"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* List Announcements */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Avisos Cadastrados</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
+            </div>
+          ) : announcements && announcements.length > 0 ? (
+            <div className="space-y-3">
+              {announcements.map((announcement) => (
+                <div 
+                  key={announcement.id}
+                  className="flex items-start justify-between p-4 border rounded-lg"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-bold">{announcement.title}</h3>
+                      <Badge variant={announcement.active ? "default" : "secondary"}>
+                        {announcement.active ? "Ativo" : "Inativo"}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{announcement.content}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => toggleActive(announcement.id, announcement.active)}
+                      disabled={updateAnnouncement.isPending}
+                    >
+                      {announcement.active ? "Desativar" : "Ativar"}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteAnnouncement.mutate({ id: announcement.id })}
+                      disabled={deleteAnnouncement.isPending}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">Nenhum aviso cadastrado</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ==================== ADMINS TAB ====================
+function AdminsTab() {
+  const utils = trpc.useUtils();
+  const { data: adminEmails, isLoading } = trpc.adminEmails.list.useQuery();
+  const addAdminEmail = trpc.adminEmails.add.useMutation({
+    onSuccess: () => {
+      utils.adminEmails.list.invalidate();
+      toast.success("Email adicionado como admin!");
+      setEmail("");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  const removeAdminEmail = trpc.adminEmails.remove.useMutation({
+    onSuccess: () => {
+      utils.adminEmails.list.invalidate();
+      toast.success("Email removido!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const [email, setEmail] = useState("");
+
+  const handleAdd = () => {
+    if (!email) {
+      toast.error("Digite um email!");
+      return;
+    }
+    // Validação básica de email
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Email inválido!");
+      return;
+    }
+    addAdminEmail.mutate({ email });
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Add Admin */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <UserPlus className="h-5 w-5" />
+            Adicionar Novo Administrador
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Email</Label>
+            <Input 
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="exemplo@email.com"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Este email terá acesso total ao painel administrativo
+            </p>
+          </div>
+          <Button 
+            onClick={handleAdd}
+            disabled={addAdminEmail.isPending}
+            className="w-full"
+          >
+            {addAdminEmail.isPending ? "Adicionando..." : "Adicionar Admin"}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* List Admins */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Administradores Cadastrados</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2].map(i => <Skeleton key={i} className="h-12 w-full" />)}
+            </div>
+          ) : adminEmails && adminEmails.length > 0 ? (
+            <div className="space-y-2">
+              {adminEmails.map((admin) => (
+                <div 
+                  key={admin.id}
+                  className="flex items-center justify-between p-3 border rounded-lg"
+                >
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-primary" />
+                    <span>{admin.email}</span>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => removeAdminEmail.mutate({ id: admin.id })}
+                    disabled={removeAdminEmail.isPending}
+                  >
+                    Remover
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">Nenhum admin adicional cadastrado</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+// ==================== SETTINGS TAB ====================
+function SettingsTab() {
+  const utils = trpc.useUtils();
+  const { data: tournamentName } = trpc.settings.get.useQuery({ key: "tournamentName" });
+  const { data: tournamentSubtitle } = trpc.settings.get.useQuery({ key: "tournamentSubtitle" });
+  const { data: tournamentOrganizer } = trpc.settings.get.useQuery({ key: "tournamentOrganizer" });
+  const { data: tournamentLogo } = trpc.settings.get.useQuery({ key: "tournamentLogo" });
+  const { data: tournamentMusic } = trpc.settings.get.useQuery({ key: "tournamentMusic" });
+
+  const setSetting = trpc.settings.set.useMutation({
+    onSuccess: () => {
+      utils.settings.get.invalidate();
+      toast.success("Configuração salva!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const uploadLogo = trpc.settings.uploadLogo.useMutation({
+    onSuccess: () => {
+      utils.settings.get.invalidate();
+      toast.success("Logo atualizado!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const uploadMusic = trpc.settings.uploadMusic.useMutation({
+    onSuccess: () => {
+      utils.settings.get.invalidate();
+      toast.success("Música atualizada!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const [name, setName] = useState("");
+  const [subtitle, setSubtitle] = useState("");
+  const [organizer, setOrganizer] = useState("");
+
+  // Atualizar estados quando os dados carregam
+  useEffect(() => {
+    if (tournamentName) setName(tournamentName);
+  }, [tournamentName]);
+
+  useEffect(() => {
+    if (tournamentSubtitle) setSubtitle(tournamentSubtitle);
+  }, [tournamentSubtitle]);
+
+  useEffect(() => {
+    if (tournamentOrganizer) setOrganizer(tournamentOrganizer);
+  }, [tournamentOrganizer]);
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result?.toString().split(',')[1];
+      if (base64) {
+        uploadLogo.mutate({
+          base64,
+          mimeType: file.type
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleMusicUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result?.toString().split(',')[1];
+      if (base64) {
+        uploadMusic.mutate({
+          base64,
+          mimeType: file.type
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Configurações do Campeonato
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Nome do Campeonato */}
+          <div>
+            <Label>Nome do Campeonato</Label>
+            <Input 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: Futebol Fraterno"
+            />
+            <Button 
+              onClick={() => setSetting.mutate({ key: "tournamentName", value: name })}
+              disabled={setSetting.isPending || !name}
+              className="mt-2"
+              size="sm"
+            >
+              Salvar Nome
+            </Button>
+          </div>
+
+          {/* Subtítulo */}
+          <div>
+            <Label>Subtítulo</Label>
+            <Input 
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value)}
+              placeholder="Ex: 2026 - Respeito e União"
+            />
+            <Button 
+              onClick={() => setSetting.mutate({ key: "tournamentSubtitle", value: subtitle })}
+              disabled={setSetting.isPending || !subtitle}
+              className="mt-2"
+              size="sm"
+            >
+              Salvar Subtítulo
+            </Button>
+          </div>
+
+          {/* Organizador */}
+          <div>
+            <Label>Organizador</Label>
+            <Input 
+              value={organizer}
+              onChange={(e) => setOrganizer(e.target.value)}
+              placeholder="Ex: Organizado pela Loja José Moreira"
+            />
+            <Button 
+              onClick={() => setSetting.mutate({ key: "tournamentOrganizer", value: organizer })}
+              disabled={setSetting.isPending || !organizer}
+              className="mt-2"
+              size="sm"
+            >
+              Salvar Organizador
+            </Button>
+          </div>
+
+          {/* Logo */}
+          <div>
+            <Label>Logo do Campeonato</Label>
+            {tournamentLogo && (
+              <img 
+                src={tournamentLogo} 
+                alt="Logo atual" 
+                className="h-24 w-24 object-cover rounded-lg mb-2"
+              />
+            )}
+            <Input 
+              type="file"
+              accept="image/*"
+              onChange={handleLogoUpload}
+              disabled={uploadLogo.isPending}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              {uploadLogo.isPending ? "Enviando..." : "Formatos: JPG, PNG"}
+            </p>
+          </div>
+
+          {/* Música */}
+          <div>
+            <Label>Música de Fundo</Label>
+            {tournamentMusic && (
+              <audio controls className="w-full mb-2">
+                <source src={tournamentMusic} />
+              </audio>
+            )}
+            <Input 
+              type="file"
+              accept="audio/*"
+              onChange={handleMusicUpload}
+              disabled={uploadMusic.isPending}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              {uploadMusic.isPending ? "Enviando..." : "Formatos: MP3, WAV, OGG"}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

@@ -454,6 +454,121 @@ export const appRouter = router({
       }),
   }),
 
+  // ==================== ANNOUNCEMENTS ====================
+  announcements: router({
+    list: publicProcedure.query(async () => {
+      return db.getAllAnnouncements();
+    }),
+    
+    active: publicProcedure.query(async () => {
+      return db.getActiveAnnouncements();
+    }),
+    
+    create: adminProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        content: z.string().min(1),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return db.createAnnouncement(input);
+      }),
+    
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().min(1).optional(),
+        content: z.string().min(1).optional(),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateAnnouncement(id, data);
+        return { success: true };
+      }),
+    
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteAnnouncement(input.id);
+        return { success: true };
+      }),
+  }),
+
+  // ==================== ADMIN EMAILS ====================
+  adminEmails: router({
+    list: adminProcedure.query(async () => {
+      return db.getAllAdminEmails();
+    }),
+    
+    add: adminProcedure
+      .input(z.object({ email: z.string().email() }))
+      .mutation(async ({ input }) => {
+        return db.addAdminEmail(input.email);
+      }),
+    
+    remove: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.removeAdminEmail(input.id);
+        return { success: true };
+      }),
+    
+    check: publicProcedure
+      .input(z.object({ email: z.string().email() }))
+      .query(async ({ input }) => {
+        const isAdmin = await db.isAdminEmail(input.email);
+        return { isAdmin };
+      }),
+  }),
+
+  // ==================== TOURNAMENT SETTINGS ====================
+  settings: router({
+    get: publicProcedure
+      .input(z.object({ key: z.string() }))
+      .query(async ({ input }) => {
+        return db.getSetting(input.key);
+      }),
+    
+    set: adminProcedure
+      .input(z.object({
+        key: z.string(),
+        value: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        await db.setSetting(input.key, input.value);
+        return { success: true };
+      }),
+    
+    uploadLogo: adminProcedure
+      .input(z.object({
+        base64: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        const ext = input.mimeType.split('/')[1] || 'png';
+        const fileKey = `tournament/logo-${nanoid()}.${ext}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        await db.setSetting('tournamentLogo', url);
+        return { url };
+      }),
+    
+    uploadMusic: adminProcedure
+      .input(z.object({
+        base64: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        const ext = input.mimeType.split('/')[1] || 'mp3';
+        const fileKey = `tournament/music-${nanoid()}.${ext}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        await db.setSetting('tournamentMusic', url);
+        return { url };
+      }),
+  }),
+
   // ==================== STATISTICS ====================
   stats: router({
     topScorers: publicProcedure

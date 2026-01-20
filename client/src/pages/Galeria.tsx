@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Header } from "@/components/Header";
-import { Image, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Image, X, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -32,6 +32,16 @@ export default function Galeria() {
     if (selectedIndex !== null && photos) {
       setSelectedIndex((selectedIndex - 1 + photos.length) % photos.length);
     }
+  };
+
+  const downloadPhoto = (url: string, caption: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = caption || 'foto-campeonato.jpg';
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -83,14 +93,24 @@ export default function Galeria() {
             <DialogTitle className="sr-only">Visualização de foto</DialogTitle>
             {selectedIndex !== null && photos && photos[selectedIndex] && (
               <div className="relative">
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="absolute top-2 right-2 z-10 text-white hover:bg-white/20"
-                  onClick={closePhoto}
-                >
-                  <X className="h-6 w-6" />
-                </Button>
+                <div className="absolute top-2 right-2 z-10 flex gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-white hover:bg-white/20"
+                    onClick={() => downloadPhoto(photos[selectedIndex].url, photos[selectedIndex].caption || 'foto')}
+                  >
+                    <Download className="h-6 w-6" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-white hover:bg-white/20"
+                    onClick={closePhoto}
+                  >
+                    <X className="h-6 w-6" />
+                  </Button>
+                </div>
                 
                 <Button 
                   variant="ghost" 
@@ -116,17 +136,18 @@ export default function Galeria() {
                   className="w-full max-h-[80vh] object-contain"
                 />
                 
-                {photos[selectedIndex].caption && (
-                  <div className="p-4 text-center">
-                    <p className="text-white">{photos[selectedIndex].caption}</p>
-                    <p className="text-white/60 text-sm mt-1">
+                <div className="bg-black/80 p-4">
+                  {photos[selectedIndex].caption && (
+                    <p className="text-white text-center mb-2">{photos[selectedIndex].caption}</p>
+                  )}
+                  <div className="flex justify-between items-center text-white/60 text-sm">
+                    <span>
                       {format(new Date(photos[selectedIndex].createdAt), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                    </p>
+                    </span>
+                    <span>
+                      {selectedIndex + 1} / {photos.length}
+                    </span>
                   </div>
-                )}
-                
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
-                  {selectedIndex + 1} / {photos.length}
                 </div>
               </div>
             )}

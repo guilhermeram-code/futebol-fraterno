@@ -43,6 +43,12 @@ export default function Home() {
     return players?.find(p => p.id === playerId)?.name || "Jogador";
   };
 
+  const getTeamLodge = (teamId: number) => {
+    return teams?.find(t => t.id === teamId)?.lodge || "";
+  };
+
+  const { data: announcements } = trpc.announcements.active.useQuery();
+
   const formatMatchDate = (date: Date | null) => {
     if (!date) return "Data a definir";
     return format(new Date(date), "dd/MM - HH:mm", { locale: ptBR });
@@ -56,11 +62,13 @@ export default function Home() {
       {/* Hero Section */}
       <section className="bg-gold-gradient py-12">
         <div className="container text-center">
-          <img 
-            src="/logo-campeonato.jpg" 
-            alt="Futebol Fraterno 2026" 
-            className="mx-auto h-48 w-48 rounded-full object-cover border-4 border-white shadow-2xl mb-6"
-          />
+          <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
+            <img 
+              src="/logo-campeonato.jpg" 
+              alt="Futebol Fraterno 2026" 
+              className="w-full h-full object-contain scale-90"
+            />
+          </div>
           <h2 className="text-4xl font-bold text-primary-foreground mb-2">
             Campeonato Fraterno 2026
           </h2>
@@ -83,6 +91,29 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Avisos Importantes */}
+      {announcements && announcements.length > 0 && (
+        <section className="bg-amber-50 dark:bg-amber-950/20 border-y border-amber-200 dark:border-amber-800 py-4">
+          <div className="container">
+            <div className="space-y-3">
+              {announcements.map((announcement) => (
+                <div key={announcement.id} className="flex items-start gap-3 p-4 bg-white dark:bg-gray-900 rounded-lg shadow-sm">
+                  <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
+                  <div className="flex-1">
+                    <h3 className="font-bold text-amber-900 dark:text-amber-100 mb-1">
+                      {announcement.title}
+                    </h3>
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
+                      {announcement.content}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Main Content */}
       <main className="container py-8">
@@ -262,7 +293,10 @@ export default function Home() {
                           </span>
                           <div>
                             <p className="font-medium">{getPlayerName(scorer.playerId)}</p>
-                            <p className="text-xs text-muted-foreground">{getTeamName(scorer.teamId)}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {getTeamName(scorer.teamId)}
+                              {getTeamLodge(scorer.teamId) && ` - ${getTeamLodge(scorer.teamId)}`}
+                            </p>
                           </div>
                         </div>
                         <Badge variant="default" className="bg-primary">

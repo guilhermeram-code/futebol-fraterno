@@ -15,6 +15,13 @@
       "when": 1768875730796,
       "tag": "0001_regular_sabra",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1768880223649,
+      "tag": "0002_massive_radioactive_man",
+      "breakpoints": true
     }
   ]
 }
