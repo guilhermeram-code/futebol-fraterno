@@ -8,6 +8,7 @@ import App from "./App";
 import { getLoginUrl } from "./const";
 import "./index.css";
 import { MusicProvider } from "./contexts/MusicContext";
+import { TournamentProvider } from "./contexts/TournamentContext";
 
 const queryClient = new QueryClient();
 
@@ -56,9 +57,11 @@ const trpcClient = trpc.createClient({
 createRoot(document.getElementById("root")!).render(
   <trpc.Provider client={trpcClient} queryClient={queryClient}>
     <QueryClientProvider client={queryClient}>
-      <MusicProvider>
-        <App />
-      </MusicProvider>
+      <TournamentProvider>
+        <MusicProvider>
+          <App />
+        </MusicProvider>
+      </TournamentProvider>
     </QueryClientProvider>
   </trpc.Provider>
 );

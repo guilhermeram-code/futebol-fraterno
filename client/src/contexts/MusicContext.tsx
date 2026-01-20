@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useRef, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useRef, useEffect, ReactNode, useCallback } from "react";
 
 interface MusicContextType {
   isPlaying: boolean;
@@ -10,58 +10,87 @@ interface MusicContextType {
 
 const MusicContext = createContext<MusicContextType | undefined>(undefined);
 
+// Singleton audio element to persist across navigation
+let globalAudio: HTMLAudioElement | null = null;
+let globalMusicUrl = "/musica-fundo.mp3";
+
 export function MusicProvider({ children }: { children: ReactNode }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
-  const [musicUrl, setMusicUrl] = useState("/CampeonatoFraterno2026.mp3");
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const initialized = useRef(false);
 
+  // Initialize audio element once
   useEffect(() => {
-    // Create audio element
-    const audio = new Audio(musicUrl);
-    audio.loop = true;
-    audio.volume = 0.3; // Volume baixo-normal
-    audioRef.current = audio;
-
-    // Auto-play when component mounts
-    const playAudio = async () => {
-      try {
-        await audio.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.log("Autoplay prevented by browser:", error);
-        // User will need to click to start music
+    if (!initialized.current) {
+      initialized.current = true;
+      
+      if (!globalAudio) {
+        globalAudio = new Audio(globalMusicUrl);
+        globalAudio.loop = true;
+        globalAudio.volume = 0.3;
+        globalAudio.preload = "auto";
       }
-    };
 
-    playAudio();
+      // Sync state with actual audio state
+      const handlePlay = () => setIsPlaying(true);
+      const handlePause = () => setIsPlaying(false);
 
-    return () => {
-      audio.pause();
-      audio.src = "";
-    };
-  }, [musicUrl]);
+      globalAudio.addEventListener("play", handlePlay);
+      globalAudio.addEventListener("pause", handlePause);
 
+      // Check if already playing (from previous navigation)
+      if (!globalAudio.paused) {
+        setIsPlaying(true);
+      }
+
+      return () => {
+        if (globalAudio) {
+          globalAudio.removeEventListener("play", handlePlay);
+          globalAudio.removeEventListener("pause", handlePause);
+        }
+      };
+    }
+  }, []);
+
+  // Update muted state
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.muted = isMuted;
+    if (globalAudio) {
+      globalAudio.muted = isMuted;
     }
   }, [isMuted]);
 
-  const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
+  const togglePlay = useCallback(() => {
+    if (globalAudio) {
+      if (globalAudio.paused) {
+        globalAudio.play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((error) => {
+            console.error("Error playing audio:", error);
+          });
       } else {
-        audioRef.current.play();
+        globalAudio.pause();
+        setIsPlaying(false);
       }
-      setIsPlaying(!isPlaying);
     }
-  };
+  }, []);
 
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-  };
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => !prev);
+  }, []);
+
+  const setMusicUrl = useCallback((url: string) => {
+    if (globalAudio && globalMusicUrl !== url) {
+      const wasPlaying = !globalAudio.paused;
+      globalMusicUrl = url;
+      globalAudio.src = url;
+      globalAudio.load();
+      if (wasPlaying) {
+        globalAudio.play().catch(console.error);
+      }
+    }
+  }, []);
 
   return (
     <MusicContext.Provider value={{ isPlaying, isMuted, togglePlay, toggleMute, setMusicUrl }}>

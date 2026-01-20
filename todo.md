@@ -68,3 +68,14 @@
 - [x] Visual do site melhorado (fundo com detalhes)
 - [x] Logo centralizado no círculo
 - [x] Configurações editáveis do campeonato (logo, nome, subtítulo, organizador, música)- [x] Galeria - Data sem sobrepor a foto- [x] Botão para baixar fotos da galeria
+
+
+## Bugs Reportados (20/01/2026)
+- [x] Registro de gols intuitivo - campos obrigatórios após salvar resultado
+- [x] Música não toca - corrigir player de áudio
+- [x] Configurações não refletem no site - usar dados dinâmicos do banco
+- [x] Novo admin cadastrado não tem acesso ao painel
+- [x] Adicionar upload de imagem de fundo nas configurações
+- [x] Download de fotos abre aba ao invés de baixar direto
+- [x] Traduzir fases do mata-mata para português (quarters → Quartas)
+- [x] Critério Maior Quebrador: vermelho > amarelo, desempate por amarelo

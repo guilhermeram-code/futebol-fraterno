@@ -1,0 +1,34 @@
+{
+  "query": "SELECT * FROM tournament_settings;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM tournament_settings;",
+  "rows": [
+    {
+      "id": "1",
+      "key": "tournamentName",
+      "value": "Fut fraterno",
+      "updatedAt": "2026-01-20 03:49:15"
+    },
+    {
+      "id": "2",
+      "key": "tournamentOrganizer",
+      "value": "Ze Moreira",
+      "updatedAt": "2026-01-20 03:49:21"
+    },
+    {
+      "id": "3",
+      "key": "tournamentLogo",
+      "value": "https://d2xsxph8kpxj0f.cloudfront.net/310519663182032912/EvJULGQoHRNqTu98ru5T2m/tournament/logo-XVVs7_hez2cetQuH3z2Gy.jpeg",
+      "updatedAt": "2026-01-20 03:50:41"
+    },
+    {
+      "id": "4",
+      "key": "tournamentMusic",
+      "value": "https://d2xsxph8kpxj0f.cloudfront.net/310519663182032912/EvJULGQoHRNqTu98ru5T2m/tournament/music-xJNkkP_svClTrZISOua_B.mpeg",
+      "updatedAt": "2026-01-20 03:51:48"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tkey\tvalue\tupdatedAt\n1\ttournamentName\tFut fraterno\t2026-01-20 03:49:15\n2\ttournamentOrganizer\tZe Moreira\t2026-01-20 03:49:21\n3\ttournamentLogo\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663182032912/EvJULGQoHRNqTu98ru5T2m/tournament/logo-XVVs7_hez2cetQuH3z2Gy.jpeg\t2026-01-20 03:50:41\n4\ttournamentMusic\thttps://d2xsxph8kpxj0f.cloudfront.net/310519663182032912/EvJULGQoHRNqTu98ru5T2m/tournament/music-xJNkkP_svClTrZISOua_B.mpeg\t2026-01-20 03:51:48\n",
+  "stderr": "",
+  "execution_time_ms": 74
+}

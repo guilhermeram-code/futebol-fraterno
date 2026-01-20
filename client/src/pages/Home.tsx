@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Header } from "@/components/Header";
 import { trpc } from "@/lib/trpc";
+import { useTournament } from "@/contexts/TournamentContext";
+import { useMusic } from "@/contexts/MusicContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AudioPlayer } from "@/components/AudioPlayer";
+import { Layout } from "@/components/Layout";
 import { Link } from "wouter";
 import { 
   Trophy, 
@@ -25,6 +27,15 @@ import { ptBR } from "date-fns/locale";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
+  const { settings } = useTournament();
+  const { setMusicUrl } = useMusic();
+
+  // Atualizar URL da música quando as configurações carregarem
+  useEffect(() => {
+    if (settings.tournamentMusic) {
+      setMusicUrl(settings.tournamentMusic);
+    }
+  }, [settings.tournamentMusic, setMusicUrl]);
   
   const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery();
   const { data: upcomingMatches, isLoading: loadingUpcoming } = trpc.matches.upcoming.useQuery({ limit: 5 });
@@ -55,7 +66,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-background masonic-pattern">
+    <Layout>
       {/* Header */}
       <Header />
 
@@ -64,16 +75,16 @@ export default function Home() {
         <div className="container text-center">
           <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
             <img 
-              src="/logo-campeonato.jpg" 
-              alt="Futebol Fraterno 2026" 
+              src={settings.tournamentLogo} 
+              alt={settings.tournamentName} 
               className="w-full h-full object-contain scale-90"
             />
           </div>
           <h2 className="text-4xl font-bold text-primary-foreground mb-2">
-            Campeonato Fraterno 2026
+            {settings.tournamentName}
           </h2>
           <p className="text-xl text-primary-foreground/80 mb-6">
-            Organizado pela Loja José Moreira
+            {settings.tournamentOrganizer}
           </p>
           <div className="flex justify-center gap-4 flex-wrap">
             <Link href="/classificacao">
@@ -149,7 +160,11 @@ export default function Home() {
                       >
                         <div className="flex items-center gap-3">
                           <Badge variant="outline" className="text-xs">
-                            {match.phase === "groups" ? `Rodada ${match.round}` : match.phase}
+                            {match.phase === "groups" ? `Rodada ${match.round}` : 
+                             match.phase === "round16" ? "Oitavas" :
+                             match.phase === "quarters" ? "Quartas" :
+                             match.phase === "semis" ? "Semi" :
+                             match.phase === "final" ? "Final" : match.phase}
                           </Badge>
                           <span className="font-medium">{getTeamName(match.homeTeamId)}</span>
                           <span className="text-muted-foreground">vs</span>
@@ -449,9 +464,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Audio Player */}
-      <AudioPlayer />
-    </div>
+    </Layout>
   );
 }
 

@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Menu, X, Trophy, Calendar, Users, BarChart3, Image, Settings, LogIn } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export function Header() {
   const { user, isAuthenticated } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { settings } = useTournament();
 
   const navItems = [
     { href: "/classificacao", label: "Classificação", icon: Trophy },
@@ -17,6 +19,9 @@ export function Header() {
     { href: "/galeria", label: "Galeria", icon: Image },
   ];
 
+  // Extrair nome curto do torneio (primeira parte antes de "2026" ou similar)
+  const shortName = settings.tournamentName.split(/\s+\d{4}/)[0] || "Futebol Fraterno";
+
   return (
     <header className="bg-secondary text-secondary-foreground sticky top-0 z-50">
       <div className="container py-4">
@@ -25,13 +30,13 @@ export function Header() {
           <Link href="/">
             <div className="flex items-center gap-4 cursor-pointer">
               <img 
-                src="/logo-campeonato.jpg" 
-                alt="Futebol Fraterno 2026" 
+                src={settings.tournamentLogo} 
+                alt={settings.tournamentName} 
                 className="h-12 w-12 md:h-16 md:w-16 rounded-full object-cover border-2 border-primary shadow-lg"
               />
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-gold">Futebol Fraterno</h1>
-                <p className="text-xs md:text-sm text-muted-foreground">2026 - Respeito e União</p>
+                <h1 className="text-xl md:text-2xl font-bold text-gold">{shortName}</h1>
+                <p className="text-xs md:text-sm text-muted-foreground">{settings.tournamentSubtitle}</p>
               </div>
             </div>
           </Link>

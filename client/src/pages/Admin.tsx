@@ -31,6 +31,7 @@ import {
   Settings
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { ResultsRegistration } from "@/components/ResultsRegistration";
 
 export default function Admin() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -938,6 +939,10 @@ function MatchesTab() {
 
 // ==================== RESULTS TAB ====================
 function ResultsTab() {
+  return <ResultsRegistration />;
+}
+
+function ResultsTabOld() {
   const utils = trpc.useUtils();
   const { data: matches } = trpc.matches.list.useQuery();
   const { data: teams } = trpc.teams.list.useQuery();
@@ -1667,6 +1672,7 @@ function SettingsTab() {
   const { data: tournamentOrganizer } = trpc.settings.get.useQuery({ key: "tournamentOrganizer" });
   const { data: tournamentLogo } = trpc.settings.get.useQuery({ key: "tournamentLogo" });
   const { data: tournamentMusic } = trpc.settings.get.useQuery({ key: "tournamentMusic" });
+  const { data: tournamentBackground } = trpc.settings.get.useQuery({ key: "tournamentBackground" });
 
   const setSetting = trpc.settings.set.useMutation({
     onSuccess: () => {
@@ -1688,6 +1694,15 @@ function SettingsTab() {
     onSuccess: () => {
       utils.settings.get.invalidate();
       toast.success("Música atualizada!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const uploadBackground = trpc.settings.uploadBackground.useMutation({
+    onSuccess: () => {
+      utils.settings.get.invalidate();
+      utils.settings.getAll.invalidate();
+      toast.success("Imagem de fundo atualizada!");
     },
     onError: (error) => toast.error(error.message)
   });
@@ -1735,6 +1750,23 @@ function SettingsTab() {
       const base64 = reader.result?.toString().split(',')[1];
       if (base64) {
         uploadMusic.mutate({
+          base64,
+          mimeType: file.type
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleBackgroundUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result?.toString().split(',')[1];
+      if (base64) {
+        uploadBackground.mutate({
           base64,
           mimeType: file.type
         });
@@ -1844,6 +1876,27 @@ function SettingsTab() {
             />
             <p className="text-xs text-muted-foreground mt-1">
               {uploadMusic.isPending ? "Enviando..." : "Formatos: MP3, WAV, OGG"}
+            </p>
+          </div>
+
+          {/* Imagem de Fundo */}
+          <div>
+            <Label>Imagem de Fundo do Site</Label>
+            {tournamentBackground && (
+              <img 
+                src={tournamentBackground} 
+                alt="Fundo atual" 
+                className="h-32 w-full object-cover rounded-lg mb-2"
+              />
+            )}
+            <Input 
+              type="file"
+              accept="image/*"
+              onChange={handleBackgroundUpload}
+              disabled={uploadBackground.isPending}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              {uploadBackground.isPending ? "Enviando..." : "Formatos: JPG, PNG. Recomendado: imagem de alta resolução."}
             </p>
           </div>
         </CardContent>

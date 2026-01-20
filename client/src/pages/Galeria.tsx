@@ -34,14 +34,40 @@ export default function Galeria() {
     }
   };
 
-  const downloadPhoto = (url: string, caption: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = caption || 'foto-campeonato.jpg';
-    link.target = '_blank';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const downloadPhoto = async (url: string, caption: string) => {
+    try {
+      // Fetch the image as blob to force download
+      const response = await fetch(url);
+      const blob = await response.blob();
+      
+      // Create object URL from blob
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      
+      // Extract extension from URL or default to jpg
+      const urlParts = url.split('.');
+      const extension = urlParts.length > 1 ? urlParts[urlParts.length - 1].split('?')[0] : 'jpg';
+      
+      // Clean filename
+      const filename = caption 
+        ? `${caption.replace(/[^a-zA-Z0-9\u00C0-\u017F\s-]/g, '').substring(0, 50)}.${extension}`
+        : `foto-campeonato-${Date.now()}.${extension}`;
+      
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Clean up blob URL
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Erro ao baixar foto:', error);
+      // Fallback: open in new tab if fetch fails
+      window.open(url, '_blank');
+    }
   };
 
   return (

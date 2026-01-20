@@ -524,6 +524,11 @@ export const appRouter = router({
 
   // ==================== TOURNAMENT SETTINGS ====================
   settings: router({
+    getAll: publicProcedure
+      .query(async () => {
+        return db.getAllSettings();
+      }),
+    
     get: publicProcedure
       .input(z.object({ key: z.string() }))
       .query(async ({ input }) => {
@@ -565,6 +570,20 @@ export const appRouter = router({
         const fileKey = `tournament/music-${nanoid()}.${ext}`;
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
         await db.setSetting('tournamentMusic', url);
+        return { url };
+      }),
+    
+    uploadBackground: adminProcedure
+      .input(z.object({
+        base64: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        const ext = input.mimeType.split('/')[1] || 'jpg';
+        const fileKey = `tournament/background-${nanoid()}.${ext}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        await db.setSetting('tournamentBackground', url);
         return { url };
       }),
   }),

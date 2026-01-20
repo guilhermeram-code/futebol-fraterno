@@ -71,6 +71,13 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     } else if (user.openId === ENV.ownerOpenId) {
       values.role = 'admin';
       updateSet.role = 'admin';
+    } else if (user.email) {
+      // Verificar se o email está na lista de admin_emails
+      const isAdmin = await isAdminEmail(user.email);
+      if (isAdmin) {
+        values.role = 'admin';
+        updateSet.role = 'admin';
+      }
     }
 
     if (!values.lastSignedIn) {
@@ -355,7 +362,11 @@ export async function getTopCardedPlayers(limit: number = 10) {
   })
     .from(cards)
     .groupBy(cards.playerId, cards.teamId)
-    .orderBy(desc(sql`totalCards`))
+    // Ordenar por: 1º vermelhos (desc), 2º amarelos (desc)
+    .orderBy(
+      desc(sql`SUM(CASE WHEN ${cards.cardType} = 'red' THEN 1 ELSE 0 END)`),
+      desc(sql`SUM(CASE WHEN ${cards.cardType} = 'yellow' THEN 1 ELSE 0 END)`)
+    )
     .limit(limit);
   return result;
 }
@@ -433,6 +444,19 @@ export async function getSetting(key: string) {
   if (!db) throw new Error("Database not available");
   const result = await db.select().from(tournamentSettings).where(eq(tournamentSettings.key, key)).limit(1);
   return result[0]?.value;
+}
+
+export async function getAllSettings() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(tournamentSettings);
+  const settings: Record<string, string> = {};
+  result.forEach(row => {
+    if (row.key && row.value) {
+      settings[row.key] = row.value;
+    }
+  });
+  return settings;
 }
 
 export async function setSetting(key: string, value: string) {
