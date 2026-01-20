@@ -52,3 +52,7 @@
 ## Responsividade
 - [x] Layout responsivo para celular
 - [x] Layout responsivo para desktop
+
+
+## Correções
+- [x] Menu hambúrguer mobile com todas as opções de navegação

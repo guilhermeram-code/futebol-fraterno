@@ -4,8 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Link } from "wouter";
-import { ArrowLeft, Image, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Header } from "@/components/Header";
+import { Image, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -37,26 +37,7 @@ export default function Galeria() {
   return (
     <div className="min-h-screen bg-background masonic-pattern">
       {/* Header */}
-      <header className="bg-secondary text-secondary-foreground">
-        <div className="container py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <img 
-              src="/logo-campeonato.jpg" 
-              alt="Futebol Fraterno 2026" 
-              className="h-12 w-12 rounded-full object-cover border-2 border-primary"
-            />
-            <div>
-              <h1 className="text-xl font-bold text-gold">Galeria</h1>
-              <p className="text-sm text-muted-foreground">Fotos do Campeonato</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="container py-8">
         {isLoading ? (

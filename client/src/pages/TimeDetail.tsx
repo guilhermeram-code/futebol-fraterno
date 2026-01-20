@@ -2,9 +2,9 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
-import { ArrowLeft, Users, Shield, Trophy, Target, AlertTriangle, Calendar } from "lucide-react";
+import { Users, Shield, Trophy, Target, AlertTriangle, Calendar } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -37,11 +37,7 @@ export default function TimeDetail() {
   if (loadingTeam) {
     return (
       <div className="min-h-screen bg-background masonic-pattern">
-        <header className="bg-secondary text-secondary-foreground">
-          <div className="container py-4">
-            <Skeleton className="h-12 w-48" />
-          </div>
-        </header>
+        <Header />
         <main className="container py-8">
           <Skeleton className="h-64 w-full" />
         </main>
@@ -52,15 +48,7 @@ export default function TimeDetail() {
   if (!team) {
     return (
       <div className="min-h-screen bg-background masonic-pattern">
-        <header className="bg-secondary text-secondary-foreground">
-          <div className="container py-4">
-            <Link href="/times">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </header>
+        <Header />
         <main className="container py-8">
           <Card>
             <CardContent className="py-12 text-center">
@@ -75,34 +63,7 @@ export default function TimeDetail() {
   return (
     <div className="min-h-screen bg-background masonic-pattern">
       {/* Header */}
-      <header className="bg-secondary text-secondary-foreground">
-        <div className="container py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/times">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            {team.logoUrl ? (
-              <img 
-                src={team.logoUrl} 
-                alt={team.name}
-                className="h-12 w-12 rounded-full object-cover border-2 border-primary"
-              />
-            ) : (
-              <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center border-2 border-primary">
-                <Shield className="h-6 w-6 text-muted-foreground" />
-              </div>
-            )}
-            <div>
-              <h1 className="text-xl font-bold text-gold">{team.name}</h1>
-              {team.lodge && (
-                <p className="text-sm text-muted-foreground">{team.lodge}</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="container py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

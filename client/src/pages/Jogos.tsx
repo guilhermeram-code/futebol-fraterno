@@ -3,10 +3,10 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Header } from "@/components/Header";
 import { Link } from "wouter";
-import { ArrowLeft, Calendar, Clock, Trophy, MapPin } from "lucide-react";
+import { Calendar, Clock, Trophy, MapPin } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -44,26 +44,7 @@ export default function Jogos() {
   return (
     <div className="min-h-screen bg-background masonic-pattern">
       {/* Header */}
-      <header className="bg-secondary text-secondary-foreground">
-        <div className="container py-4">
-          <div className="flex items-center gap-4">
-            <Link href="/">
-              <Button variant="ghost" size="icon">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <img 
-              src="/logo-campeonato.jpg" 
-              alt="Futebol Fraterno 2026" 
-              className="h-12 w-12 rounded-full object-cover border-2 border-primary"
-            />
-            <div>
-              <h1 className="text-xl font-bold text-gold">Jogos</h1>
-              <p className="text-sm text-muted-foreground">Calendário e Resultados</p>
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <main className="container py-8">
         <Tabs defaultValue="upcoming" className="w-full">

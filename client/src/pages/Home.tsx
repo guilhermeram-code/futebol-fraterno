@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
+import { Header } from "@/components/Header";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -50,57 +51,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background masonic-pattern">
       {/* Header */}
-      <header className="bg-secondary text-secondary-foreground">
-        <div className="container py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <img 
-                src="/logo-campeonato.jpg" 
-                alt="Futebol Fraterno 2026" 
-                className="h-16 w-16 rounded-full object-cover border-2 border-primary shadow-lg"
-              />
-              <div>
-                <h1 className="text-2xl font-bold text-gold">Futebol Fraterno</h1>
-                <p className="text-sm text-muted-foreground">2026 - Respeito e União</p>
-              </div>
-            </div>
-            <nav className="hidden md:flex items-center gap-4">
-              <Link href="/classificacao">
-                <Button variant="ghost" className="text-secondary-foreground hover:text-gold">
-                  Classificação
-                </Button>
-              </Link>
-              <Link href="/jogos">
-                <Button variant="ghost" className="text-secondary-foreground hover:text-gold">
-                  Jogos
-                </Button>
-              </Link>
-              <Link href="/times">
-                <Button variant="ghost" className="text-secondary-foreground hover:text-gold">
-                  Times
-                </Button>
-              </Link>
-              <Link href="/estatisticas">
-                <Button variant="ghost" className="text-secondary-foreground hover:text-gold">
-                  Estatísticas
-                </Button>
-              </Link>
-              <Link href="/galeria">
-                <Button variant="ghost" className="text-secondary-foreground hover:text-gold">
-                  Galeria
-                </Button>
-              </Link>
-              {isAuthenticated && user?.role === "admin" && (
-                <Link href="/admin">
-                  <Button variant="default" className="bg-primary text-primary-foreground">
-                    Painel Admin
-                  </Button>
-                </Link>
-              )}
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
       {/* Hero Section */}
       <section className="bg-gold-gradient py-12">
