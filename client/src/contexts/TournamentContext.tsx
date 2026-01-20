@@ -8,6 +8,7 @@ interface TournamentSettings {
   tournamentLogo: string;
   tournamentMusic: string;
   tournamentBackground: string;
+  heroBackground: string;
 }
 
 interface TournamentContextType {
@@ -23,6 +24,7 @@ const defaultSettings: TournamentSettings = {
   tournamentLogo: "/logo-campeonato.jpg",
   tournamentMusic: "/musica-fundo.mp3",
   tournamentBackground: "",
+  heroBackground: "",
 };
 
 const TournamentContext = createContext<TournamentContextType | undefined>(undefined);
@@ -39,6 +41,7 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
     tournamentLogo: data?.tournamentLogo || defaultSettings.tournamentLogo,
     tournamentMusic: data?.tournamentMusic || defaultSettings.tournamentMusic,
     tournamentBackground: data?.tournamentBackground || defaultSettings.tournamentBackground,
+    heroBackground: data?.heroBackground || defaultSettings.heroBackground,
   };
 
   return (

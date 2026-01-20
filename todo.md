@@ -79,3 +79,6 @@
 - [x] Download de fotos abre aba ao invés de baixar direto
 - [x] Traduzir fases do mata-mata para português (quarters → Quartas)
 - [x] Critério Maior Quebrador: vermelho > amarelo, desempate por amarelo
+
+## Novas Features (20/01/2026)
+- [x] Upload de imagem de fundo para seção Hero (parte laranja)

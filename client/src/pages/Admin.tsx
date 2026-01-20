@@ -1673,6 +1673,7 @@ function SettingsTab() {
   const { data: tournamentLogo } = trpc.settings.get.useQuery({ key: "tournamentLogo" });
   const { data: tournamentMusic } = trpc.settings.get.useQuery({ key: "tournamentMusic" });
   const { data: tournamentBackground } = trpc.settings.get.useQuery({ key: "tournamentBackground" });
+  const { data: heroBackground } = trpc.settings.get.useQuery({ key: "heroBackground" });
 
   const setSetting = trpc.settings.set.useMutation({
     onSuccess: () => {
@@ -1703,6 +1704,15 @@ function SettingsTab() {
       utils.settings.get.invalidate();
       utils.settings.getAll.invalidate();
       toast.success("Imagem de fundo atualizada!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const uploadHeroBackground = trpc.settings.uploadHeroBackground.useMutation({
+    onSuccess: () => {
+      utils.settings.get.invalidate();
+      utils.settings.getAll.invalidate();
+      toast.success("Imagem do Hero atualizada!");
     },
     onError: (error) => toast.error(error.message)
   });
@@ -1767,6 +1777,23 @@ function SettingsTab() {
       const base64 = reader.result?.toString().split(',')[1];
       if (base64) {
         uploadBackground.mutate({
+          base64,
+          mimeType: file.type
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleHeroBackgroundUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result?.toString().split(',')[1];
+      if (base64) {
+        uploadHeroBackground.mutate({
           base64,
           mimeType: file.type
         });
@@ -1879,9 +1906,36 @@ function SettingsTab() {
             </p>
           </div>
 
-          {/* Imagem de Fundo */}
+          {/* Imagem de Fundo da Seção Hero (Laranja) */}
           <div>
-            <Label>Imagem de Fundo do Site</Label>
+            <Label>Imagem de Fundo da Seção Hero (parte laranja)</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Esta imagem aparece na seção principal do site, onde fica o logo e os botões.
+            </p>
+            {heroBackground && (
+              <img 
+                src={heroBackground} 
+                alt="Hero atual" 
+                className="h-32 w-full object-cover rounded-lg mb-2"
+              />
+            )}
+            <Input 
+              type="file"
+              accept="image/*"
+              onChange={handleHeroBackgroundUpload}
+              disabled={uploadHeroBackground.isPending}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              {uploadHeroBackground.isPending ? "Enviando..." : "Formatos: JPG, PNG. Recomendado: 1920x600px ou maior."}
+            </p>
+          </div>
+
+          {/* Imagem de Fundo Geral */}
+          <div>
+            <Label>Imagem de Fundo Geral do Site</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Esta imagem aparece como fundo em todas as páginas do site.
+            </p>
             {tournamentBackground && (
               <img 
                 src={tournamentBackground} 

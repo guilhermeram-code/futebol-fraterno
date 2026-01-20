@@ -71,8 +71,17 @@ export default function Home() {
       <Header />
 
       {/* Hero Section */}
-      <section className="bg-gold-gradient py-12">
-        <div className="container text-center">
+      <section 
+        className="py-12 relative"
+        style={settings.heroBackground ? {
+          backgroundImage: `url(${settings.heroBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        } : undefined}
+      >
+        {/* Overlay para garantir legibilidade */}
+        <div className={`absolute inset-0 ${settings.heroBackground ? 'bg-black/40' : 'bg-gold-gradient'}`} />
+        <div className="container text-center relative z-10">
           <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
             <img 
               src={settings.tournamentLogo} 

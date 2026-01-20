@@ -586,6 +586,20 @@ export const appRouter = router({
         await db.setSetting('tournamentBackground', url);
         return { url };
       }),
+    
+    uploadHeroBackground: adminProcedure
+      .input(z.object({
+        base64: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        const ext = input.mimeType.split('/')[1] || 'jpg';
+        const fileKey = `tournament/hero-bg-${nanoid()}.${ext}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        await db.setSetting('heroBackground', url);
+        return { url };
+      }),
   }),
 
   // ==================== STATISTICS ====================
