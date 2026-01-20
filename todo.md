@@ -97,3 +97,12 @@
 - [x] 9. Remover campo "Lado da Chave" para Final
 - [x] 10. Corrigir responsividade mobile do painel admin
 - [x] 11. Autoplay da música ao entrar no site
+
+## Ajustes Finais (20/01/2026)
+- [x] Sistema de login com username/senha (sem email)
+- [x] Controle de permissões: só admin principal cadastra novos admins
+- [x] Botão de logout no painel admin
+- [x] Nome da loja na classificação
+- [x] Nome da loja em próximos jogos e resultados
+- [x] Vermelho antes do amarelo na página inicial (Maior Quebrador)
+- [x] Testes automatizados do sistema de autenticação (9 testes passando)

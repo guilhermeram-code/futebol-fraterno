@@ -170,9 +170,10 @@ export type InsertAdminEmail = typeof adminEmails.$inferInsert;
 // Tabela de usuários admin (login simplificado)
 export const adminUsers = mysqlTable("admin_users", {
   id: int("id").autoincrement().primaryKey(),
-  email: varchar("email", { length: 320 }).notNull().unique(),
+  username: varchar("username", { length: 255 }).notNull().unique(), // Login (pode ser email ou username)
   password: varchar("password", { length: 255 }).notNull(), // Hash da senha
   name: varchar("name", { length: 255 }),
+  isOwner: boolean("isOwner").default(false).notNull(), // Se é o dono (pode cadastrar outros admins)
   active: boolean("active").default(true).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   lastLogin: timestamp("lastLogin"),

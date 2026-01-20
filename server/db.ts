@@ -704,51 +704,7 @@ export async function isAdminEmail(email: string) {
 }
 
 
-// ==================== ADMIN USERS (LOGIN SIMPLIFICADO) ====================
-export async function createAdminUser(adminUser: InsertAdminUser) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.insert(adminUsers).values(adminUser);
-  return { id: result[0].insertId };
-}
 
-export async function updateAdminUser(id: number, adminUser: Partial<InsertAdminUser>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.update(adminUsers).set(adminUser).where(eq(adminUsers.id, id));
-}
-
-export async function deleteAdminUser(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.delete(adminUsers).where(eq(adminUsers.id, id));
-}
-
-export async function getAllAdminUsers() {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  return db.select({
-    id: adminUsers.id,
-    email: adminUsers.email,
-    name: adminUsers.name,
-    active: adminUsers.active,
-    createdAt: adminUsers.createdAt,
-    lastLogin: adminUsers.lastLogin
-  }).from(adminUsers).orderBy(asc(adminUsers.email));
-}
-
-export async function getAdminUserByEmail(email: string) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  const result = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
-  return result[0];
-}
-
-export async function updateAdminUserLastLogin(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.update(adminUsers).set({ lastLogin: new Date() }).where(eq(adminUsers.id, id));
-}
 
 // ==================== COMMENTS (COM APROVAÇÃO) ====================
 export async function getApprovedComments() {
@@ -777,4 +733,67 @@ export async function rejectComment(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(comments).where(eq(comments.id, id));
+}
+
+// ==================== ADMIN USERS ====================
+export async function createAdminUser(data: { username: string; password: string; name?: string; isOwner?: boolean }): Promise<AdminUser | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const bcrypt = await import('bcrypt');
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+
+  await db.insert(adminUsers).values({
+    username: data.username,
+    password: hashedPassword,
+    name: data.name,
+    isOwner: data.isOwner || false,
+    active: true,
+  });
+
+  // Buscar o usuário recém-criado por username
+  const [newUser] = await db.select().from(adminUsers).where(eq(adminUsers.username, data.username));
+  return newUser || null;
+}
+
+export async function getAdminUserByUsername(username: string): Promise<AdminUser | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const [user] = await db.select().from(adminUsers).where(eq(adminUsers.username, username));
+  return user || null;
+}
+
+export async function verifyAdminPassword(username: string, password: string): Promise<AdminUser | null> {
+  const user = await getAdminUserByUsername(username);
+  if (!user || !user.active) return null;
+
+  const bcrypt = await import('bcrypt');
+  const isValid = await bcrypt.compare(password, user.password);
+  if (!isValid) return null;
+
+  // Atualizar lastLogin
+  const db = await getDb();
+  if (db) {
+    await db.update(adminUsers)
+      .set({ lastLogin: new Date() })
+      .where(eq(adminUsers.id, user.id));
+  }
+
+  return user;
+}
+
+export async function getAllAdminUsers(): Promise<AdminUser[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return await db.select().from(adminUsers).orderBy(adminUsers.createdAt);
+}
+
+export async function deleteAdminUser(id: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  await db.delete(adminUsers).where(eq(adminUsers.id, id));
+  return true;
 }

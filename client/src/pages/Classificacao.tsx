@@ -93,9 +93,12 @@ function GroupStandings({ groupId, groupName }: { groupId: number; groupName: st
                     </td>
                     <td className="py-2 px-1">
                       <Link href={`/times/${row.team.id}`}>
-                        <span className="font-medium hover:text-primary cursor-pointer">
-                          {row.team.name}
-                        </span>
+                        <div className="hover:text-primary cursor-pointer">
+                          <span className="font-medium">{row.team.name}</span>
+                          {row.team.lodge && (
+                            <span className="text-xs text-muted-foreground block">{row.team.lodge}</span>
+                          )}
+                        </div>
                       </Link>
                     </td>
                     <td className="text-center py-2 px-1 font-bold text-gold-dark">{row.points}</td>

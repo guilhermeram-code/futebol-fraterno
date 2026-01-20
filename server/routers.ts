@@ -674,39 +674,21 @@ export const appRouter = router({
     
     create: adminProcedure
       .input(z.object({
-        email: z.string().email(),
+        username: z.string(),
         password: z.string().min(4),
         name: z.string().optional(),
+        isOwner: z.boolean().optional(),
       }))
       .mutation(async ({ input }) => {
-        // Hash simples da senha (em produção usar bcrypt)
-        const crypto = await import('crypto');
-        const hashedPassword = crypto.createHash('sha256').update(input.password).digest('hex');
         return db.createAdminUser({
-          email: input.email,
-          password: hashedPassword,
+          username: input.username,
+          password: input.password,
           name: input.name,
+          isOwner: input.isOwner,
         });
       }),
     
-    update: adminProcedure
-      .input(z.object({
-        id: z.number(),
-        email: z.string().email().optional(),
-        password: z.string().min(4).optional(),
-        name: z.string().optional(),
-        active: z.boolean().optional(),
-      }))
-      .mutation(async ({ input }) => {
-        const { id, password, ...data } = input;
-        const updateData: any = { ...data };
-        if (password) {
-          const crypto = await import('crypto');
-          updateData.password = crypto.createHash('sha256').update(password).digest('hex');
-        }
-        await db.updateAdminUser(id, updateData);
-        return { success: true };
-      }),
+
     
     delete: adminProcedure
       .input(z.object({ id: z.number() }))
@@ -718,29 +700,20 @@ export const appRouter = router({
     // Login simplificado (público)
     login: publicProcedure
       .input(z.object({
-        email: z.string().email(),
+        username: z.string(),
         password: z.string(),
       }))
       .mutation(async ({ input, ctx }) => {
-        const crypto = await import('crypto');
-        const hashedPassword = crypto.createHash('sha256').update(input.password).digest('hex');
-        const adminUser = await db.getAdminUserByEmail(input.email);
+        const adminUser = await db.verifyAdminPassword(input.username, input.password);
         
-        if (!adminUser || adminUser.password !== hashedPassword) {
-          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
+        if (!adminUser) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Área restrita, você não tem acesso' });
         }
-        
-        if (!adminUser.active) {
-          throw new TRPCError({ code: 'FORBIDDEN', message: 'Usuário desativado' });
-        }
-        
-        // Atualizar último login
-        await db.updateAdminUserLastLogin(adminUser.id);
         
         // Criar sessão (usar JWT simples)
         const jwt = await import('jsonwebtoken');
         const token = jwt.default.sign(
-          { adminUserId: adminUser.id, email: adminUser.email, name: adminUser.name },
+          { adminUserId: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner },
           process.env.JWT_SECRET || 'secret',
           { expiresIn: '7d' }
         );
@@ -753,8 +726,9 @@ export const appRouter = router({
           success: true, 
           user: { 
             id: adminUser.id, 
-            email: adminUser.email, 
-            name: adminUser.name 
+            username: adminUser.username, 
+            name: adminUser.name,
+            isOwner: adminUser.isOwner
           } 
         };
       }),
@@ -768,9 +742,9 @@ export const appRouter = router({
         try {
           const jwt = await import('jsonwebtoken');
           const decoded = jwt.default.verify(token, process.env.JWT_SECRET || 'secret') as any;
-          const adminUser = await db.getAdminUserByEmail(decoded.email);
+          const adminUser = await db.getAdminUserByUsername(decoded.username);
           if (!adminUser || !adminUser.active) return null;
-          return { id: adminUser.id, email: adminUser.email, name: adminUser.name };
+          return { id: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner };
         } catch {
           return null;
         }

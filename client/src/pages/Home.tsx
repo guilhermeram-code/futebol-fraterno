@@ -370,15 +370,18 @@ export default function Home() {
                           </span>
                           <div>
                             <p className="font-medium">{getPlayerName(player.playerId)}</p>
-                            <p className="text-xs text-muted-foreground">{getTeamName(player.teamId)}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {getTeamName(player.teamId)}
+                              {getTeamLodge(player.teamId) && ` - ${getTeamLodge(player.teamId)}`}
+                            </p>
                           </div>
                         </div>
                         <div className="flex gap-1">
-                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
-                            {player.yellowCards} 🟨
-                          </Badge>
                           <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">
                             {player.redCards} 🟥
+                          </Badge>
+                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                            {player.yellowCards} 🟨
                           </Badge>
                         </div>
                       </div>

@@ -13,6 +13,7 @@ import Estatisticas from "./pages/Estatisticas";
 import MataMata from "./pages/MataMata";
 import Galeria from "./pages/Galeria";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function Router() {
       <Route path="/estatisticas" component={Estatisticas} />
       <Route path="/mata-mata" component={MataMata} />
       <Route path="/galeria" component={Galeria} />
+      <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />

@@ -20,6 +20,10 @@ export default function Jogos() {
     return teams?.find(t => t.id === teamId)?.name || "Time";
   };
 
+  const getTeamLodge = (teamId: number) => {
+    return teams?.find(t => t.id === teamId)?.lodge || null;
+  };
+
   const getGroupName = (groupId: number | null) => {
     if (!groupId) return "";
     return groups?.find(g => g.id === groupId)?.name || "";
@@ -75,9 +79,12 @@ export default function Jogos() {
                         <div className="flex items-center gap-4 flex-1">
                           <div className="text-center flex-1">
                             <Link href={`/times/${match.homeTeamId}`}>
-                              <p className="font-bold text-lg hover:text-primary cursor-pointer">
-                                {getTeamName(match.homeTeamId)}
-                              </p>
+                              <div className="hover:text-primary cursor-pointer">
+                                <p className="font-bold text-lg">{getTeamName(match.homeTeamId)}</p>
+                                {getTeamLodge(match.homeTeamId) && (
+                                  <p className="text-xs text-muted-foreground">{getTeamLodge(match.homeTeamId)}</p>
+                                )}
+                              </div>
                             </Link>
                           </div>
                           <div className="text-center px-4">
@@ -90,9 +97,12 @@ export default function Jogos() {
                           </div>
                           <div className="text-center flex-1">
                             <Link href={`/times/${match.awayTeamId}`}>
-                              <p className="font-bold text-lg hover:text-primary cursor-pointer">
-                                {getTeamName(match.awayTeamId)}
-                              </p>
+                              <div className="hover:text-primary cursor-pointer">
+                                <p className="font-bold text-lg">{getTeamName(match.awayTeamId)}</p>
+                                {getTeamLodge(match.awayTeamId) && (
+                                  <p className="text-xs text-muted-foreground">{getTeamLodge(match.awayTeamId)}</p>
+                                )}
+                              </div>
                             </Link>
                           </div>
                         </div>
@@ -139,11 +149,16 @@ export default function Jogos() {
                         <div className="flex items-center gap-4 flex-1">
                           <div className="text-center flex-1">
                             <Link href={`/times/${match.homeTeamId}`}>
-                              <p className={`font-bold text-lg hover:text-primary cursor-pointer ${
-                                match.homeScore! > match.awayScore! ? "text-green-600" : ""
-                              }`}>
-                                {getTeamName(match.homeTeamId)}
-                              </p>
+                              <div className="hover:text-primary cursor-pointer">
+                                <p className={`font-bold text-lg ${
+                                  match.homeScore! > match.awayScore! ? "text-green-600" : ""
+                                }`}>
+                                  {getTeamName(match.homeTeamId)}
+                                </p>
+                                {getTeamLodge(match.homeTeamId) && (
+                                  <p className="text-xs text-muted-foreground">{getTeamLodge(match.homeTeamId)}</p>
+                                )}
+                              </div>
                             </Link>
                           </div>
                           <div className="text-center px-4">
@@ -164,11 +179,16 @@ export default function Jogos() {
                           </div>
                           <div className="text-center flex-1">
                             <Link href={`/times/${match.awayTeamId}`}>
-                              <p className={`font-bold text-lg hover:text-primary cursor-pointer ${
-                                match.awayScore! > match.homeScore! ? "text-green-600" : ""
-                              }`}>
-                                {getTeamName(match.awayTeamId)}
-                              </p>
+                              <div className="hover:text-primary cursor-pointer">
+                                <p className={`font-bold text-lg ${
+                                  match.awayScore! > match.homeScore! ? "text-green-600" : ""
+                                }`}>
+                                  {getTeamName(match.awayTeamId)}
+                                </p>
+                                {getTeamLodge(match.awayTeamId) && (
+                                  <p className="text-xs text-muted-foreground">{getTeamLodge(match.awayTeamId)}</p>
+                                )}
+                              </div>
                             </Link>
                           </div>
                         </div>

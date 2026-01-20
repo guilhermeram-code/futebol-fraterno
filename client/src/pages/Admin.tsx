@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,13 +31,14 @@ import {
   Settings,
   ChevronDown,
   ChevronRight,
-  Check
+  Check,
+  LogOut
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { ResultsRegistration } from "@/components/ResultsRegistration";
 
 export default function Admin() {
-  const { user, isAuthenticated, loading } = useAuth();
+  const { adminUser, isAuthenticated, loading, logout } = useAdminAuth();
   const [, setLocation] = useLocation();
 
   if (loading) {
@@ -61,7 +62,7 @@ export default function Admin() {
             <p className="text-muted-foreground mb-4">
               Você precisa fazer login para acessar o painel administrativo.
             </p>
-            <Button onClick={() => window.location.href = getLoginUrl()}>
+            <Button onClick={() => setLocation("/admin/login")}>
               Fazer Login
             </Button>
           </CardContent>
@@ -70,24 +71,7 @@ export default function Admin() {
     );
   }
 
-  if (user?.role !== "admin") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardContent className="py-8 text-center">
-            <AlertTriangle className="h-12 w-12 mx-auto text-destructive mb-4" />
-            <h2 className="text-xl font-bold mb-2">Acesso Negado</h2>
-            <p className="text-muted-foreground mb-4">
-              Você não tem permissão para acessar esta página.
-            </p>
-            <Link href="/">
-              <Button>Voltar para Home</Button>
-            </Link>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -111,9 +95,20 @@ export default function Admin() {
                 <p className="text-sm text-muted-foreground">Gerenciar Campeonato</p>
               </div>
             </div>
-            <Badge variant="outline" className="text-gold border-gold">
-              Admin: {user.name || user.email}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-gold border-gold">
+                Admin: {adminUser?.name || adminUser?.username}
+              </Badge>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={logout}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sair
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -1788,70 +1783,108 @@ function AnnouncementsTab() {
 // ==================== ADMINS TAB ====================
 function AdminsTab() {
   const utils = trpc.useUtils();
-  const { data: adminEmails, isLoading } = trpc.adminEmails.list.useQuery();
-  const addAdminEmail = trpc.adminEmails.add.useMutation({
+  const { adminUser } = useAdminAuth();
+  const { data: adminUsers, isLoading } = trpc.adminUsers.list.useQuery();
+  
+  const createAdmin = trpc.adminUsers.create.useMutation({
     onSuccess: () => {
-      utils.adminEmails.list.invalidate();
-      toast.success("Email adicionado como admin!");
-      setEmail("");
+      utils.adminUsers.list.invalidate();
+      toast.success("Administrador criado com sucesso!");
+      setUsername("");
+      setPassword("");
+      setName("");
     },
-    onError: (error) => toast.error(error.message)
+    onError: (error: any) => toast.error(error.message || "Erro ao criar administrador")
   });
-  const removeAdminEmail = trpc.adminEmails.remove.useMutation({
+  
+  const deleteAdmin = trpc.adminUsers.delete.useMutation({
     onSuccess: () => {
-      utils.adminEmails.list.invalidate();
-      toast.success("Email removido!");
+      utils.adminUsers.list.invalidate();
+      toast.success("Administrador removido!");
     },
-    onError: (error) => toast.error(error.message)
+    onError: (error: any) => toast.error(error.message || "Erro ao remover administrador")
   });
 
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const handleAdd = () => {
-    if (!email) {
-      toast.error("Digite um email!");
+  const handleCreate = () => {
+    if (!username || !password) {
+      toast.error("Preencha login e senha!");
       return;
     }
-    // Validação básica de email
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error("Email inválido!");
+    if (password.length < 4) {
+      toast.error("Senha deve ter no mínimo 4 caracteres!");
       return;
     }
-    addAdminEmail.mutate({ email });
+    createAdmin.mutate({ username, password, name: name || undefined, isOwner: false });
   };
+
+  const isOwner = adminUser?.isOwner || false;
 
   return (
     <div className="space-y-6">
-      {/* Add Admin */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <UserPlus className="h-5 w-5" />
-            Adicionar Novo Administrador
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label>Email</Label>
-            <Input 
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="exemplo@email.com"
-            />
-            <p className="text-xs text-muted-foreground mt-1">
-              Este email terá acesso total ao painel administrativo
+      {/* Add Admin - apenas para owner */}
+      {isOwner ? (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <UserPlus className="h-5 w-5" />
+              Criar Novo Administrador
+            </CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Apenas o administrador principal pode criar novos admins
             </p>
-          </div>
-          <Button 
-            onClick={handleAdd}
-            disabled={addAdminEmail.isPending}
-            className="w-full"
-          >
-            {addAdminEmail.isPending ? "Adicionando..." : "Adicionar Admin"}
-          </Button>
-        </CardContent>
-      </Card>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label>Login (Username)</Label>
+              <Input 
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="Digite o login"
+              />
+            </div>
+            <div>
+              <Label>Senha</Label>
+              <Input 
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Mínimo 4 caracteres"
+              />
+            </div>
+            <div>
+              <Label>Nome (opcional)</Label>
+              <Input 
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Nome completo"
+              />
+            </div>
+            <Button 
+              onClick={handleCreate}
+              disabled={createAdmin.isPending}
+              className="w-full"
+            >
+              {createAdmin.isPending ? "Criando..." : "Criar Administrador"}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardContent className="py-8 text-center">
+            <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Permissão Restrita</h3>
+            <p className="text-muted-foreground">
+              Apenas o administrador principal pode criar novos administradores.
+            </p>
+          </CardContent>
+        </Card>
+      )}
 
       {/* List Admins */}
       <Card>
@@ -1863,30 +1896,38 @@ function AdminsTab() {
             <div className="space-y-2">
               {[1, 2].map(i => <Skeleton key={i} className="h-12 w-full" />)}
             </div>
-          ) : adminEmails && adminEmails.length > 0 ? (
+          ) : adminUsers && adminUsers.length > 0 ? (
             <div className="space-y-2">
-              {adminEmails.map((admin) => (
+              {adminUsers.map((admin: any) => (
                 <div 
                   key={admin.id}
                   className="flex items-center justify-between p-3 border rounded-lg"
                 >
                   <div className="flex items-center gap-2">
                     <Shield className="h-4 w-4 text-primary" />
-                    <span>{admin.email}</span>
+                    <div>
+                      <p className="font-medium">{admin.username}</p>
+                      {admin.name && <p className="text-sm text-muted-foreground">{admin.name}</p>}
+                      {admin.isOwner && (
+                        <Badge variant="secondary" className="text-xs mt-1">Administrador Principal</Badge>
+                      )}
+                    </div>
                   </div>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => removeAdminEmail.mutate({ id: admin.id })}
-                    disabled={removeAdminEmail.isPending}
-                  >
-                    Remover
-                  </Button>
+                  {isOwner && !admin.isOwner && (
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => deleteAdmin.mutate({ id: admin.id })}
+                      disabled={deleteAdmin.isPending}
+                    >
+                      Remover
+                    </Button>
+                  )}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-muted-foreground py-8">Nenhum admin adicional cadastrado</p>
+            <p className="text-center text-muted-foreground py-8">Nenhum administrador cadastrado</p>
           )}
         </CardContent>
       </Card>
