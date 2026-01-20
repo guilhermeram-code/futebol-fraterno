@@ -45,8 +45,16 @@ const trpcClient = trpc.createClient({
       url: "/api/trpc",
       transformer: superjson,
       fetch(input, init) {
+        // Adicionar token de admin se existir
+        const adminToken = localStorage.getItem("admin_token");
+        const headers = {
+          ...(init?.headers || {}),
+          ...(adminToken ? { Authorization: `Bearer ${adminToken}` } : {}),
+        };
+        
         return globalThis.fetch(input, {
           ...(init ?? {}),
+          headers,
           credentials: "include",
         });
       },

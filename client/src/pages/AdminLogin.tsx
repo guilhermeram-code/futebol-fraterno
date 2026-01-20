@@ -15,8 +15,10 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
 
   const loginMutation = trpc.adminUsers.login.useMutation({
-    onSuccess: () => {
-      toast.success("Login realizado com sucesso!");
+    onSuccess: (data) => {
+      // Armazenar token no localStorage
+      localStorage.setItem("admin_token", data.token);
+      toast.success("Login realizado com sucesso");
       setLocation("/admin");
     },
     onError: (error: any) => {
@@ -48,44 +50,34 @@ export default function AdminLogin() {
             <div className="flex justify-center mb-4">
               <Shield className="h-12 w-12 text-primary" />
             </div>
-            <CardTitle className="text-2xl">Painel Administrativo</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Entre com suas credenciais
-            </p>
+            <CardTitle>Painel Administrativo</CardTitle>
+            <p className="text-sm text-muted-foreground">Entre com suas credenciais</p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="username">Login</Label>
                 <Input
                   id="username"
                   type="text"
+                  placeholder="Digite seu login"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Digite seu login"
-                  autoComplete="username"
-                  disabled={loginMutation.isPending}
+                  required
                 />
               </div>
-              
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="password">Senha</Label>
                 <Input
                   id="password"
                   type="password"
+                  placeholder="Digite sua senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Digite sua senha"
-                  autoComplete="current-password"
-                  disabled={loginMutation.isPending}
+                  required
                 />
               </div>
-
-              <Button 
-                type="submit" 
-                className="w-full"
-                disabled={loginMutation.isPending}
-              >
+              <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
                 {loginMutation.isPending ? "Entrando..." : "Entrar"}
               </Button>
             </form>

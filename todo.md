@@ -106,3 +106,10 @@
 - [x] Nome da loja em próximos jogos e resultados
 - [x] Vermelho antes do amarelo na página inicial (Maior Quebrador)
 - [x] Testes automatizados do sistema de autenticação (9 testes passando)
+
+## Bug Reportado (20/01/2026 - 15:30)
+- [x] Login funciona mas não redireciona para painel admin - página Admin.tsx ainda verifica autenticação OAuth antiga
+  - Solução: Migrado de cookies HTTP-only para localStorage + Authorization header
+  - Sistema de autenticação agora usa JWT armazenado no localStorage
+  - Token enviado via header Authorization: Bearer <token>
+  - Fluxo completo testado: login → acesso ao painel → logout → bloqueio de acesso

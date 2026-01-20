@@ -718,12 +718,10 @@ export const appRouter = router({
           { expiresIn: '7d' }
         );
         
-        // Setar cookie
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        ctx.res.cookie('admin_session', token, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
-        
+        // Retornar token para o frontend armazenar
         return { 
-          success: true, 
+          success: true,
+          token, // Frontend vai armazenar no localStorage
           user: { 
             id: adminUser.id, 
             username: adminUser.username, 
@@ -736,7 +734,9 @@ export const appRouter = router({
     // Verificar sessão admin
     me: publicProcedure
       .query(async ({ ctx }) => {
-        const token = ctx.req.cookies?.admin_session;
+        // Ler token do header Authorization
+        const authHeader = ctx.req.headers.authorization;
+        const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
         if (!token) return null;
         
         try {
@@ -750,11 +750,9 @@ export const appRouter = router({
         }
       }),
     
-    // Logout admin
+    // Logout admin (frontend limpa o localStorage)
     logout: publicProcedure
-      .mutation(async ({ ctx }) => {
-        const cookieOptions = getSessionCookieOptions(ctx.req);
-        ctx.res.clearCookie('admin_session', { ...cookieOptions, maxAge: -1 });
+      .mutation(async () => {
         return { success: true };
       }),
   }),

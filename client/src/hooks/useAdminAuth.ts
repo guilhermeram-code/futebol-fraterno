@@ -5,13 +5,19 @@ import { toast } from "sonner";
 export function useAdminAuth() {
   const [, setLocation] = useLocation();
   
+  // Verificar se há token no localStorage
+  const hasToken = !!localStorage.getItem("admin_token");
+  
   const { data: adminUser, isLoading, refetch } = trpc.adminUsers.me.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: hasToken, // Só fazer query se houver token
   });
 
   const logoutMutation = trpc.adminUsers.logout.useMutation({
     onSuccess: () => {
+      // Limpar token do localStorage
+      localStorage.removeItem("admin_token");
       toast.success("Logout realizado com sucesso");
       setLocation("/admin/login");
     },
