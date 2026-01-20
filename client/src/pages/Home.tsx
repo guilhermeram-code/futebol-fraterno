@@ -459,16 +459,16 @@ export default function Home() {
       <footer className="bg-secondary text-secondary-foreground py-8 mt-12">
         <div className="container text-center">
           <img 
-            src="/logo-campeonato.jpg" 
-            alt="Futebol Fraterno 2026" 
+            src={settings.tournamentLogo} 
+            alt={settings.tournamentName} 
             className="mx-auto h-20 w-20 rounded-full object-cover border-2 border-primary mb-4"
           />
-          <p className="text-gold font-bold text-lg mb-2">Futebol Fraterno 2026</p>
+          <p className="text-gold font-bold text-lg mb-2">{settings.tournamentName}</p>
           <p className="text-muted-foreground text-sm">
-            Organizado pela Loja José Moreira
+            {settings.tournamentOrganizer}
           </p>
           <p className="text-muted-foreground text-xs mt-4">
-            Respeito e União
+            {settings.tournamentSubtitle}
           </p>
         </div>
       </footer>

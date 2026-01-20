@@ -19,8 +19,7 @@ export function Header() {
     { href: "/galeria", label: "Galeria", icon: Image },
   ];
 
-  // Extrair nome curto do torneio (primeira parte antes de "2026" ou similar)
-  const shortName = settings.tournamentName.split(/\s+\d{4}/)[0] || "Futebol Fraterno";
+  // Usar nome do torneio das configurações
 
   return (
     <header className="bg-secondary text-secondary-foreground sticky top-0 z-50">
@@ -35,7 +34,7 @@ export function Header() {
                 className="h-12 w-12 md:h-16 md:w-16 rounded-full object-cover border-2 border-primary shadow-lg"
               />
               <div>
-                <h1 className="text-xl md:text-2xl font-bold text-gold">{shortName}</h1>
+                <h1 className="text-xl md:text-2xl font-bold text-gold">{settings.tournamentName}</h1>
                 <p className="text-xs md:text-sm text-muted-foreground">{settings.tournamentSubtitle}</p>
               </div>
             </div>

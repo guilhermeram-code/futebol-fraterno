@@ -82,3 +82,4 @@
 
 ## Novas Features (20/01/2026)
 - [x] Upload de imagem de fundo para seção Hero (parte laranja)
+- [x] Nome, subtítulo e organizador dinâmicos no Header e Footer
