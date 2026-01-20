@@ -113,3 +113,11 @@
   - Sistema de autenticação agora usa JWT armazenado no localStorage
   - Token enviado via header Authorization: Bearer <token>
   - Fluxo completo testado: login → acesso ao painel → logout → bloqueio de acesso
+
+## Bugs Reportados (20/01/2026 - 15:50)
+- [x] Últimos Resultados (Home) - falta nome da loja junto aos times
+- [x] Frangueiro (Pior Defesa) - falta nome da loja junto aos times
+- [x] Melhor Defesa - falta nome da loja junto aos times
+- [x] Próximo Jogo (Home) - mostra "Rodada null" ao invés da rodada correta (corrigido para mostrar "Fase de Grupos - Grupo A/B")
+- [x] Mata-mata - falta nome da loja em todos os jogos (semifinais, final, etc)
+- [x] Troféu "Final" - texto e ícone estão sobrepostos ao card do jogo (troféu agora aparece acima do título)

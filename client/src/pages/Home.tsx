@@ -58,6 +58,11 @@ export default function Home() {
     return teams?.find(t => t.id === teamId)?.lodge || "";
   };
 
+  const getGroupName = (groupId: number | null) => {
+    if (!groupId) return "";
+    return groups?.find(g => g.id === groupId)?.name || "";
+  };
+
   const { data: announcements } = trpc.announcements.active.useQuery();
 
   const formatMatchDate = (date: Date | null) => {
@@ -167,17 +172,25 @@ export default function Home() {
                         key={match.id} 
                         className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
                       >
-                        <div className="flex items-center gap-3">
-                          <Badge variant="outline" className="text-xs">
-                            {match.phase === "groups" ? `Rodada ${match.round}` : 
+                        <div className="flex flex-col gap-2 flex-1">
+                          <Badge variant="outline" className="text-xs w-fit">
+                            {match.phase === "groups" ? (getGroupName(match.groupId) ? `Fase de Grupos - ${getGroupName(match.groupId)}` : "Fase de Grupos") : 
                              match.phase === "round16" ? "Oitavas" :
                              match.phase === "quarters" ? "Quartas" :
                              match.phase === "semis" ? "Semi" :
                              match.phase === "final" ? "Final" : match.phase}
                           </Badge>
-                          <span className="font-medium">{getTeamName(match.homeTeamId)}</span>
-                          <span className="text-muted-foreground">vs</span>
-                          <span className="font-medium">{getTeamName(match.awayTeamId)}</span>
+                          <div className="flex items-center gap-3">
+                            <div className="flex-1 text-right">
+                              <div className="font-medium">{getTeamName(match.homeTeamId)}</div>
+                              <div className="text-xs text-muted-foreground">{getTeamLodge(match.homeTeamId)}</div>
+                            </div>
+                            <span className="text-muted-foreground">vs</span>
+                            <div className="flex-1">
+                              <div className="font-medium">{getTeamName(match.awayTeamId)}</div>
+                              <div className="text-xs text-muted-foreground">{getTeamLodge(match.awayTeamId)}</div>
+                            </div>
+                          </div>
                         </div>
                         <div className="text-sm text-muted-foreground">
                           {formatMatchDate(match.matchDate)}
@@ -221,9 +234,10 @@ export default function Home() {
                         className="flex items-center justify-between p-3 bg-muted rounded-lg"
                       >
                         <div className="flex items-center gap-3 flex-1">
-                          <span className="font-medium flex-1 text-right">
-                            {getTeamName(match.homeTeamId)}
-                          </span>
+                          <div className="flex-1 text-right">
+                            <div className="font-medium">{getTeamName(match.homeTeamId)}</div>
+                            <div className="text-xs text-muted-foreground">{getTeamLodge(match.homeTeamId)}</div>
+                          </div>
                           <div className="flex items-center gap-2 px-4">
                             <span className="text-2xl font-bold text-gold-dark">
                               {match.homeScore}
@@ -233,9 +247,10 @@ export default function Home() {
                               {match.awayScore}
                             </span>
                           </div>
-                          <span className="font-medium flex-1">
-                            {getTeamName(match.awayTeamId)}
-                          </span>
+                          <div className="flex-1">
+                            <div className="font-medium">{getTeamName(match.awayTeamId)}</div>
+                            <div className="text-xs text-muted-foreground">{getTeamLodge(match.awayTeamId)}</div>
+                          </div>
                         </div>
                         {match.penalties && (
                           <Badge variant="secondary" className="ml-2">
@@ -421,7 +436,10 @@ export default function Home() {
                           <span className="font-bold text-lg w-6 text-warning">
                             {index + 1}º
                           </span>
-                          <p className="font-medium">{team.team.name}</p>
+                          <div>
+                            <p className="font-medium">{team.team.name}</p>
+                            <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
+                          </div>
                         </div>
                         <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300">
                           {team.goalsAgainst} gols sofridos
@@ -513,7 +531,10 @@ function BestDefenseSection() {
             <span className="font-bold text-lg w-6 text-success">
               {index + 1}º
             </span>
-            <p className="font-medium">{team.team.name}</p>
+            <div>
+              <p className="font-medium">{team.team.name}</p>
+              <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
+            </div>
           </div>
           <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
             {team.goalsAgainst} gols sofridos

@@ -22,6 +22,10 @@ export default function MataMata() {
     return logo || undefined;
   };
 
+  const getTeamLodge = (teamId: number) => {
+    return teams?.find(t => t.id === teamId)?.lodge || "";
+  };
+
   const hasKnockoutMatches = (round16Matches?.length || 0) > 0 || 
     (quarterMatches?.length || 0) > 0 || 
     (semiMatches?.length || 0) > 0 || 
@@ -61,6 +65,7 @@ export default function MataMata() {
                         match={match} 
                         getTeamName={getTeamName}
                         getTeamLogo={getTeamLogo}
+                        getTeamLodge={getTeamLodge}
                       />
                     ))}
                   </div>
@@ -74,6 +79,7 @@ export default function MataMata() {
                         match={match} 
                         getTeamName={getTeamName}
                         getTeamLogo={getTeamLogo}
+                        getTeamLodge={getTeamLodge}
                         size="lg"
                       />
                     ))}
@@ -88,6 +94,7 @@ export default function MataMata() {
                         match={match} 
                         getTeamName={getTeamName}
                         getTeamLogo={getTeamLogo}
+                        getTeamLodge={getTeamLodge}
                         size="lg"
                       />
                     ))}
@@ -95,16 +102,17 @@ export default function MataMata() {
 
                   {/* Final */}
                   <div className="flex-shrink-0">
-                    <h3 className="text-center font-bold text-gold-dark mb-4">Final</h3>
+                    <div className="flex flex-col items-center gap-2 mb-4">
+                      <Trophy className="h-12 w-12 text-gold trophy-shine" />
+                      <h3 className="text-center font-bold text-gold-dark">Final</h3>
+                    </div>
                     <div className="relative">
-                      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2">
-                        <Trophy className="h-12 w-12 text-gold trophy-shine" />
-                      </div>
                       {finalMatch && finalMatch.length > 0 ? (
                         <BracketMatch 
                           match={finalMatch[0]} 
                           getTeamName={getTeamName}
                           getTeamLogo={getTeamLogo}
+                          getTeamLodge={getTeamLodge}
                           size="xl"
                           isFinal
                         />
@@ -126,6 +134,7 @@ export default function MataMata() {
                         match={match} 
                         getTeamName={getTeamName}
                         getTeamLogo={getTeamLogo}
+                        getTeamLodge={getTeamLodge}
                         size="lg"
                       />
                     ))}
@@ -140,6 +149,7 @@ export default function MataMata() {
                         match={match} 
                         getTeamName={getTeamName}
                         getTeamLogo={getTeamLogo}
+                        getTeamLodge={getTeamLodge}
                         size="lg"
                       />
                     ))}
@@ -154,6 +164,7 @@ export default function MataMata() {
                         match={match} 
                         getTeamName={getTeamName}
                         getTeamLogo={getTeamLogo}
+                        getTeamLodge={getTeamLodge}
                       />
                     ))}
                   </div>
@@ -260,11 +271,12 @@ interface BracketMatchProps {
   match: any;
   getTeamName: (id: number) => string;
   getTeamLogo?: (id: number) => string | undefined;
+  getTeamLodge?: (id: number) => string;
   size?: "sm" | "lg" | "xl";
   isFinal?: boolean;
 }
 
-function BracketMatch({ match, getTeamName, getTeamLogo, size = "sm", isFinal }: BracketMatchProps) {
+function BracketMatch({ match, getTeamName, getTeamLogo, getTeamLodge, size = "sm", isFinal }: BracketMatchProps) {
   const sizeClasses = {
     sm: "w-40 text-xs",
     lg: "w-44 text-sm",
@@ -277,18 +289,28 @@ function BracketMatch({ match, getTeamName, getTeamLogo, size = "sm", isFinal }:
   return (
     <div className={`${sizeClasses[size]} rounded-lg overflow-hidden shadow-md ${isFinal ? "border-2 border-primary" : "border border-border"}`}>
       <div className={`p-2 flex items-center justify-between ${homeWon ? "bg-green-100" : "bg-card"}`}>
-        <span className={`truncate ${homeWon ? "font-bold text-green-700" : ""}`}>
-          {getTeamName(match.homeTeamId)}
-        </span>
-        <span className={`font-bold ${homeWon ? "text-green-700" : ""}`}>
+        <div className="flex-1 truncate">
+          <div className={`${homeWon ? "font-bold text-green-700" : ""}`}>
+            {getTeamName(match.homeTeamId)}
+          </div>
+          {getTeamLodge && getTeamLodge(match.homeTeamId) && (
+            <div className="text-[10px] text-muted-foreground">{getTeamLodge(match.homeTeamId)}</div>
+          )}
+        </div>
+        <span className={`font-bold ml-2 ${homeWon ? "text-green-700" : ""}`}>
           {match.played ? match.homeScore : "-"}
         </span>
       </div>
       <div className={`p-2 flex items-center justify-between border-t ${awayWon ? "bg-green-100" : "bg-card"}`}>
-        <span className={`truncate ${awayWon ? "font-bold text-green-700" : ""}`}>
-          {getTeamName(match.awayTeamId)}
-        </span>
-        <span className={`font-bold ${awayWon ? "text-green-700" : ""}`}>
+        <div className="flex-1 truncate">
+          <div className={`${awayWon ? "font-bold text-green-700" : ""}`}>
+            {getTeamName(match.awayTeamId)}
+          </div>
+          {getTeamLodge && getTeamLodge(match.awayTeamId) && (
+            <div className="text-[10px] text-muted-foreground">{getTeamLodge(match.awayTeamId)}</div>
+          )}
+        </div>
+        <span className={`font-bold ml-2 ${awayWon ? "text-green-700" : ""}`}>
           {match.played ? match.awayScore : "-"}
         </span>
       </div>
