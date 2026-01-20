@@ -66,6 +66,70 @@ export default function TimeDetail() {
       <Header />
 
       <main className="container py-8">
+        {/* Cabeçalho do Time */}
+        <div className="mb-8">
+          <Card className="bg-gradient-to-r from-secondary to-secondary/80 text-secondary-foreground overflow-hidden">
+            <CardContent className="p-6 md:p-8">
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                {/* Logo do Time */}
+                {team.logoUrl ? (
+                  <img 
+                    src={team.logoUrl} 
+                    alt={team.name}
+                    className="h-24 w-24 md:h-32 md:w-32 object-contain rounded-lg bg-white/10 p-2"
+                  />
+                ) : (
+                  <div className="h-24 w-24 md:h-32 md:w-32 rounded-lg bg-white/10 flex items-center justify-center">
+                    <Shield className="h-12 w-12 md:h-16 md:w-16 text-gold" />
+                  </div>
+                )}
+                
+                {/* Informações do Time */}
+                <div className="text-center md:text-left flex-1">
+                  <h1 className="text-3xl md:text-4xl font-bold text-gold mb-2">
+                    {team.name}
+                  </h1>
+                  {team.lodge && (
+                    <p className="text-xl md:text-2xl text-gold/80 mb-3">
+                      {team.lodge}
+                    </p>
+                  )}
+                  <div className="flex flex-wrap justify-center md:justify-start gap-2">
+                    {team.groupId && (
+                      <Badge variant="secondary" className="bg-gold/20 text-gold border-gold/30">
+                        <Trophy className="h-3 w-3 mr-1" />
+                        {getGroupName(team.groupId)}
+                      </Badge>
+                    )}
+                    <Badge variant="secondary" className="bg-white/10 text-white/80">
+                      <Users className="h-3 w-3 mr-1" />
+                      {players?.length || 0} jogadores
+                    </Badge>
+                  </div>
+                </div>
+                
+                {/* Estatísticas Rápidas */}
+                {stats && (
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-2xl md:text-3xl font-bold text-gold">{stats.points}</p>
+                      <p className="text-xs text-white/60">Pontos</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-2xl md:text-3xl font-bold text-green-400">{stats.wins}</p>
+                      <p className="text-xs text-white/60">Vitórias</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-2xl md:text-3xl font-bold text-gold">{stats.goalsFor}</p>
+                      <p className="text-xs text-white/60">Gols</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Stats and Players */}
           <div className="lg:col-span-2 space-y-6">

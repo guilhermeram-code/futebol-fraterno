@@ -67,8 +67,31 @@ export function ResultsRegistration() {
   const [newCardTeamId, setNewCardTeamId] = useState("");
   const [newCardType, setNewCardType] = useState<"yellow" | "red">("yellow");
 
-  const getTeamName = (id: number) => teams?.find(t => t.id === id)?.name || "Time";
+  const getTeamById = (id: number) => teams?.find(t => t.id === id);
+  const getTeamName = (id: number) => getTeamById(id)?.name || "Time";
+  const getTeamLodge = (id: number) => getTeamById(id)?.lodge || "";
+  const getTeamWithLodge = (id: number) => {
+    const team = getTeamById(id);
+    if (!team) return "Time";
+    return team.lodge ? `${team.name} (${team.lodge})` : team.name;
+  };
   const getPlayersByTeam = (teamId: number) => players?.filter(p => p.teamId === teamId) || [];
+  
+  const formatMatchDate = (date: Date | null) => {
+    if (!date) return "";
+    return new Date(date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  };
+  
+  const getPhaseLabel = (phase: string) => {
+    const labels: Record<string, string> = {
+      'groups': 'Fase de Grupos',
+      'round16': 'Oitavas',
+      'quarters': 'Quartas',
+      'semis': 'Semi',
+      'final': 'Final'
+    };
+    return labels[phase] || phase;
+  };
   
   const pendingMatches = matches?.filter(m => !m.played) || [];
   const selectedMatchData = matches?.find(m => m.id === selectedMatch);
@@ -235,29 +258,58 @@ export function ResultsRegistration() {
           <CardContent>
             <div className="space-y-2 max-h-[400px] overflow-y-auto">
               {pendingMatches.length > 0 ? (
-                pendingMatches.map(match => (
-                  <div 
-                    key={match.id} 
-                    className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                      selectedMatch === match.id ? "bg-primary text-primary-foreground" : "bg-muted hover:bg-muted/80"
-                    }`}
-                    onClick={() => {
-                      if (step === "result") {
-                        setSelectedMatch(match.id);
-                        setHomeScore("");
-                        setAwayScore("");
-                        setPenalties(false);
-                        setHomeGoals([]);
-                        setAwayGoals([]);
-                        setCards([]);
-                      }
-                    }}
-                  >
-                    <p className="font-medium">
-                      {getTeamName(match.homeTeamId)} vs {getTeamName(match.awayTeamId)}
-                    </p>
-                  </div>
-                ))
+                pendingMatches.map(match => {
+                  const isSelected = selectedMatch === match.id;
+                  return (
+                    <div 
+                      key={match.id} 
+                      className={`p-3 rounded-lg cursor-pointer transition-colors border-l-4 ${
+                        isSelected 
+                          ? "bg-primary text-primary-foreground border-l-primary" 
+                          : "bg-muted hover:bg-muted/80 border-l-amber-500"
+                      }`}
+                      onClick={() => {
+                        if (step === "result") {
+                          setSelectedMatch(match.id);
+                          setHomeScore("");
+                          setAwayScore("");
+                          setPenalties(false);
+                          setHomeGoals([]);
+                          setAwayGoals([]);
+                          setCards([]);
+                        }
+                      }}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className={`text-xs font-medium ${
+                          isSelected ? "text-primary-foreground/80" : "text-muted-foreground"
+                        }`}>
+                          {getPhaseLabel(match.phase)} {match.round && `- R${match.round}`}
+                        </span>
+                        {match.matchDate && (
+                          <span className={`text-xs ${
+                            isSelected ? "text-primary-foreground/80" : "text-muted-foreground"
+                          }`}>
+                            {formatMatchDate(match.matchDate)}
+                          </span>
+                        )}
+                      </div>
+                      <p className="font-medium">
+                        {getTeamWithLodge(match.homeTeamId)}
+                      </p>
+                      <p className={`text-sm ${
+                        isSelected ? "text-primary-foreground/90" : "text-muted-foreground"
+                      }`}>
+                        vs {getTeamWithLodge(match.awayTeamId)}
+                      </p>
+                      {!isSelected && (
+                        <Badge variant="outline" className="mt-2 bg-amber-100 text-amber-800 border-amber-300">
+                          Pendente
+                        </Badge>
+                      )}
+                    </div>
+                  );
+                })
               ) : (
                 <p className="text-center text-muted-foreground py-4">
                   Nenhum jogo pendente

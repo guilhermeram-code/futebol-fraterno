@@ -84,3 +84,16 @@
 - [x] Upload de imagem de fundo para seção Hero (parte laranja)
 - [x] Nome, subtítulo e organizador dinâmicos no Header e Footer
 - [x] Adicionar campo "Lado da Chave" (esquerdo/direito) no cadastro de jogos do mata-mata
+
+## Solicitações arrumar.docx (20/01/2026)
+- [x] 1. Login simplificado com email/senha (cadastrar guilhermeram@gmail.com / 1754gr)
+- [x] 2. Reordenar abas: Grupos → Times → Jogadores → resto
+- [x] 3. Organizar jogadores por Grupo/Loja com expand/collapse
+- [x] 4. Cabeçalho na página do time com nome e loja em destaque
+- [x] 5. Melhorar seleção de jogo: "Time (Loja) vs Time (Loja) Rodada - Data" + status colorido
+- [x] 6. Mostrar loja no ranking de artilheiros
+- [x] 7. Inverter ordem visual do Maior Quebrador (vermelho primeiro)
+- [x] 8. Sistema de aprovação de comentários
+- [x] 9. Remover campo "Lado da Chave" para Final
+- [x] 10. Corrigir responsividade mobile do painel admin
+- [x] 11. Autoplay da música ao entrar no site

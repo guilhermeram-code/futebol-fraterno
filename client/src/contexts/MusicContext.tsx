@@ -43,11 +43,42 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         setIsPlaying(true);
       }
 
+      // Autoplay on first user interaction (click, touch, scroll, keypress)
+      const attemptAutoplay = () => {
+        if (globalAudio && globalAudio.paused) {
+          globalAudio.play()
+            .then(() => {
+              setIsPlaying(true);
+              // Remove listeners after successful play
+              document.removeEventListener("click", attemptAutoplay);
+              document.removeEventListener("touchstart", attemptAutoplay);
+              document.removeEventListener("scroll", attemptAutoplay);
+              document.removeEventListener("keydown", attemptAutoplay);
+            })
+            .catch(() => {
+              // Silently fail - user hasn't interacted yet
+            });
+        }
+      };
+
+      // Try to play immediately (will work if user has interacted before)
+      attemptAutoplay();
+
+      // Add listeners for first interaction
+      document.addEventListener("click", attemptAutoplay);
+      document.addEventListener("touchstart", attemptAutoplay);
+      document.addEventListener("scroll", attemptAutoplay);
+      document.addEventListener("keydown", attemptAutoplay);
+
       return () => {
         if (globalAudio) {
           globalAudio.removeEventListener("play", handlePlay);
           globalAudio.removeEventListener("pause", handlePause);
         }
+        document.removeEventListener("click", attemptAutoplay);
+        document.removeEventListener("touchstart", attemptAutoplay);
+        document.removeEventListener("scroll", attemptAutoplay);
+        document.removeEventListener("keydown", attemptAutoplay);
       };
     }
   }, []);

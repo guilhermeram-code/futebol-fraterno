@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,10 @@ import {
   Upload,
   Bell,
   UserPlus,
-  Settings
+  Settings,
+  ChevronDown,
+  ChevronRight,
+  Check
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { ResultsRegistration } from "@/components/ResultsRegistration";
@@ -116,8 +119,12 @@ export default function Admin() {
       </header>
 
       <main className="container py-8">
-        <Tabs defaultValue="teams" className="w-full">
-          <TabsList className="grid w-full grid-cols-10 mb-6">
+        <Tabs defaultValue="groups" className="w-full">
+          <TabsList className="flex flex-wrap justify-start gap-1 mb-6 h-auto p-2">
+            <TabsTrigger value="groups" className="gap-1 text-xs">
+              <Trophy className="h-4 w-4 hidden md:block" />
+              Grupos
+            </TabsTrigger>
             <TabsTrigger value="teams" className="gap-1 text-xs">
               <Shield className="h-4 w-4 hidden md:block" />
               Times
@@ -125,10 +132,6 @@ export default function Admin() {
             <TabsTrigger value="players" className="gap-1 text-xs">
               <Users className="h-4 w-4 hidden md:block" />
               Jogadores
-            </TabsTrigger>
-            <TabsTrigger value="groups" className="gap-1 text-xs">
-              <Trophy className="h-4 w-4 hidden md:block" />
-              Grupos
             </TabsTrigger>
             <TabsTrigger value="matches" className="gap-1 text-xs">
               <Calendar className="h-4 w-4 hidden md:block" />
@@ -409,6 +412,7 @@ function PlayersTab() {
   const utils = trpc.useUtils();
   const { data: players, isLoading } = trpc.players.list.useQuery();
   const { data: teams } = trpc.teams.list.useQuery();
+  const { data: groups } = trpc.groups.list.useQuery();
   const createPlayer = trpc.players.create.useMutation({
     onSuccess: () => {
       utils.players.list.invalidate();
@@ -431,6 +435,10 @@ function PlayersTab() {
   const [number, setNumber] = useState("");
   const [position, setPosition] = useState("");
   const [teamId, setTeamId] = useState("");
+  
+  // Estado para expand/collapse
+  const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
+  const [expandedLodges, setExpandedLodges] = useState<Set<string>>(new Set());
 
   const resetForm = () => {
     setName("");
@@ -449,7 +457,74 @@ function PlayersTab() {
     });
   };
 
-  const getTeamName = (id: number) => teams?.find(t => t.id === id)?.name || "Time";
+  const toggleGroup = (groupId: number) => {
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(groupId)) {
+        newSet.delete(groupId);
+      } else {
+        newSet.add(groupId);
+      }
+      return newSet;
+    });
+  };
+
+  const toggleLodge = (lodgeKey: string) => {
+    setExpandedLodges(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(lodgeKey)) {
+        newSet.delete(lodgeKey);
+      } else {
+        newSet.add(lodgeKey);
+      }
+      return newSet;
+    });
+  };
+
+  // Organizar jogadores por Grupo > Loja
+  const organizedPlayers = useMemo(() => {
+    if (!players || !teams || !groups) return [];
+    
+    const groupMap = new Map<number, {
+      group: typeof groups[0];
+      lodges: Map<string, {
+        lodge: string;
+        team: typeof teams[0];
+        players: typeof players;
+      }>;
+    }>();
+    
+    // Inicializar grupos
+    groups.forEach(group => {
+      groupMap.set(group.id, { group, lodges: new Map() });
+    });
+    
+    // Grupo "Sem Grupo" para times sem grupo
+    groupMap.set(0, { group: { id: 0, name: "Sem Grupo", createdAt: new Date() }, lodges: new Map() });
+    
+    // Organizar por grupo e loja
+    players.forEach(player => {
+      const team = teams.find(t => t.id === player.teamId);
+      if (!team) return;
+      
+      const groupId = team.groupId || 0;
+      const lodge = team.lodge || "Sem Loja";
+      const lodgeKey = `${groupId}-${lodge}`;
+      
+      const groupData = groupMap.get(groupId);
+      if (!groupData) return;
+      
+      if (!groupData.lodges.has(lodgeKey)) {
+        groupData.lodges.set(lodgeKey, { lodge, team, players: [] });
+      }
+      groupData.lodges.get(lodgeKey)!.players.push(player);
+    });
+    
+    // Converter para array e filtrar grupos vazios
+    return Array.from(groupMap.values())
+      .filter(g => g.lodges.size > 0)
+      .sort((a, b) => a.group.name.localeCompare(b.group.name));
+  }, [players, teams, groups]);
 
   return (
     <Card>
@@ -507,7 +582,9 @@ function PlayersTab() {
                   </SelectTrigger>
                   <SelectContent>
                     {teams?.map(t => (
-                      <SelectItem key={t.id} value={t.id.toString()}>{t.name}</SelectItem>
+                      <SelectItem key={t.id} value={t.id.toString()}>
+                        {t.name} {t.lodge && `(${t.lodge})`}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -524,28 +601,92 @@ function PlayersTab() {
           <div className="space-y-2">
             {[1, 2, 3].map(i => <Skeleton key={i} className="h-12 w-full" />)}
           </div>
-        ) : players && players.length > 0 ? (
-          <div className="space-y-2">
-            {players.map(player => (
-              <div key={player.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="font-bold text-primary">{player.number || "-"}</span>
-                  </div>
-                  <div>
-                    <p className="font-medium">{player.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {getTeamName(player.teamId)} {player.position && `• ${player.position}`}
-                    </p>
-                  </div>
-                </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => deletePlayer.mutate({ id: player.id })}
+        ) : organizedPlayers.length > 0 ? (
+          <div className="space-y-3">
+            {organizedPlayers.map((groupData: any) => (
+              <div key={groupData.group.id} className="border rounded-lg overflow-hidden">
+                {/* Cabeçalho do Grupo */}
+                <button
+                  onClick={() => toggleGroup(groupData.group.id)}
+                  className="w-full flex items-center justify-between p-3 bg-primary/10 hover:bg-primary/20 transition-colors"
                 >
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
+                  <div className="flex items-center gap-2">
+                    {expandedGroups.has(groupData.group.id) ? (
+                      <ChevronDown className="h-5 w-5" />
+                    ) : (
+                      <ChevronRight className="h-5 w-5" />
+                    )}
+                    <Trophy className="h-4 w-4 text-primary" />
+                    <span className="font-bold">{groupData.group.name}</span>
+                  </div>
+                  <Badge variant="secondary">
+                    {Array.from(groupData.lodges.values()).reduce((acc: number, l: any) => acc + l.players.length, 0)} jogadores
+                  </Badge>
+                </button>
+                
+                {/* Lojas do Grupo */}
+                {expandedGroups.has(groupData.group.id) && (
+                  <div className="pl-4">
+                    {Array.from(groupData.lodges.values()).map((lodgeData: any) => {
+                      const lodgeKey = `${groupData.group.id}-${lodgeData.lodge}`;
+                      return (
+                        <div key={lodgeKey} className="border-l-2 border-primary/30">
+                          {/* Cabeçalho da Loja */}
+                          <button
+                            onClick={() => toggleLodge(lodgeKey)}
+                            className="w-full flex items-center justify-between p-2 pl-4 bg-muted/50 hover:bg-muted transition-colors"
+                          >
+                            <div className="flex items-center gap-2">
+                              {expandedLodges.has(lodgeKey) ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
+                              <Shield className="h-4 w-4 text-muted-foreground" />
+                              <span className="font-medium text-sm">{lodgeData.lodge}</span>
+                              <span className="text-xs text-muted-foreground">({lodgeData.team.name})</span>
+                            </div>
+                            <Badge variant="outline" className="text-xs">
+                              {lodgeData.players.length}
+                            </Badge>
+                          </button>
+                          
+                          {/* Jogadores da Loja */}
+                          {expandedLodges.has(lodgeKey) && (
+                            <div className="pl-8 py-2 space-y-1">
+                              {lodgeData.players.map((player: any) => (
+                                <div key={player.id} className="flex items-center justify-between p-2 bg-background rounded hover:bg-muted/30">
+                                  <div className="flex items-center gap-2">
+                                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-sm">
+                                      <span className="font-bold text-primary">{player.number || "-"}</span>
+                                    </div>
+                                    <div>
+                                      <p className="font-medium text-sm">{player.name}</p>
+                                      {player.position && (
+                                        <p className="text-xs text-muted-foreground">{player.position}</p>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <Button 
+                                    variant="ghost" 
+                                    size="icon"
+                                    className="h-8 w-8"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      deletePlayer.mutate({ id: player.id });
+                                    }}
+                                  >
+                                    <Trash2 className="h-4 w-4 text-destructive" />
+                                  </Button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -862,7 +1003,7 @@ function MatchesTab() {
                       </SelectContent>
                     </Select>
                   </div>
-                ) : (
+                ) : phase !== "final" ? (
                   <div>
                     <Label>Lado da Chave</Label>
                     <Select value={bracketSide} onValueChange={setBracketSide}>
@@ -875,7 +1016,7 @@ function MatchesTab() {
                       </SelectContent>
                     </Select>
                   </div>
-                )}
+                ) : null}
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -1381,53 +1522,126 @@ function PhotosTab() {
 // ==================== COMMENTS TAB ====================
 function CommentsTab() {
   const utils = trpc.useUtils();
-  const { data: comments, isLoading } = trpc.comments.list.useQuery({ limit: 100 });
+  const { data: allComments, isLoading } = trpc.comments.listAll.useQuery({ limit: 100 });
+  const approveComment = trpc.comments.approve.useMutation({
+    onSuccess: () => {
+      utils.comments.listAll.invalidate();
+      utils.comments.list.invalidate();
+      toast.success("Comentário aprovado!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
   const deleteComment = trpc.comments.delete.useMutation({
     onSuccess: () => {
+      utils.comments.listAll.invalidate();
       utils.comments.list.invalidate();
       toast.success("Comentário excluído!");
     },
     onError: (error) => toast.error(error.message)
   });
 
+  const pendingComments = allComments?.filter((c: any) => !c.approved) || [];
+  const approvedComments = allComments?.filter((c: any) => c.approved) || [];
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Comentários ({comments?.length || 0})</CardTitle>
-      </CardHeader>
-      <CardContent>
-        {isLoading ? (
-          <div className="space-y-2">
-            {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
-          </div>
-        ) : comments && comments.length > 0 ? (
-          <div className="space-y-2">
-            {comments.map(comment => (
-              <div key={comment.id} className="flex items-start justify-between p-3 bg-muted rounded-lg">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium">{comment.authorName}</span>
-                    {comment.authorLodge && (
-                      <Badge variant="outline" className="text-xs">{comment.authorLodge}</Badge>
-                    )}
+    <div className="space-y-6">
+      {/* Comentários Pendentes */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-amber-500"></span>
+            Pendentes de Aprovação ({pendingComments.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
+            </div>
+          ) : pendingComments.length > 0 ? (
+            <div className="space-y-2">
+              {pendingComments.map((comment: any) => (
+                <div key={comment.id} className="flex items-start justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium">{comment.authorName}</span>
+                      {comment.authorLodge && (
+                        <Badge variant="outline" className="text-xs">{comment.authorLodge}</Badge>
+                      )}
+                      <Badge variant="outline" className="text-xs bg-amber-100 text-amber-800 border-amber-300">
+                        Pendente
+                      </Badge>
+                    </div>
+                    <p className="text-sm">{comment.content}</p>
                   </div>
-                  <p className="text-sm">{comment.content}</p>
+                  <div className="flex gap-1 ml-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="text-green-600 hover:text-green-700 hover:bg-green-100"
+                      onClick={() => approveComment.mutate({ id: comment.id })}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="text-destructive hover:text-destructive hover:bg-red-100"
+                      onClick={() => deleteComment.mutate({ id: comment.id })}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => deleteComment.mutate({ id: comment.id })}
-                >
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-center text-muted-foreground py-8">Nenhum comentário</p>
-        )}
-      </CardContent>
-    </Card>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-4">Nenhum comentário pendente</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Comentários Aprovados */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-green-500"></span>
+            Aprovados ({approvedComments.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {approvedComments.length > 0 ? (
+            <div className="space-y-2">
+              {approvedComments.map((comment: any) => (
+                <div key={comment.id} className="flex items-start justify-between p-3 bg-muted rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium">{comment.authorName}</span>
+                      {comment.authorLodge && (
+                        <Badge variant="outline" className="text-xs">{comment.authorLodge}</Badge>
+                      )}
+                      <Badge variant="outline" className="text-xs bg-green-100 text-green-800 border-green-300">
+                        Aprovado
+                      </Badge>
+                    </div>
+                    <p className="text-sm">{comment.content}</p>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => deleteComment.mutate({ id: comment.id })}
+                  >
+                    <Trash2 className="h-4 w-4 text-destructive" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-4">Nenhum comentário aprovado</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 

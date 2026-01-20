@@ -523,12 +523,14 @@ function BestDefenseSection() {
 
 function CommentsSection() {
   const { data: comments, isLoading, refetch } = trpc.comments.list.useQuery({ limit: 10 });
+  const [showPendingMessage, setShowPendingMessage] = useState(false);
   const createComment = trpc.comments.create.useMutation({
     onSuccess: () => {
-      refetch();
       setName("");
       setLodge("");
       setContent("");
+      setShowPendingMessage(true);
+      setTimeout(() => setShowPendingMessage(false), 5000);
     }
   });
 
@@ -589,6 +591,14 @@ function CommentsSection() {
           >
             {createComment.isPending ? "Enviando..." : "Enviar Comentário"}
           </Button>
+          
+          {showPendingMessage && (
+            <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+              <p className="text-amber-800 text-sm font-medium">
+                ✅ Comentário enviado! Aguardando aprovação do administrador.
+              </p>
+            </div>
+          )}
         </form>
 
         {/* Comments List */}

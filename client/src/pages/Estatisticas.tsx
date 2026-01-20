@@ -16,8 +16,13 @@ export default function Estatisticas() {
   const { data: teams } = trpc.teams.list.useQuery();
   const { data: players } = trpc.players.list.useQuery();
 
-  const getTeamName = (teamId: number) => {
-    return teams?.find(t => t.id === teamId)?.name || "Time";
+  const getTeamById = (teamId: number) => teams?.find(t => t.id === teamId);
+  const getTeamName = (teamId: number) => getTeamById(teamId)?.name || "Time";
+  const getTeamLodge = (teamId: number) => getTeamById(teamId)?.lodge || "";
+  const getTeamWithLodge = (teamId: number) => {
+    const team = getTeamById(teamId);
+    if (!team) return "Time";
+    return team.lodge ? `${team.name} (${team.lodge})` : team.name;
   };
 
   const getPlayerName = (playerId: number) => {
@@ -86,7 +91,7 @@ export default function Estatisticas() {
                           </div>
                           <div>
                             <p className="font-bold">{getPlayerName(scorer.playerId)}</p>
-                            <p className="text-sm text-muted-foreground">{getTeamName(scorer.teamId)}</p>
+                            <p className="text-sm text-muted-foreground">{getTeamWithLodge(scorer.teamId)}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
@@ -138,15 +143,15 @@ export default function Estatisticas() {
                           </div>
                           <div>
                             <p className="font-bold">{getPlayerName(player.playerId)}</p>
-                            <p className="text-sm text-muted-foreground">{getTeamName(player.teamId)}</p>
+                            <p className="text-sm text-muted-foreground">{getTeamWithLodge(player.teamId)}</p>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
-                            {player.yellowCards} 🟨
-                          </Badge>
                           <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">
                             {player.redCards} 🟥
+                          </Badge>
+                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                            {player.yellowCards} 🟨
                           </Badge>
                           <span className="text-sm text-muted-foreground ml-2">
                             Total: {player.totalCards}

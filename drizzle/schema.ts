@@ -113,6 +113,7 @@ export const comments = mysqlTable("comments", {
   content: text("content").notNull(),
   matchId: int("matchId"), // Comentário sobre um jogo específico (opcional)
   teamId: int("teamId"), // Comentário sobre um time específico (opcional)
+  approved: boolean("approved").default(false).notNull(), // Aprovado para exibição
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -165,3 +166,17 @@ export const adminEmails = mysqlTable("admin_emails", {
 
 export type AdminEmail = typeof adminEmails.$inferSelect;
 export type InsertAdminEmail = typeof adminEmails.$inferInsert;
+
+// Tabela de usuários admin (login simplificado)
+export const adminUsers = mysqlTable("admin_users", {
+  id: int("id").autoincrement().primaryKey(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  password: varchar("password", { length: 255 }).notNull(), // Hash da senha
+  name: varchar("name", { length: 255 }),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  lastLogin: timestamp("lastLogin"),
+});
+
+export type AdminUser = typeof adminUsers.$inferSelect;
+export type InsertAdminUser = typeof adminUsers.$inferInsert;

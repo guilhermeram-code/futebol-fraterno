@@ -375,10 +375,24 @@ export const appRouter = router({
 
   // ==================== COMMENTS ====================
   comments: router({
+    // Lista pública - apenas comentários aprovados
     list: publicProcedure
       .input(z.object({ limit: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getAllComments(input.limit || 50);
+        return db.getApprovedComments();
+      }),
+    
+    // Lista admin - comentários pendentes de aprovação
+    pending: adminProcedure
+      .query(async () => {
+        return db.getPendingComments();
+      }),
+    
+    // Lista admin - todos os comentários (aprovados e pendentes)
+    listAll: adminProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(async ({ input }) => {
+        return db.getAllComments(input.limit || 100);
       }),
     
     byMatch: publicProcedure
@@ -402,7 +416,22 @@ export const appRouter = router({
         teamId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
+        // Comentário criado com approved: false por padrão
         return db.createComment(input);
+      }),
+    
+    approve: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.approveComment(input.id);
+        return { success: true };
+      }),
+    
+    reject: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.rejectComment(input.id);
+        return { success: true };
       }),
     
     delete: adminProcedure
@@ -633,6 +662,126 @@ export const appRouter = router({
       .input(z.object({ round: z.number() }))
       .query(async ({ input }) => {
         return db.getRoundStats(input.round);
+      }),
+  }),
+
+  // ==================== ADMIN USERS (LOGIN SIMPLIFICADO) ====================
+  adminUsers: router({
+    list: adminProcedure
+      .query(async () => {
+        return db.getAllAdminUsers();
+      }),
+    
+    create: adminProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string().min(4),
+        name: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        // Hash simples da senha (em produção usar bcrypt)
+        const crypto = await import('crypto');
+        const hashedPassword = crypto.createHash('sha256').update(input.password).digest('hex');
+        return db.createAdminUser({
+          email: input.email,
+          password: hashedPassword,
+          name: input.name,
+        });
+      }),
+    
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        email: z.string().email().optional(),
+        password: z.string().min(4).optional(),
+        name: z.string().optional(),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, password, ...data } = input;
+        const updateData: any = { ...data };
+        if (password) {
+          const crypto = await import('crypto');
+          updateData.password = crypto.createHash('sha256').update(password).digest('hex');
+        }
+        await db.updateAdminUser(id, updateData);
+        return { success: true };
+      }),
+    
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteAdminUser(input.id);
+        return { success: true };
+      }),
+    
+    // Login simplificado (público)
+    login: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const crypto = await import('crypto');
+        const hashedPassword = crypto.createHash('sha256').update(input.password).digest('hex');
+        const adminUser = await db.getAdminUserByEmail(input.email);
+        
+        if (!adminUser || adminUser.password !== hashedPassword) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
+        }
+        
+        if (!adminUser.active) {
+          throw new TRPCError({ code: 'FORBIDDEN', message: 'Usuário desativado' });
+        }
+        
+        // Atualizar último login
+        await db.updateAdminUserLastLogin(adminUser.id);
+        
+        // Criar sessão (usar JWT simples)
+        const jwt = await import('jsonwebtoken');
+        const token = jwt.default.sign(
+          { adminUserId: adminUser.id, email: adminUser.email, name: adminUser.name },
+          process.env.JWT_SECRET || 'secret',
+          { expiresIn: '7d' }
+        );
+        
+        // Setar cookie
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie('admin_session', token, { ...cookieOptions, maxAge: 7 * 24 * 60 * 60 * 1000 });
+        
+        return { 
+          success: true, 
+          user: { 
+            id: adminUser.id, 
+            email: adminUser.email, 
+            name: adminUser.name 
+          } 
+        };
+      }),
+    
+    // Verificar sessão admin
+    me: publicProcedure
+      .query(async ({ ctx }) => {
+        const token = ctx.req.cookies?.admin_session;
+        if (!token) return null;
+        
+        try {
+          const jwt = await import('jsonwebtoken');
+          const decoded = jwt.default.verify(token, process.env.JWT_SECRET || 'secret') as any;
+          const adminUser = await db.getAdminUserByEmail(decoded.email);
+          if (!adminUser || !adminUser.active) return null;
+          return { id: adminUser.id, email: adminUser.email, name: adminUser.name };
+        } catch {
+          return null;
+        }
+      }),
+    
+    // Logout admin
+    logout: publicProcedure
+      .mutation(async ({ ctx }) => {
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.clearCookie('admin_session', { ...cookieOptions, maxAge: -1 });
+        return { success: true };
       }),
   }),
 });

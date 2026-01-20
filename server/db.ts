@@ -12,7 +12,8 @@ import {
   photos, InsertPhoto, Photo,
   tournamentSettings, InsertTournamentSetting,
   announcements, InsertAnnouncement, Announcement,
-  adminEmails, InsertAdminEmail, AdminEmail
+  adminEmails, InsertAdminEmail, AdminEmail,
+  adminUsers, InsertAdminUser, AdminUser
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -700,4 +701,80 @@ export async function isAdminEmail(email: string) {
   if (!db) throw new Error("Database not available");
   const result = await db.select().from(adminEmails).where(eq(adminEmails.email, email)).limit(1);
   return result.length > 0;
+}
+
+
+// ==================== ADMIN USERS (LOGIN SIMPLIFICADO) ====================
+export async function createAdminUser(adminUser: InsertAdminUser) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(adminUsers).values(adminUser);
+  return { id: result[0].insertId };
+}
+
+export async function updateAdminUser(id: number, adminUser: Partial<InsertAdminUser>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(adminUsers).set(adminUser).where(eq(adminUsers.id, id));
+}
+
+export async function deleteAdminUser(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(adminUsers).where(eq(adminUsers.id, id));
+}
+
+export async function getAllAdminUsers() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select({
+    id: adminUsers.id,
+    email: adminUsers.email,
+    name: adminUsers.name,
+    active: adminUsers.active,
+    createdAt: adminUsers.createdAt,
+    lastLogin: adminUsers.lastLogin
+  }).from(adminUsers).orderBy(asc(adminUsers.email));
+}
+
+export async function getAdminUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(adminUsers).where(eq(adminUsers.email, email)).limit(1);
+  return result[0];
+}
+
+export async function updateAdminUserLastLogin(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(adminUsers).set({ lastLogin: new Date() }).where(eq(adminUsers.id, id));
+}
+
+// ==================== COMMENTS (COM APROVAÇÃO) ====================
+export async function getApprovedComments() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(comments)
+    .where(eq(comments.approved, true))
+    .orderBy(desc(comments.createdAt));
+}
+
+export async function getPendingComments() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(comments)
+    .where(eq(comments.approved, false))
+    .orderBy(desc(comments.createdAt));
+}
+
+export async function approveComment(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(comments).set({ approved: true }).where(eq(comments.id, id));
+}
+
+export async function rejectComment(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(comments).where(eq(comments.id, id));
 }
