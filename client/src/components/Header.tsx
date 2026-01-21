@@ -65,7 +65,7 @@ export function Header() {
           <Link href="/">
             <div className="flex items-center gap-4 cursor-pointer">
               <img 
-                src={settings.tournamentLogo} 
+                src={`${settings.tournamentLogo}?v=${Date.now()}`} 
                 alt={settings.tournamentName} 
                 className="h-12 w-12 md:h-16 md:w-16 rounded-full object-cover border-2 border-primary shadow-lg"
               />

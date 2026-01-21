@@ -198,3 +198,10 @@
 - [x] Adicionar botão de editar jogador no admin (ao lado da lixeira)
 - [x] BUG CRÍTICO: Horário do jogo salvo errado (10h → 7h = 3 horas de diferença timezone)
 - [x] BUG: Jogo sem resultado não pode contabilizar pontos na página do time
+
+
+## MELHORIAS DE UX - 21/01/2026
+
+- [x] Reordenar abas do painel admin: Configurações primeiro
+- [x] Reordenar abas do painel admin: Admins último
+- [x] Corrigir flash de conteúdo antigo ao carregar página (cache busting)

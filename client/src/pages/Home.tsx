@@ -89,7 +89,7 @@ export default function Home() {
         <div className="container text-center relative z-10">
           <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
             <img 
-              src={settings.tournamentLogo} 
+              src={`${settings.tournamentLogo}?v=${Date.now()}`} 
               alt={settings.tournamentName} 
               className="w-full h-full object-contain scale-90"
             />
@@ -518,7 +518,7 @@ export default function Home() {
       <footer className="bg-secondary text-secondary-foreground py-8 mt-12">
         <div className="container text-center">
           <img 
-            src={settings.tournamentLogo} 
+            src={`${settings.tournamentLogo}?v=${Date.now()}`} 
             alt={settings.tournamentName} 
             className="mx-auto h-20 w-20 rounded-full object-cover border-2 border-primary mb-4"
           />

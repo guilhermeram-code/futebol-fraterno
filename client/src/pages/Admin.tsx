@@ -90,7 +90,7 @@ export default function Admin() {
                 </Button>
               </Link>
               <img 
-                src="/logo-campeonato.jpg" 
+                src={`/logo-campeonato.jpg?v=${Date.now()}`} 
                 alt="Futebol Fraterno 2026" 
                 className="h-12 w-12 rounded-full object-cover border-2 border-primary"
               />
@@ -118,8 +118,12 @@ export default function Admin() {
       </header>
 
       <main className="container py-8">
-        <Tabs defaultValue="groups" className="w-full">
+        <Tabs defaultValue="settings" className="w-full">
           <TabsList className="flex flex-wrap justify-start gap-1 mb-6 h-auto p-2">
+            <TabsTrigger value="settings" className="gap-1 text-xs">
+              <Settings className="h-4 w-4 hidden md:block" />
+              Configurações
+            </TabsTrigger>
             <TabsTrigger value="groups" className="gap-1 text-xs">
               <Trophy className="h-4 w-4 hidden md:block" />
               Grupos
@@ -152,10 +156,6 @@ export default function Admin() {
               <Bell className="h-4 w-4 hidden md:block" />
               Avisos
             </TabsTrigger>
-            <TabsTrigger value="admins" className="gap-1 text-xs">
-              <UserPlus className="h-4 w-4 hidden md:block" />
-              Admins
-            </TabsTrigger>
             <TabsTrigger value="sponsors" className="gap-1 text-xs">
               <Star className="h-4 w-4 hidden md:block" />
               Patrocinadores
@@ -164,9 +164,9 @@ export default function Admin() {
               <Heart className="h-4 w-4 hidden md:block" />
               Apoio
             </TabsTrigger>
-            <TabsTrigger value="settings" className="gap-1 text-xs">
-              <Settings className="h-4 w-4 hidden md:block" />
-              Configurações
+            <TabsTrigger value="admins" className="gap-1 text-xs">
+              <UserPlus className="h-4 w-4 hidden md:block" />
+              Admins
             </TabsTrigger>
           </TabsList>
 
@@ -2642,7 +2642,7 @@ function SettingsTab() {
             <Label>Logo do Campeonato</Label>
             {tournamentLogo && (
               <img 
-                src={tournamentLogo} 
+                src={`${tournamentLogo}?v=${Date.now()}`} 
                 alt="Logo atual" 
                 className="h-24 w-24 object-cover rounded-lg mb-2"
               />
