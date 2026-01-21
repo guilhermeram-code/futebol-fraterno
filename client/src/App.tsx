@@ -15,6 +15,7 @@ import Galeria from "./pages/Galeria";
 import JogadorDetail from "./pages/JogadorDetail";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import Relatorios from "./pages/Relatorios";
 
 function Router() {
   return (
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/jogadores/:id" component={JogadorDetail} />
       <Route path="/mata-mata" component={MataMata} />
       <Route path="/galeria" component={Galeria} />
+      <Route path="/relatorios" component={Relatorios} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />

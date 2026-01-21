@@ -140,7 +140,7 @@
 
 ### Bloco 3: Busca e Organização
 - [x] Busca de times (campo inteligente) - JÁ IMPLEMENTADO na página Times
-- [ ] Organizar times por grupos (accordion)
+- [x] Organizar times por grupos (accordion)
 - [ ] Busca de jogadores (nova página/seção)
 - [ ] Organizar resultados por grupos (abas/accordion)
 - [ ] Organizar próximos jogos por grupos
@@ -159,9 +159,9 @@
 
 ### Bloco 6: Premium (Patrocinadores e Relatórios)
 - [x] Seção de patrocinadores (níveis A, B, C)
-- [ ] Relatório PDF visual (para WhatsApp)
-- [ ] Relatório PDF completo (gerencial)
-- [ ] Relatório Excel/CSV
+- [x] Relatório PDF visual (para WhatsApp)
+- [x] Relatório PDF completo (gerencial)
+- [x] Relatório Excel/CSV (classificação, artilharia, jogos)
 
 ## BUGS CRÍTICOS (Reportados pelo usuário 20/01/2026)
 - [x] BUG: Query sponsorMessage retornando undefined (causando 62+ erros em cascata) - CORRIGIDO
@@ -169,7 +169,7 @@
 - [x] BUG: Pontuação errada no header do time - CORRIGIDO (agora usa apenas pontos da fase de grupos)
 
 ## FUNCIONALIDADES FALTANTES (Reportadas pelo usuário)
-- [ ] Mensagem de apoio ao selecionar time na aba Times
+- [x] Mensagem de apoio ao selecionar time na aba Times
 - [x] Mensagens prontas para goleador/pior defesa na aba times
 - [x] Campo atalho para adicionar jogador dentro do time (admin) - JÁ EXISTE (botão UserPlus)
 - [x] Upload de foto do jogador ao cadastrar

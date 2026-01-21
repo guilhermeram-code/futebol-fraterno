@@ -57,6 +57,13 @@
       "when": 1768960489858,
       "tag": "0007_happy_wolverine",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1768961309270,
+      "tag": "0008_nasty_bloodaxe",
+      "breakpoints": true
     }
   ]
 }

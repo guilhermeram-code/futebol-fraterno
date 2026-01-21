@@ -3,12 +3,14 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
-import { Users, Shield, ChevronRight, Search, TrendingUp, Flame } from "lucide-react";
+import { Users, Shield, ChevronRight, Search, TrendingUp, Flame, LayoutGrid, List, Trophy } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 
 export default function Times() {
@@ -21,6 +23,7 @@ export default function Times() {
   
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<"grid" | "accordion">("accordion");
 
   const getGroupName = (groupId: number | null) => {
     if (!groupId) return null;
@@ -170,12 +173,32 @@ export default function Times() {
           </Select>
         </div>
 
-        {/* Results count */}
+        {/* Results count and view toggle */}
         {!isLoading && filteredTeams && (
-          <p className="text-sm text-muted-foreground mb-4">
-            {filteredTeams.length} time{filteredTeams.length !== 1 ? 's' : ''} encontrado{filteredTeams.length !== 1 ? 's' : ''}
-            {searchTerm && ` para "${searchTerm}"`}
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-muted-foreground">
+              {filteredTeams.length} time{filteredTeams.length !== 1 ? 's' : ''} encontrado{filteredTeams.length !== 1 ? 's' : ''}
+              {searchTerm && ` para "${searchTerm}"`}
+            </p>
+            <div className="flex gap-1">
+              <Button
+                variant={viewMode === "accordion" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("accordion")}
+                title="Visualizar por grupos"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === "grid" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                title="Visualizar em grade"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
         )}
 
         {isLoading ? (
@@ -185,114 +208,70 @@ export default function Times() {
             ))}
           </div>
         ) : filteredTeams && filteredTeams.length > 0 ? (
+          viewMode === "accordion" ? (
+            <Accordion type="multiple" defaultValue={groups?.map(g => `group-${g.id}`) || []} className="space-y-4">
+              {/* Times com grupo */}
+              {groups?.map(group => {
+                const groupTeams = filteredTeams.filter(t => t.groupId === group.id);
+                if (groupTeams.length === 0) return null;
+                return (
+                  <AccordionItem key={group.id} value={`group-${group.id}`} className="border rounded-lg bg-card">
+                    <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                      <div className="flex items-center gap-3">
+                        <Trophy className="h-5 w-5 text-gold" />
+                        <span className="font-bold text-lg">{group.name}</span>
+                        <Badge variant="secondary">{groupTeams.length} times</Badge>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-4 pb-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {groupTeams.map(team => {
+                          const stats = getTeamStats(team.id);
+                          const specialMessages = getTeamSpecialMessage(team.id);
+                          return (
+                            <TeamCard key={team.id} team={team} stats={stats} specialMessages={specialMessages} getGroupName={getGroupName} />
+                          );
+                        })}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+              {/* Times sem grupo */}
+              {filteredTeams.filter(t => !t.groupId).length > 0 && (
+                <AccordionItem value="no-group" className="border rounded-lg bg-card">
+                  <AccordionTrigger className="px-4 py-3 hover:no-underline">
+                    <div className="flex items-center gap-3">
+                      <Shield className="h-5 w-5 text-muted-foreground" />
+                      <span className="font-bold text-lg">Sem Grupo</span>
+                      <Badge variant="secondary">{filteredTeams.filter(t => !t.groupId).length} times</Badge>
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-4 pb-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {filteredTeams.filter(t => !t.groupId).map(team => {
+                        const stats = getTeamStats(team.id);
+                        const specialMessages = getTeamSpecialMessage(team.id);
+                        return (
+                          <TeamCard key={team.id} team={team} stats={stats} specialMessages={specialMessages} getGroupName={getGroupName} />
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
+            </Accordion>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredTeams.map(team => {
               const stats = getTeamStats(team.id);
               const specialMessages = getTeamSpecialMessage(team.id);
               return (
-                <Link key={team.id} href={`/times/${team.id}`}>
-                  <Card className="card-hover cursor-pointer h-full card-shadow">
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-4">
-                        {team.logoUrl ? (
-                          <img 
-                            src={team.logoUrl} 
-                            alt={team.name}
-                            className="h-16 w-16 rounded-full object-cover border-2 border-primary"
-                          />
-                        ) : (
-                          <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center border-2 border-primary">
-                            <Shield className="h-8 w-8 text-muted-foreground" />
-                          </div>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-lg truncate">{team.name}</h3>
-                          {team.lodge && (
-                            <p className="text-sm text-muted-foreground truncate">{team.lodge}</p>
-                          )}
-                          <div className="flex items-center gap-2 mt-1 flex-wrap">
-                            {team.groupId && (
-                              <Badge variant="outline" className="text-xs">
-                                {getGroupName(team.groupId)}
-                              </Badge>
-                            )}
-                            {stats.played > 0 && (
-                              <>
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Badge 
-                                        variant="secondary" 
-                                        className={`text-xs ${
-                                          stats.aproveitamento >= 70 ? 'bg-green-100 text-green-800' :
-                                          stats.aproveitamento >= 40 ? 'bg-yellow-100 text-yellow-800' :
-                                          'bg-red-100 text-red-800'
-                                        }`}
-                                      >
-                                        <TrendingUp className="h-3 w-3 mr-1" />
-                                        {stats.aproveitamento}%
-                                      </Badge>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Aproveitamento em {stats.played} jogos</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </>
-                            )}
-                          </div>
-                          {/* Sequência de resultados */}
-                          {stats.sequencia.length > 0 && (
-                            <div className="flex items-center gap-0.5 mt-2">
-                              <TooltipProvider>
-                                {stats.sequencia.map((result, idx) => (
-                                  <Tooltip key={idx}>
-                                    <TooltipTrigger asChild>
-                                      <span className="text-xs cursor-help">{getSequenciaEmoji(result)}</span>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>{getSequenciaLabel(result)}</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                ))}
-                              </TooltipProvider>
-                              {stats.sequencia.filter(r => r === 'W').length >= 3 && (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <span className="ml-1">🔥</span>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p>Em boa fase!</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              )}
-                            </div>
-                          )}
-                          {/* Mensagens especiais */}
-                          {specialMessages.length > 0 && (
-                            <div className="mt-2 space-y-1">
-                              {specialMessages.map((msg, idx) => (
-                                <div 
-                                  key={idx} 
-                                  className={`text-xs px-2 py-1 rounded border ${msg.color}`}
-                                >
-                                  <span className="mr-1">{msg.emoji}</span>
-                                  {msg.text}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                        <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <TeamCard key={team.id} team={team} stats={stats} specialMessages={specialMessages} getGroupName={getGroupName} />
               );
             })}
           </div>
+          )
         ) : (
           <Card>
             <CardContent className="py-12 text-center">
@@ -309,5 +288,135 @@ export default function Times() {
 
       <AudioPlayer />
     </div>
+  );
+}
+
+// Componente TeamCard para reutilização
+function TeamCard({ 
+  team, 
+  stats, 
+  specialMessages, 
+  getGroupName 
+}: { 
+  team: { id: number; name: string; lodge: string | null; logoUrl: string | null; groupId: number | null };
+  stats: { aproveitamento: number; sequencia: ('W' | 'D' | 'L')[]; played: number };
+  specialMessages: { emoji: string; text: string; color: string }[];
+  getGroupName: (groupId: number | null) => string | null | undefined;
+}) {
+  const getSequenciaEmoji = (result: 'W' | 'D' | 'L') => {
+    switch (result) {
+      case 'W': return '🟢';
+      case 'D': return '🟡';
+      case 'L': return '🔴';
+    }
+  };
+
+  const getSequenciaLabel = (result: 'W' | 'D' | 'L') => {
+    switch (result) {
+      case 'W': return 'Vitória';
+      case 'D': return 'Empate';
+      case 'L': return 'Derrota';
+    }
+  };
+
+  return (
+    <Link href={`/times/${team.id}`}>
+      <Card className="card-hover cursor-pointer h-full card-shadow">
+        <CardContent className="p-4">
+          <div className="flex items-center gap-4">
+            {team.logoUrl ? (
+              <img 
+                src={team.logoUrl} 
+                alt={team.name}
+                className="h-14 w-14 rounded-full object-cover border-2 border-primary flex-shrink-0"
+              />
+            ) : (
+              <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center border-2 border-primary flex-shrink-0">
+                <Shield className="h-7 w-7 text-muted-foreground" />
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold truncate">{team.name}</h3>
+              {team.lodge && (
+                <p className="text-sm text-muted-foreground truncate">{team.lodge}</p>
+              )}
+              <div className="flex items-center gap-2 mt-1 flex-wrap">
+                {team.groupId && (
+                  <Badge variant="outline" className="text-xs">
+                    {getGroupName(team.groupId)}
+                  </Badge>
+                )}
+                {stats.played > 0 && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge 
+                          variant="secondary" 
+                          className={`text-xs ${
+                            stats.aproveitamento >= 70 ? 'bg-green-100 text-green-800' :
+                            stats.aproveitamento >= 40 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}
+                        >
+                          <TrendingUp className="h-3 w-3 mr-1" />
+                          {stats.aproveitamento}%
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Aproveitamento em {stats.played} jogos</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+              {/* Sequência de resultados */}
+              {stats.sequencia.length > 0 && (
+                <div className="flex items-center gap-0.5 mt-2">
+                  <TooltipProvider>
+                    {stats.sequencia.map((result, idx) => (
+                      <Tooltip key={idx}>
+                        <TooltipTrigger asChild>
+                          <span className="text-xs cursor-help">{getSequenciaEmoji(result)}</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{getSequenciaLabel(result)}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </TooltipProvider>
+                  {stats.sequencia.filter(r => r === 'W').length >= 3 && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="ml-1">🔥</span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Em boa fase!</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </div>
+              )}
+              {/* Mensagens especiais */}
+              {specialMessages.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {specialMessages.map((msg, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`text-xs px-2 py-1 rounded border ${msg.color}`}
+                    >
+                      <span className="mr-1">{msg.emoji}</span>
+                      {msg.text}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <ChevronRight className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
 }

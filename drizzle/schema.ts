@@ -23,6 +23,7 @@ export const teams = mysqlTable("teams", {
   lodge: varchar("lodge", { length: 255 }), // Nome da loja maçônica
   logoUrl: text("logoUrl"),
   groupId: int("groupId"),
+  supportMessage: text("supportMessage"), // Mensagem de apoio ao time
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

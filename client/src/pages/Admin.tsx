@@ -4,6 +4,7 @@ import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -345,6 +346,7 @@ function TeamsTab() {
                     </Badge>
                   )}
                   <AddPlayerToTeamButton teamId={team.id} teamName={team.name} />
+                  <TeamSupportMessageButton teamId={team.id} teamName={team.name} currentMessage={team.supportMessage} />
                   <TeamLogoUpload teamId={team.id} />
                   <ConfirmDeleteDialog
                     title="Excluir Time"
@@ -494,6 +496,86 @@ function AddPlayerToTeamButton({ teamId, teamName }: { teamId: number; teamName:
           <Button type="submit" className="w-full" disabled={createPlayer.isPending}>
             {createPlayer.isPending ? "Adicionando..." : "Adicionar Jogador"}
           </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ==================== TEAM SUPPORT MESSAGE BUTTON ====================
+function TeamSupportMessageButton({ teamId, teamName, currentMessage }: { teamId: number; teamName: string; currentMessage: string | null }) {
+  const utils = trpc.useUtils();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState(currentMessage || "");
+
+  const updateTeam = trpc.teams.update.useMutation({
+    onSuccess: () => {
+      utils.teams.list.invalidate();
+      toast.success("Mensagem de apoio atualizada!");
+      setOpen(false);
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateTeam.mutate({
+      id: teamId,
+      supportMessage: message.trim() || null
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      setOpen(isOpen);
+      if (isOpen) setMessage(currentMessage || "");
+    }}>
+      <DialogTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          title={`Mensagem de apoio - ${teamName}`}
+          className={currentMessage ? "text-gold" : ""}
+        >
+          <MessageSquare className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Mensagem de Apoio - {teamName}</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="supportMessage">Mensagem</Label>
+            <Textarea
+              id="supportMessage"
+              value={message}
+              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
+              placeholder="Ex: Vai com tudo, time! Estamos torcendo por vocês!"
+              rows={3}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Esta mensagem aparecerá na página do time
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <Button type="submit" className="flex-1" disabled={updateTeam.isPending}>
+              {updateTeam.isPending ? "Salvando..." : "Salvar"}
+            </Button>
+            {currentMessage && (
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={() => {
+                  setMessage("");
+                  updateTeam.mutate({ id: teamId, supportMessage: null });
+                }}
+                disabled={updateTeam.isPending}
+              >
+                Remover
+              </Button>
+            )}
+          </div>
         </form>
       </DialogContent>
     </Dialog>

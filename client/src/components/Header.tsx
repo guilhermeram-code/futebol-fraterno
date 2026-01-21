@@ -3,7 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
-import { Menu, X, Trophy, Calendar, Users, BarChart3, Image, Settings, LogIn, Search, User } from "lucide-react";
+import { Menu, X, Trophy, Calendar, Users, BarChart3, Image, Settings, LogIn, Search, User, FileText } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { useTournament } from "@/contexts/TournamentContext";
 import { trpc } from "@/lib/trpc";
@@ -53,6 +53,7 @@ export function Header() {
     { href: "/times", label: "Times", icon: Users },
     { href: "/estatisticas", label: "Estatísticas", icon: BarChart3 },
     { href: "/galeria", label: "Galeria", icon: Image },
+    { href: "/relatorios", label: "Relatórios", icon: FileText },
   ];
 
   return (

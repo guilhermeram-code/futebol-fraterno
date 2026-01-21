@@ -109,6 +109,14 @@ export default function TimeDetail() {
                       {players?.length || 0} jogadores
                     </Badge>
                   </div>
+                  {/* Mensagem de Apoio */}
+                  {team.supportMessage && (
+                    <div className="mt-4 p-3 rounded-lg bg-gold/20 border border-gold/30">
+                      <p className="text-sm md:text-base italic text-gold">
+                        "💬 {team.supportMessage}"
+                      </p>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Estatísticas Rápidas - Apenas Fase de Grupos */}
