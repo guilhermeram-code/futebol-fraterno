@@ -759,28 +759,34 @@ function SponsorsSection() {
                   Patrocinadores Principais
                 </Badge>
                 <div className="flex flex-wrap justify-center gap-6">
-                  {tierA.map(sponsor => (
-                    <a 
-                      key={sponsor.id}
-                      href={sponsor.link || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group"
-                    >
-                      <div className="w-40 h-40 rounded-lg border-2 border-gold bg-white p-4 flex items-center justify-center transition-transform group-hover:scale-105 shadow-lg">
-                        {sponsor.logoUrl ? (
-                          <img 
-                            src={sponsor.logoUrl} 
-                            alt={sponsor.name}
-                            className="max-w-full max-h-full object-contain"
-                          />
-                        ) : (
-                          <span className="text-lg font-bold text-center">{sponsor.name}</span>
-                        )}
-                      </div>
-                      <p className="text-center text-sm font-medium mt-2">{sponsor.name}</p>
-                    </a>
-                  ))}
+                  {tierA.map(sponsor => {
+                    const link = sponsor.link 
+                      ? (sponsor.link.startsWith('http') ? sponsor.link : `https://${sponsor.link}`)
+                      : "#";
+                    return (
+                      <a 
+                        key={sponsor.id}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group"
+                        onClick={(e) => link === "#" && e.preventDefault()}
+                      >
+                        <div className="w-40 h-40 rounded-lg border-2 border-gold bg-white p-4 flex items-center justify-center transition-transform group-hover:scale-105 shadow-lg">
+                          {sponsor.logoUrl ? (
+                            <img 
+                              src={sponsor.logoUrl} 
+                              alt={sponsor.name}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          ) : (
+                            <span className="text-lg font-bold text-center">{sponsor.name}</span>
+                          )}
+                        </div>
+                        <p className="text-center text-sm font-medium mt-2">{sponsor.name}</p>
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -792,28 +798,34 @@ function SponsorsSection() {
                   Patrocinadores
                 </Badge>
                 <div className="flex flex-wrap justify-center gap-4">
-                  {tierB.map(sponsor => (
-                    <a 
-                      key={sponsor.id}
-                      href={sponsor.link || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group"
-                    >
-                      <div className="w-28 h-28 rounded-lg border bg-white p-3 flex items-center justify-center transition-transform group-hover:scale-105 shadow">
-                        {sponsor.logoUrl ? (
-                          <img 
-                            src={sponsor.logoUrl} 
-                            alt={sponsor.name}
-                            className="max-w-full max-h-full object-contain"
-                          />
-                        ) : (
-                          <span className="text-sm font-medium text-center">{sponsor.name}</span>
-                        )}
-                      </div>
-                      <p className="text-center text-xs mt-1">{sponsor.name}</p>
-                    </a>
-                  ))}
+                  {tierB.map(sponsor => {
+                    const link = sponsor.link 
+                      ? (sponsor.link.startsWith('http') ? sponsor.link : `https://${sponsor.link}`)
+                      : "#";
+                    return (
+                      <a 
+                        key={sponsor.id}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group"
+                        onClick={(e) => link === "#" && e.preventDefault()}
+                      >
+                        <div className="w-28 h-28 rounded-lg border bg-white p-3 flex items-center justify-center transition-transform group-hover:scale-105 shadow">
+                          {sponsor.logoUrl ? (
+                            <img 
+                              src={sponsor.logoUrl} 
+                              alt={sponsor.name}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          ) : (
+                            <span className="text-sm font-medium text-center">{sponsor.name}</span>
+                          )}
+                        </div>
+                        <p className="text-center text-xs mt-1">{sponsor.name}</p>
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             )}
@@ -825,27 +837,33 @@ function SponsorsSection() {
                   Apoiadores
                 </Badge>
                 <div className="flex flex-wrap justify-center gap-3">
-                  {tierC.map(sponsor => (
-                    <a 
-                      key={sponsor.id}
-                      href={sponsor.link || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group"
-                    >
-                      <div className="w-20 h-20 rounded border bg-white p-2 flex items-center justify-center transition-transform group-hover:scale-105">
-                        {sponsor.logoUrl ? (
-                          <img 
-                            src={sponsor.logoUrl} 
-                            alt={sponsor.name}
-                            className="max-w-full max-h-full object-contain"
-                          />
-                        ) : (
-                          <span className="text-xs text-center">{sponsor.name}</span>
-                        )}
-                      </div>
-                    </a>
-                  ))}
+                  {tierC.map(sponsor => {
+                    const link = sponsor.link 
+                      ? (sponsor.link.startsWith('http') ? sponsor.link : `https://${sponsor.link}`)
+                      : "#";
+                    return (
+                      <a 
+                        key={sponsor.id}
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group"
+                        onClick={(e) => link === "#" && e.preventDefault()}
+                      >
+                        <div className="w-20 h-20 rounded border bg-white p-2 flex items-center justify-center transition-transform group-hover:scale-105">
+                          {sponsor.logoUrl ? (
+                            <img 
+                              src={sponsor.logoUrl} 
+                              alt={sponsor.name}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          ) : (
+                            <span className="text-xs text-center">{sponsor.name}</span>
+                          )}
+                        </div>
+                      </a>
+                    );
+                  })}
                 </div>
               </div>
             )}

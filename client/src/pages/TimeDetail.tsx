@@ -111,19 +111,34 @@ export default function TimeDetail() {
                   </div>
                 </div>
                 
-                {/* Estatísticas Rápidas */}
-                {stats && (
+                {/* Estatísticas Rápidas - Apenas Fase de Grupos */}
+                {statsGroupOnly && statsGroupOnly.played > 0 ? (
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div className="bg-white/10 rounded-lg p-3">
-                      <p className="text-2xl md:text-3xl font-bold text-gold">{stats.points}</p>
+                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">{statsGroupOnly.points}</p>
                       <p className="text-xs text-white/60">Pontos</p>
                     </div>
                     <div className="bg-white/10 rounded-lg p-3">
-                      <p className="text-2xl md:text-3xl font-bold text-green-400">{stats.wins}</p>
+                      <p className="text-2xl md:text-3xl font-bold text-green-400 score-display">{statsGroupOnly.wins}</p>
                       <p className="text-xs text-white/60">Vitórias</p>
                     </div>
                     <div className="bg-white/10 rounded-lg p-3">
-                      <p className="text-2xl md:text-3xl font-bold text-gold">{stats.goalsFor}</p>
+                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">{statsGroupOnly.goalsFor}</p>
+                      <p className="text-xs text-white/60">Gols</p>
+                    </div>
+                  </div>
+                ) : stats && (
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">{stats.points}</p>
+                      <p className="text-xs text-white/60">Pontos</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-2xl md:text-3xl font-bold text-green-400 score-display">{stats.wins}</p>
+                      <p className="text-xs text-white/60">Vitórias</p>
+                    </div>
+                    <div className="bg-white/10 rounded-lg p-3">
+                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">{stats.goalsFor}</p>
                       <p className="text-xs text-white/60">Gols</p>
                     </div>
                   </div>

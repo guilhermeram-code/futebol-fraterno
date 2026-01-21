@@ -47,6 +47,7 @@ export const players = mysqlTable("players", {
   number: int("number"),
   position: varchar("position", { length: 50 }), // Goleiro, Defensor, Meio, Atacante
   teamId: int("teamId").notNull(),
+  photoUrl: text("photoUrl"), // Foto do jogador
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

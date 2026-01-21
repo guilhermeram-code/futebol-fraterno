@@ -164,6 +164,7 @@ export const appRouter = router({
         number: z.number().optional(),
         position: z.string().optional(),
         teamId: z.number(),
+        photoUrl: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         return db.createPlayer(input);
@@ -176,6 +177,7 @@ export const appRouter = router({
         number: z.number().optional(),
         position: z.string().optional(),
         teamId: z.number().optional(),
+        photoUrl: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
         const { id, ...data } = input;

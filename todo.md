@@ -162,3 +162,19 @@
 - [ ] Relatório PDF visual (para WhatsApp)
 - [ ] Relatório PDF completo (gerencial)
 - [ ] Relatório Excel/CSV
+
+## BUGS CRÍTICOS (Reportados pelo usuário 20/01/2026)
+- [x] BUG: Query sponsorMessage retornando undefined (causando 62+ erros em cascata) - CORRIGIDO
+- [x] BUG: Link do patrocinador redirecionando para URL interna - CORRIGIDO (adiciona https:// se faltar)
+- [x] BUG: Pontuação errada no header do time - CORRIGIDO (agora usa apenas pontos da fase de grupos)
+
+## FUNCIONALIDADES FALTANTES (Reportadas pelo usuário)
+- [ ] Mensagem de apoio ao selecionar time na aba Times
+- [x] Mensagens prontas para goleador/pior defesa na aba times
+- [x] Campo atalho para adicionar jogador dentro do time (admin) - JÁ EXISTE (botão UserPlus)
+- [x] Upload de foto do jogador ao cadastrar
+- [x] Página individual do jogador com estatísticas pessoais - JÁ EXISTE (/jogadores/:id)
+- [x] Campo de busca de jogador no header principal
+- [ ] Relatórios PDF visual (para WhatsApp)
+- [ ] Relatórios PDF completo (gerencial)
+- [ ] Relatórios Excel/CSV

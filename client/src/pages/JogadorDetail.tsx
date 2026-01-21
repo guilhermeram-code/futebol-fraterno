@@ -76,9 +76,17 @@ export default function JogadorDetail() {
           <CardContent className="py-8">
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Player Avatar */}
-              <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary">
-                <User className="h-12 w-12 text-primary" />
-              </div>
+              {player.photoUrl ? (
+                <img 
+                  src={player.photoUrl} 
+                  alt={player.name}
+                  className="h-24 w-24 rounded-full object-cover border-4 border-primary"
+                />
+              ) : (
+                <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center border-4 border-primary">
+                  <User className="h-12 w-12 text-primary" />
+                </div>
+              )}
               
               {/* Player Info */}
               <div className="text-center md:text-left flex-1">

@@ -452,7 +452,7 @@ export async function getSetting(key: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const result = await db.select().from(tournamentSettings).where(eq(tournamentSettings.key, key)).limit(1);
-  return result[0]?.value;
+  return result[0]?.value ?? "";
 }
 
 export async function getAllSettings() {

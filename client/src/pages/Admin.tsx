@@ -528,6 +528,9 @@ function PlayersTab() {
   const [number, setNumber] = useState("");
   const [position, setPosition] = useState("");
   const [teamId, setTeamId] = useState("");
+  const [photoUrl, setPhotoUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Estado para expand/collapse
   const [expandedGroups, setExpandedGroups] = useState<Set<number>>(new Set());
@@ -538,6 +541,38 @@ function PlayersTab() {
     setNumber("");
     setPosition("");
     setTeamId("");
+    setPhotoUrl("");
+  };
+
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Arquivo muito grande. Máximo 5MB.");
+      return;
+    }
+    
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) throw new Error('Erro no upload');
+      
+      const { url } = await response.json();
+      setPhotoUrl(url);
+      toast.success("Foto enviada!");
+    } catch (error) {
+      toast.error("Erro ao enviar foto");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -546,7 +581,8 @@ function PlayersTab() {
       name,
       number: number ? parseInt(number) : undefined,
       position: position || undefined,
-      teamId: parseInt(teamId)
+      teamId: parseInt(teamId),
+      photoUrl: photoUrl || undefined
     });
   };
 
@@ -681,6 +717,36 @@ function PlayersTab() {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+              <div>
+                <Label>Foto do Jogador</Label>
+                <div className="flex items-center gap-3 mt-2">
+                  {photoUrl ? (
+                    <img src={photoUrl} alt="Foto" className="h-16 w-16 rounded-full object-cover border" />
+                  ) : (
+                    <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center border">
+                      <Users className="h-6 w-6 text-muted-foreground" />
+                    </div>
+                  )}
+                  <div className="flex-1">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                    >
+                      {uploading ? "Enviando..." : photoUrl ? "Trocar Foto" : "Escolher Foto"}
+                    </Button>
+                  </div>
+                </div>
               </div>
               <Button type="submit" className="w-full" disabled={createPlayer.isPending || !teamId}>
                 {createPlayer.isPending ? "Salvando..." : "Salvar"}

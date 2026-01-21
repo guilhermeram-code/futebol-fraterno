@@ -15,6 +15,9 @@ export default function Times() {
   const { data: teams, isLoading } = trpc.teams.list.useQuery();
   const { data: groups } = trpc.groups.list.useQuery();
   const { data: allMatches } = trpc.matches.list.useQuery();
+  const { data: topScorers } = trpc.stats.topScorers.useQuery({ limit: 1 });
+  const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 1 });
+  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 1 });
   
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
@@ -91,6 +94,49 @@ export default function Times() {
     }
   };
 
+  // Função para obter mensagem especial do time
+  const getTeamSpecialMessage = (teamId: number) => {
+    const messages: { emoji: string; text: string; color: string }[] = [];
+    
+    // Verifica se tem o artilheiro
+    if (topScorers && topScorers.length > 0) {
+      const artilheiro = topScorers[0];
+      if (artilheiro.teamId === teamId) {
+        messages.push({
+          emoji: '⚽',
+          text: `Time do Artilheiro! (${artilheiro.goalCount} gols)`,
+          color: 'bg-yellow-100 text-yellow-800 border-yellow-300'
+        });
+      }
+    }
+    
+    // Verifica melhor defesa
+    if (bestDefenses && bestDefenses.length > 0) {
+      const melhorDefesa = bestDefenses[0];
+      if (melhorDefesa.team.id === teamId) {
+        messages.push({
+          emoji: '🧱',
+          text: `Melhor Defesa! (${melhorDefesa.goalsAgainst} gols sofridos)`,
+          color: 'bg-blue-100 text-blue-800 border-blue-300'
+        });
+      }
+    }
+    
+    // Verifica pior defesa (frangueiro)
+    if (worstDefenses && worstDefenses.length > 0) {
+      const piorDefesa = worstDefenses[0];
+      if (piorDefesa.team.id === teamId) {
+        messages.push({
+          emoji: '🐔',
+          text: `Frangueiro! (${piorDefesa.goalsAgainst} gols sofridos)`,
+          color: 'bg-red-100 text-red-800 border-red-300'
+        });
+      }
+    }
+    
+    return messages;
+  };
+
   return (
     <div className="min-h-screen bg-background masonic-pattern">
       {/* Header */}
@@ -142,6 +188,7 @@ export default function Times() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredTeams.map(team => {
               const stats = getTeamStats(team.id);
+              const specialMessages = getTeamSpecialMessage(team.id);
               return (
                 <Link key={team.id} href={`/times/${team.id}`}>
                   <Card className="card-hover cursor-pointer h-full card-shadow">
@@ -221,6 +268,20 @@ export default function Times() {
                                   </Tooltip>
                                 </TooltipProvider>
                               )}
+                            </div>
+                          )}
+                          {/* Mensagens especiais */}
+                          {specialMessages.length > 0 && (
+                            <div className="mt-2 space-y-1">
+                              {specialMessages.map((msg, idx) => (
+                                <div 
+                                  key={idx} 
+                                  className={`text-xs px-2 py-1 rounded border ${msg.color}`}
+                                >
+                                  <span className="mr-1">{msg.emoji}</span>
+                                  {msg.text}
+                                </div>
+                              ))}
                             </div>
                           )}
                         </div>

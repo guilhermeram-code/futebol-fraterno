@@ -1,0 +1,25 @@
+{
+  "query": "SELECT id, name, link FROM sponsors LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, name, link FROM sponsors LIMIT 5;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "testee",
+      "link": "NULL"
+    },
+    {
+      "id": "2",
+      "name": "testandoo",
+      "link": "www.google.com"
+    },
+    {
+      "id": "3",
+      "name": "2",
+      "link": "www.gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tlink\n1\ttestee\tNULL\n2\ttestandoo\twww.google.com\n3\t2\twww.gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 126
+}
