@@ -121,3 +121,44 @@
 - [x] Próximo Jogo (Home) - mostra "Rodada null" ao invés da rodada correta (corrigido para mostrar "Fase de Grupos - Grupo A/B")
 - [x] Mata-mata - falta nome da loja em todos os jogos (semifinais, final, etc)
 - [x] Troféu "Final" - texto e ícone estão sobrepostos ao card do jogo (troféu agora aparece acima do título)
+
+
+## MEGA ATUALIZAÇÃO - 26 MELHORIAS PARA MONETIZAÇÃO
+
+### Bloco 1: Fundação (Crítico)
+- [x] Popup confirmação deletar (grupo, time, jogador, jogo) - JÁ IMPLEMENTADO
+- [x] Corrigir pontos fase grupos vs mata-mata (página do time) - JÁ IMPLEMENTADO (statsGroupOnly e statsKnockoutOnly separados)
+- [x] Nome da loja nos grupos (admin)
+
+### Bloco 2: Visual e UX
+- [x] Comentários com scroll (max 400px, scroll interno) - JÁ IMPLEMENTADO
+- [x] Melhorias visuais gerais (fonte esportiva Oswald, sombras, hover, zebra)
+- [x] Explicar "@" nos jogos (casa/fora) - 🏠 para casa, ✈️ para fora com tooltip
+- [x] Informações no card do time (aproveitamento %, sequência de resultados com emojis)
+- [x] Estatísticas do time menos poluídas (layout compacto com abreviações)
+- [x] Mensagens comemorativas/brincalhonas - JÁ IMPLEMENTADO (artilheiro, quebrador, frangueiro, melhor defesa)
+
+### Bloco 3: Busca e Organização
+- [x] Busca de times (campo inteligente) - JÁ IMPLEMENTADO na página Times
+- [ ] Organizar times por grupos (accordion)
+- [ ] Busca de jogadores (nova página/seção)
+- [ ] Organizar resultados por grupos (abas/accordion)
+- [ ] Organizar próximos jogos por grupos
+- [ ] Minimizar/maximizar jogos no admin
+
+### Bloco 4: Páginas e Funcionalidades
+- [ ] Página individual do jogador
+- [ ] Foto de jogador (opcional)
+- [ ] Botão + adicionar jogador no time
+- [ ] Mensagem de apoio ao time
+
+### Bloco 5: Flexibilidade
+- [x] Configurar quantos times classificam por grupo
+- [x] Mata-mata flexível (4, 8, 16, 32 times)
+- [x] Campeonato só mata-mata (sem grupos)
+
+### Bloco 6: Premium (Patrocinadores e Relatórios)
+- [x] Seção de patrocinadores (níveis A, B, C)
+- [ ] Relatório PDF visual (para WhatsApp)
+- [ ] Relatório PDF completo (gerencial)
+- [ ] Relatório Excel/CSV

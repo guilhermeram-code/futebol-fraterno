@@ -84,6 +84,20 @@ export const appRouter = router({
         return db.getTeamStats(input.id);
       }),
     
+    // Estatísticas apenas da fase de grupos
+    statsGroupOnly: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return db.getTeamStatsGroupOnly(input.id);
+      }),
+    
+    // Estatísticas apenas do mata-mata
+    statsKnockoutOnly: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return db.getTeamStatsKnockoutOnly(input.id);
+      }),
+    
     uploadLogo: adminProcedure
       .input(z.object({
         teamId: z.number(),
@@ -131,6 +145,12 @@ export const appRouter = router({
     list: publicProcedure.query(async () => {
       return db.getAllPlayers();
     }),
+    
+    byId: publicProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return db.getPlayerById(input.id);
+      }),
     
     byTeam: publicProcedure
       .input(z.object({ teamId: z.number() }))
@@ -754,6 +774,70 @@ export const appRouter = router({
     logout: publicProcedure
       .mutation(async () => {
         return { success: true };
+      }),
+  }),
+
+  // ==================== SPONSORS ====================
+  sponsors: router({
+    list: publicProcedure.query(async () => {
+      return db.getAllSponsors();
+    }),
+    
+    listAdmin: adminProcedure.query(async () => {
+      return db.getAllSponsorsAdmin();
+    }),
+    
+    create: adminProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        tier: z.enum(['A', 'B', 'C']),
+        logoUrl: z.string().optional(),
+        fileKey: z.string().optional(),
+        link: z.string().optional(),
+        description: z.string().optional(),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return db.createSponsor(input);
+      }),
+    
+    update: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(1).optional(),
+        tier: z.enum(['A', 'B', 'C']).optional(),
+        logoUrl: z.string().optional(),
+        fileKey: z.string().optional(),
+        link: z.string().optional(),
+        description: z.string().optional(),
+        active: z.boolean().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await db.updateSponsor(id, data);
+        return { success: true };
+      }),
+    
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteSponsor(input.id);
+        return { success: true };
+      }),
+    
+    uploadLogo: adminProcedure
+      .input(z.object({
+        sponsorId: z.number(),
+        base64: z.string(),
+        mimeType: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        const ext = input.mimeType.split('/')[1] || 'png';
+        const fileKey = `sponsors/${input.sponsorId}/logo-${nanoid()}.${ext}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        await db.updateSponsor(input.sponsorId, { logoUrl: url, fileKey });
+        return { url };
       }),
   }),
 });

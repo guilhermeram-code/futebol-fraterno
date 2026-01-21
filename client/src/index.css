@@ -111,6 +111,7 @@
   --warning: oklch(0.75 0.18 85);
   --danger: oklch(0.55 0.22 25);
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-sport: "Oswald", ui-sans-serif, system-ui, sans-serif;
 }
 
 .dark {
@@ -244,6 +245,111 @@
 
 .bracket-connector {
   @apply absolute border-t-2 border-primary;
+}
+
+/* Enhanced card styles */
+.card-enhanced {
+  @apply bg-card rounded-xl shadow-md border border-border/50 transition-all duration-300;
+}
+
+.card-enhanced:hover {
+  @apply shadow-xl border-primary/30;
+}
+
+/* Ranking position badges */
+.rank-badge {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm;
+}
+
+.rank-badge-gold {
+  @apply bg-gradient-to-br from-yellow-400 to-yellow-600 text-yellow-900 shadow-md;
+}
+
+.rank-badge-silver {
+  @apply bg-gradient-to-br from-gray-300 to-gray-500 text-gray-900 shadow-md;
+}
+
+.rank-badge-bronze {
+  @apply bg-gradient-to-br from-orange-400 to-orange-600 text-orange-900 shadow-md;
+}
+
+/* Pulse animation for highlights */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.02); }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 2s ease-in-out infinite;
+}
+
+/* Gradient text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, oklch(0.78 0.15 85) 0%, oklch(0.65 0.15 85) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Success, warning, destructive colors */
+.text-success {
+  color: oklch(0.55 0.15 145);
+}
+
+.text-warning {
+  color: oklch(0.70 0.15 65);
+}
+
+.bg-success\/10 {
+  background-color: oklch(0.55 0.15 145 / 0.1);
+}
+
+.bg-warning\/10 {
+  background-color: oklch(0.70 0.15 65 / 0.1);
+}
+
+.border-success\/30 {
+  border-color: oklch(0.55 0.15 145 / 0.3);
+}
+
+.border-warning\/30 {
+  border-color: oklch(0.70 0.15 65 / 0.3);
+}
+
+/* Smooth transitions for all interactive elements */
+.transition-smooth {
+  @apply transition-all duration-200 ease-out;
+}
+
+/* Table row hover effect */
+.table-row-hover {
+  @apply transition-colors duration-150 hover:bg-muted/50;
+}
+
+/* Fonte esportiva para placares */
+.font-sport {
+  font-family: var(--font-sport);
+}
+
+/* Placar estilo esportivo */
+.score-display {
+  font-family: var(--font-sport);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* Tabela zebrada */
+.table-zebra tbody tr:nth-child(even) {
+  @apply bg-muted/30;
+}
+
+.table-zebra tbody tr:hover {
+  @apply bg-muted/50;
+}
+
+/* Card com sombra aprimorada */
+.card-shadow {
+  @apply shadow-md hover:shadow-lg transition-shadow duration-300;
 }
 
 @layer components {

@@ -239,11 +239,11 @@ export default function Home() {
                             <div className="text-xs text-muted-foreground">{getTeamLodge(match.homeTeamId)}</div>
                           </div>
                           <div className="flex items-center gap-2 px-4">
-                            <span className="text-2xl font-bold text-gold-dark">
+                            <span className="text-2xl font-bold text-gold-dark score-display">
                               {match.homeScore}
                             </span>
                             <span className="text-muted-foreground">x</span>
-                            <span className="text-2xl font-bold text-gold-dark">
+                            <span className="text-2xl font-bold text-gold-dark score-display">
                               {match.awayScore}
                             </span>
                           </div>
@@ -320,30 +320,41 @@ export default function Home() {
                     ))}
                   </div>
                 ) : topScorers && topScorers.length > 0 ? (
-                  <div className="space-y-2">
-                    {topScorers.map((scorer, index) => (
-                      <div 
-                        key={scorer.playerId} 
-                        className="flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className={`font-bold text-lg w-6 ${index < 3 ? "text-gold" : "text-muted-foreground"}`}>
-                            {index + 1}º
-                          </span>
-                          <div>
-                            <p className="font-medium">{getPlayerName(scorer.playerId)}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {getTeamName(scorer.teamId)}
-                              {getTeamLodge(scorer.teamId) && ` - ${getTeamLodge(scorer.teamId)}`}
-                            </p>
+                  <>
+                    {/* Mensagem comemorativa para o líder */}
+                    {topScorers[0] && topScorers[0].goalCount >= 3 && (
+                      <p className="text-xs text-center text-gold-dark italic mb-3 animate-pulse">
+                        🔥 {getPlayerName(topScorers[0].playerId)} está voando! Artilheiro isolado!
+                      </p>
+                    )}
+                    <div className="space-y-2">
+                      {topScorers.map((scorer, index) => (
+                        <div 
+                          key={scorer.playerId} 
+                          className={`flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors ${index === 0 ? 'bg-gold/10 border border-gold/30' : ''}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={`font-bold text-lg w-6 ${index < 3 ? "text-gold" : "text-muted-foreground"}`}>
+                              {index + 1}º
+                            </span>
+                            <div>
+                              <p className="font-medium">
+                                {getPlayerName(scorer.playerId)}
+                                {index === 0 && " 👑"}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {getTeamName(scorer.teamId)}
+                                {getTeamLodge(scorer.teamId) && ` - ${getTeamLodge(scorer.teamId)}`}
+                              </p>
+                            </div>
                           </div>
+                          <Badge variant="default" className="bg-primary">
+                            {scorer.goalCount} gols
+                          </Badge>
                         </div>
-                        <Badge variant="default" className="bg-primary">
-                          {scorer.goalCount} gols
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </>
                 ) : (
                   <p className="text-center text-muted-foreground py-4">
                     Nenhum gol marcado
@@ -373,35 +384,46 @@ export default function Home() {
                     ))}
                   </div>
                 ) : topCarded && topCarded.length > 0 ? (
-                  <div className="space-y-2">
-                    {topCarded.slice(0, 3).map((player, index) => (
-                      <div 
-                        key={player.playerId} 
-                        className="flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="font-bold text-lg w-6 text-destructive">
-                            {index + 1}º
-                          </span>
-                          <div>
-                            <p className="font-medium">{getPlayerName(player.playerId)}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {getTeamName(player.teamId)}
-                              {getTeamLodge(player.teamId) && ` - ${getTeamLodge(player.teamId)}`}
-                            </p>
+                  <>
+                    {/* Mensagem brincalhona para o líder */}
+                    {topCarded[0] && (topCarded[0].redCards >= 2 || topCarded[0].yellowCards >= 4) && (
+                      <p className="text-xs text-center text-destructive italic mb-3">
+                        ⚠️ {getPlayerName(topCarded[0].playerId)} precisa se acalmar! Vai quebrar alguém!
+                      </p>
+                    )}
+                    <div className="space-y-2">
+                      {topCarded.slice(0, 3).map((player, index) => (
+                        <div 
+                          key={player.playerId} 
+                          className={`flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors ${index === 0 ? 'bg-destructive/10 border border-destructive/30' : ''}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-lg w-6 text-destructive">
+                              {index + 1}º
+                            </span>
+                            <div>
+                              <p className="font-medium">
+                                {getPlayerName(player.playerId)}
+                                {index === 0 && " 💢"}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {getTeamName(player.teamId)}
+                                {getTeamLodge(player.teamId) && ` - ${getTeamLodge(player.teamId)}`}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex gap-1">
+                            <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">
+                              {player.redCards} 🟥
+                            </Badge>
+                            <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                              {player.yellowCards} 🟨
+                            </Badge>
                           </div>
                         </div>
-                        <div className="flex gap-1">
-                          <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">
-                            {player.redCards} 🟥
-                          </Badge>
-                          <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
-                            {player.yellowCards} 🟨
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </>
                 ) : (
                   <p className="text-center text-muted-foreground py-4">
                     Nenhum cartão registrado
@@ -426,27 +448,38 @@ export default function Home() {
                     ))}
                   </div>
                 ) : worstDefenses && worstDefenses.length > 0 ? (
-                  <div className="space-y-2">
-                    {worstDefenses.map((team, index) => (
-                      <div 
-                        key={team.team.id} 
-                        className="flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span className="font-bold text-lg w-6 text-warning">
-                            {index + 1}º
-                          </span>
-                          <div>
-                            <p className="font-medium">{team.team.name}</p>
-                            <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
+                  <>
+                    {/* Mensagem brincalhona para o líder */}
+                    {worstDefenses[0] && worstDefenses[0].goalsAgainst >= 5 && (
+                      <p className="text-xs text-center text-warning italic mb-3">
+                        🐔 {worstDefenses[0].team.name} tá tomando de todo lado! Fecha o gol!
+                      </p>
+                    )}
+                    <div className="space-y-2">
+                      {worstDefenses.map((team, index) => (
+                        <div 
+                          key={team.team.id} 
+                          className={`flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors ${index === 0 ? 'bg-warning/10 border border-warning/30' : ''}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="font-bold text-lg w-6 text-warning">
+                              {index + 1}º
+                            </span>
+                            <div>
+                              <p className="font-medium">
+                                {team.team.name}
+                                {index === 0 && " 🐔"}
+                              </p>
+                              <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
+                            </div>
                           </div>
+                          <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300">
+                            {team.goalsAgainst} gols sofridos
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300">
-                          {team.goalsAgainst} gols sofridos
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  </>
                 ) : (
                   <p className="text-center text-muted-foreground py-4">
                     Nenhum jogo realizado
@@ -469,6 +502,11 @@ export default function Home() {
             </Card>
           </div>
         </div>
+
+        {/* Sponsors Section */}
+        <section className="mt-8">
+          <SponsorsSection />
+        </section>
 
         {/* Comments Section */}
         <section className="mt-8">
@@ -521,27 +559,38 @@ function BestDefenseSection() {
   }
 
   return (
-    <div className="space-y-2">
-      {bestDefenses.map((team, index) => (
-        <div 
-          key={team.team.id} 
-          className="flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors"
-        >
-          <div className="flex items-center gap-3">
-            <span className="font-bold text-lg w-6 text-success">
-              {index + 1}º
-            </span>
-            <div>
-              <p className="font-medium">{team.team.name}</p>
-              <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
+    <>
+      {/* Mensagem comemorativa para o líder */}
+      {bestDefenses[0] && bestDefenses[0].goalsAgainst <= 2 && (
+        <p className="text-xs text-center text-success italic mb-3">
+          🧤 {bestDefenses[0].team.name} é uma muralha! Defesa impenetrável!
+        </p>
+      )}
+      <div className="space-y-2">
+        {bestDefenses.map((team, index) => (
+          <div 
+            key={team.team.id} 
+            className={`flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors ${index === 0 ? 'bg-success/10 border border-success/30' : ''}`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-lg w-6 text-success">
+                {index + 1}º
+              </span>
+              <div>
+                <p className="font-medium">
+                  {team.team.name}
+                  {index === 0 && " 🧤"}
+                </p>
+                <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
+              </div>
             </div>
+            <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
+              {team.goalsAgainst} gols sofridos
+            </Badge>
           </div>
-          <Badge variant="outline" className="bg-green-100 text-green-800 border-green-300">
-            {team.goalsAgainst} gols sofridos
-          </Badge>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -633,7 +682,7 @@ function CommentsSection() {
             ))}
           </div>
         ) : comments && comments.length > 0 ? (
-          <div className="space-y-4">
+          <div className={`space-y-4 ${comments.length > 5 ? 'max-h-[400px] overflow-y-auto pr-2' : ''}`}>
             {comments.map(comment => (
               <div key={comment.id} className="p-4 bg-muted rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
@@ -650,11 +699,157 @@ function CommentsSection() {
                 <p className="text-sm">{comment.content}</p>
               </div>
             ))}
+            {comments.length > 5 && (
+              <p className="text-center text-xs text-muted-foreground py-2">
+                ↑ Role para ver mais comentários
+              </p>
+            )}
           </div>
         ) : (
           <p className="text-center text-muted-foreground py-8">
             Seja o primeiro a comentar!
           </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+
+function SponsorsSection() {
+  const { data: sponsors, isLoading } = trpc.sponsors.list.useQuery();
+  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage" });
+
+  // Separar por nível
+  const tierA = sponsors?.filter(s => s.tier === "A") || [];
+  const tierB = sponsors?.filter(s => s.tier === "B") || [];
+  const tierC = sponsors?.filter(s => s.tier === "C") || [];
+
+  // Se não há patrocinadores, não mostrar a seção
+  if (!isLoading && (!sponsors || sponsors.length === 0)) {
+    return null;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-gold-dark text-center justify-center">
+          <Star className="h-5 w-5" />
+          Nossos Patrocinadores
+        </CardTitle>
+        {sponsorMessage && (
+          <p className="text-center text-muted-foreground text-sm">
+            {sponsorMessage}
+          </p>
+        )}
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="flex justify-center gap-4">
+            {[1, 2, 3].map(i => (
+              <Skeleton key={i} className="h-24 w-24" />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {/* Tier A - Patrocinadores Principais */}
+            {tierA.length > 0 && (
+              <div>
+                <Badge className="mb-4 mx-auto block w-fit bg-gold text-black">
+                  Patrocinadores Principais
+                </Badge>
+                <div className="flex flex-wrap justify-center gap-6">
+                  {tierA.map(sponsor => (
+                    <a 
+                      key={sponsor.id}
+                      href={sponsor.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                    >
+                      <div className="w-40 h-40 rounded-lg border-2 border-gold bg-white p-4 flex items-center justify-center transition-transform group-hover:scale-105 shadow-lg">
+                        {sponsor.logoUrl ? (
+                          <img 
+                            src={sponsor.logoUrl} 
+                            alt={sponsor.name}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-lg font-bold text-center">{sponsor.name}</span>
+                        )}
+                      </div>
+                      <p className="text-center text-sm font-medium mt-2">{sponsor.name}</p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tier B - Patrocinadores */}
+            {tierB.length > 0 && (
+              <div>
+                <Badge variant="secondary" className="mb-4 mx-auto block w-fit">
+                  Patrocinadores
+                </Badge>
+                <div className="flex flex-wrap justify-center gap-4">
+                  {tierB.map(sponsor => (
+                    <a 
+                      key={sponsor.id}
+                      href={sponsor.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                    >
+                      <div className="w-28 h-28 rounded-lg border bg-white p-3 flex items-center justify-center transition-transform group-hover:scale-105 shadow">
+                        {sponsor.logoUrl ? (
+                          <img 
+                            src={sponsor.logoUrl} 
+                            alt={sponsor.name}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-sm font-medium text-center">{sponsor.name}</span>
+                        )}
+                      </div>
+                      <p className="text-center text-xs mt-1">{sponsor.name}</p>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tier C - Apoiadores */}
+            {tierC.length > 0 && (
+              <div>
+                <Badge variant="outline" className="mb-4 mx-auto block w-fit">
+                  Apoiadores
+                </Badge>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {tierC.map(sponsor => (
+                    <a 
+                      key={sponsor.id}
+                      href={sponsor.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="group"
+                    >
+                      <div className="w-20 h-20 rounded border bg-white p-2 flex items-center justify-center transition-transform group-hover:scale-105">
+                        {sponsor.logoUrl ? (
+                          <img 
+                            src={sponsor.logoUrl} 
+                            alt={sponsor.name}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-xs text-center">{sponsor.name}</span>
+                        )}
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         )}
       </CardContent>
     </Card>

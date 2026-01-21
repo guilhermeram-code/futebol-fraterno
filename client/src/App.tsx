@@ -12,6 +12,7 @@ import TimeDetail from "./pages/TimeDetail";
 import Estatisticas from "./pages/Estatisticas";
 import MataMata from "./pages/MataMata";
 import Galeria from "./pages/Galeria";
+import JogadorDetail from "./pages/JogadorDetail";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/times" component={Times} />
       <Route path="/times/:id" component={TimeDetail} />
       <Route path="/estatisticas" component={Estatisticas} />
+      <Route path="/jogadores/:id" component={JogadorDetail} />
       <Route path="/mata-mata" component={MataMata} />
       <Route path="/galeria" component={Galeria} />
       <Route path="/admin/login" component={AdminLogin} />

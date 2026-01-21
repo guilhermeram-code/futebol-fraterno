@@ -32,10 +32,12 @@ import {
   ChevronDown,
   ChevronRight,
   Check,
-  LogOut
+  LogOut,
+  Star
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { ResultsRegistration } from "@/components/ResultsRegistration";
+import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
 
 export default function Admin() {
   const { adminUser, isAuthenticated, loading, logout } = useAdminAuth();
@@ -152,6 +154,10 @@ export default function Admin() {
               <UserPlus className="h-4 w-4 hidden md:block" />
               Admins
             </TabsTrigger>
+            <TabsTrigger value="sponsors" className="gap-1 text-xs">
+              <Star className="h-4 w-4 hidden md:block" />
+              Patrocinadores
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-1 text-xs">
               <Settings className="h-4 w-4 hidden md:block" />
               Configurações
@@ -192,6 +198,10 @@ export default function Admin() {
 
           <TabsContent value="admins">
             <AdminsTab />
+          </TabsContent>
+
+          <TabsContent value="sponsors">
+            <SponsorsTab />
           </TabsContent>
 
           <TabsContent value="settings">
@@ -334,14 +344,15 @@ function TeamsTab() {
                       {groups.find(g => g.id === team.groupId)?.name}
                     </Badge>
                   )}
+                  <AddPlayerToTeamButton teamId={team.id} teamName={team.name} />
                   <TeamLogoUpload teamId={team.id} />
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => deleteTeam.mutate({ id: team.id })}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
+                  <ConfirmDeleteDialog
+                    title="Excluir Time"
+                    description={`Você está prestes a excluir o time "${team.name}". Todos os jogadores, jogos e estatísticas relacionados serão permanentemente removidos.`}
+                    requireTyping={true}
+                    onConfirm={() => deleteTeam.mutate({ id: team.id })}
+                    isDeleting={deleteTeam.isPending}
+                  />
                 </div>
               </div>
             ))}
@@ -399,6 +410,93 @@ function TeamLogoUpload({ teamId }: { teamId: number }) {
         <Upload className="h-4 w-4" />
       </Button>
     </>
+  );
+}
+
+// ==================== ADD PLAYER TO TEAM BUTTON ====================
+function AddPlayerToTeamButton({ teamId, teamName }: { teamId: number; teamName: string }) {
+  const utils = trpc.useUtils();
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [number, setNumber] = useState("");
+  const [position, setPosition] = useState("");
+
+  const createPlayer = trpc.players.create.useMutation({
+    onSuccess: () => {
+      utils.players.list.invalidate();
+      toast.success("Jogador adicionado!");
+      setName("");
+      setNumber("");
+      setPosition("");
+      setOpen(false);
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim()) {
+      toast.error("Nome do jogador é obrigatório");
+      return;
+    }
+    createPlayer.mutate({
+      name: name.trim(),
+      teamId,
+      number: number ? parseInt(number) : undefined,
+      position: position || undefined
+    });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="ghost" size="icon" title={`Adicionar jogador ao ${teamName}`}>
+          <UserPlus className="h-4 w-4" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Adicionar Jogador ao {teamName}</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <Label htmlFor="playerName">Nome do Jogador *</Label>
+            <Input
+              id="playerName"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Nome completo"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="playerNumber">Número</Label>
+              <Input
+                id="playerNumber"
+                type="number"
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+                placeholder="Ex: 10"
+                min="1"
+                max="99"
+              />
+            </div>
+            <div>
+              <Label htmlFor="playerPosition">Posição</Label>
+              <Input
+                id="playerPosition"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
+                placeholder="Ex: Atacante"
+              />
+            </div>
+          </div>
+          <Button type="submit" className="w-full" disabled={createPlayer.isPending}>
+            {createPlayer.isPending ? "Adicionando..." : "Adicionar Jogador"}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -662,17 +760,14 @@ function PlayersTab() {
                                       )}
                                     </div>
                                   </div>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon"
+                                  <ConfirmDeleteDialog
+                                    title="Excluir Jogador"
+                                    description={`Você está prestes a excluir o jogador "${player.name}". Todos os gols e cartões registrados serão removidos.`}
+                                    requireTyping={false}
+                                    onConfirm={() => deletePlayer.mutate({ id: player.id })}
+                                    isDeleting={deletePlayer.isPending}
                                     className="h-8 w-8"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      deletePlayer.mutate({ id: player.id });
-                                    }}
-                                  >
-                                    <Trash2 className="h-4 w-4 text-destructive" />
-                                  </Button>
+                                  />
                                 </div>
                               ))}
                             </div>
@@ -812,19 +907,24 @@ function GroupsTab() {
                   <div key={group.id} className="p-4 bg-muted rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-bold text-gold-dark">{group.name}</h3>
-                      <Button 
-                        variant="ghost" 
-                        size="icon"
-                        onClick={() => deleteGroup.mutate({ id: group.id })}
-                      >
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                      </Button>
+                      <ConfirmDeleteDialog
+                        title="Excluir Grupo"
+                        description={`Você está prestes a excluir o grupo "${group.name}". Todos os times serão removidos do grupo e os jogos relacionados poderão ser afetados.`}
+                        requireTyping={true}
+                        onConfirm={() => deleteGroup.mutate({ id: group.id })}
+                        isDeleting={deleteGroup.isPending}
+                      />
                     </div>
                     <div className="space-y-1">
                       {getTeamsInGroup(group.id).length > 0 ? (
                         getTeamsInGroup(group.id).map(team => (
                           <div key={team.id} className="flex items-center justify-between p-2 bg-background rounded">
-                            <span className="text-sm">{team.name}</span>
+                            <div className="flex flex-col">
+                              <span className="text-sm font-medium">{team.name}</span>
+                              {team.lodge && (
+                                <span className="text-xs text-muted-foreground">{team.lodge}</span>
+                              )}
+                            </div>
                             <Button 
                               variant="ghost" 
                               size="icon"
@@ -911,6 +1011,11 @@ function MatchesTab() {
   };
 
   const getTeamName = (id: number) => teams?.find(t => t.id === id)?.name || "Time";
+  const getTeamNameWithLodge = (id: number) => {
+    const team = teams?.find(t => t.id === id);
+    if (!team) return "Time";
+    return team.lodge ? `${team.name} (${team.lodge})` : team.name;
+  };
   const getGroupName = (id: number | null) => {
     if (!id) return "";
     return groups?.find(g => g.id === id)?.name || "";
@@ -1066,18 +1171,18 @@ function MatchesTab() {
                     {match.played && <Badge className="bg-green-500">Finalizado</Badge>}
                   </div>
                   <p className="font-medium">
-                    {getTeamName(match.homeTeamId)} 
+                    {getTeamNameWithLodge(match.homeTeamId)} 
                     {match.played ? ` ${match.homeScore} x ${match.awayScore} ` : " vs "}
-                    {getTeamName(match.awayTeamId)}
+                    {getTeamNameWithLodge(match.awayTeamId)}
                   </p>
                 </div>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => deleteMatch.mutate({ id: match.id })}
-                >
-                  <Trash2 className="h-4 w-4 text-destructive" />
-                </Button>
+                <ConfirmDeleteDialog
+                  title="Excluir Jogo"
+                  description={`Você está prestes a excluir o jogo "${getTeamNameWithLodge(match.homeTeamId)} vs ${getTeamNameWithLodge(match.awayTeamId)}". Resultados, gols e cartões registrados serão removidos.`}
+                  requireTyping={false}
+                  onConfirm={() => deleteMatch.mutate({ id: match.id })}
+                  isDeleting={deleteMatch.isPending}
+                />
               </div>
             ))}
           </div>
@@ -1138,6 +1243,11 @@ function ResultsTabOld() {
   const [cardType, setCardType] = useState<"yellow" | "red">("yellow");
 
   const getTeamName = (id: number) => teams?.find(t => t.id === id)?.name || "Time";
+  const getTeamNameWithLodge = (id: number) => {
+    const team = teams?.find(t => t.id === id);
+    if (!team) return "Time";
+    return team.lodge ? `${team.name} (${team.lodge})` : team.name;
+  };
   const getPlayersByTeam = (teamId: number) => players?.filter(p => p.teamId === teamId) || [];
 
   const pendingMatches = matches?.filter(m => !m.played) || [];
@@ -1200,7 +1310,7 @@ function ResultsTabOld() {
                   }}
                 >
                   <p className="font-medium">
-                    {getTeamName(match.homeTeamId)} vs {getTeamName(match.awayTeamId)}
+                    {getTeamNameWithLodge(match.homeTeamId)} vs {getTeamNameWithLodge(match.awayTeamId)}
                   </p>
                 </div>
               ))
@@ -1223,7 +1333,7 @@ function ResultsTabOld() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-3 gap-4 items-center">
                 <div className="text-center">
-                  <p className="font-bold mb-2">{getTeamName(selectedMatchData.homeTeamId)}</p>
+                  <p className="font-bold mb-2">{getTeamNameWithLodge(selectedMatchData.homeTeamId)}</p>
                   <Input 
                     type="number" 
                     value={homeScore} 
@@ -1234,7 +1344,7 @@ function ResultsTabOld() {
                 </div>
                 <div className="text-center text-2xl font-bold text-muted-foreground">X</div>
                 <div className="text-center">
-                  <p className="font-bold mb-2">{getTeamName(selectedMatchData.awayTeamId)}</p>
+                  <p className="font-bold mb-2">{getTeamNameWithLodge(selectedMatchData.awayTeamId)}</p>
                   <Input 
                     type="number" 
                     value={awayScore} 
@@ -1258,7 +1368,7 @@ function ResultsTabOld() {
               {penalties && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label>Pênaltis {getTeamName(selectedMatchData.homeTeamId)}</Label>
+                    <Label>Pênaltis {getTeamNameWithLodge(selectedMatchData.homeTeamId)}</Label>
                     <Input 
                       type="number" 
                       value={homePenalties} 
@@ -1267,7 +1377,7 @@ function ResultsTabOld() {
                     />
                   </div>
                   <div>
-                    <Label>Pênaltis {getTeamName(selectedMatchData.awayTeamId)}</Label>
+                    <Label>Pênaltis {getTeamNameWithLodge(selectedMatchData.awayTeamId)}</Label>
                     <Input 
                       type="number" 
                       value={awayPenalties} 
@@ -1305,10 +1415,10 @@ function ResultsTabOld() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={selectedMatchData.homeTeamId.toString()}>
-                      {getTeamName(selectedMatchData.homeTeamId)}
+                      {getTeamNameWithLodge(selectedMatchData.homeTeamId)}
                     </SelectItem>
                     <SelectItem value={selectedMatchData.awayTeamId.toString()}>
-                      {getTeamName(selectedMatchData.awayTeamId)}
+                      {getTeamNameWithLodge(selectedMatchData.awayTeamId)}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -1357,10 +1467,10 @@ function ResultsTabOld() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value={selectedMatchData.homeTeamId.toString()}>
-                      {getTeamName(selectedMatchData.homeTeamId)}
+                      {getTeamNameWithLodge(selectedMatchData.homeTeamId)}
                     </SelectItem>
                     <SelectItem value={selectedMatchData.awayTeamId.toString()}>
-                      {getTeamName(selectedMatchData.awayTeamId)}
+                      {getTeamNameWithLodge(selectedMatchData.awayTeamId)}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -1492,14 +1602,16 @@ function PhotosTab() {
                   alt={photo.caption || "Foto"}
                   className="w-full aspect-square object-cover rounded-lg"
                 />
-                <Button 
-                  variant="destructive" 
-                  size="icon"
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => deletePhoto.mutate({ id: photo.id })}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ConfirmDeleteDialog
+                    title="Excluir Foto"
+                    description="Você está prestes a excluir esta foto da galeria. Esta ação não pode ser desfeita."
+                    requireTyping={false}
+                    onConfirm={() => deletePhoto.mutate({ id: photo.id })}
+                    isDeleting={deletePhoto.isPending}
+                    variant="destructive"
+                  />
+                </div>
                 {photo.caption && (
                   <p className="text-xs text-muted-foreground mt-1 truncate">{photo.caption}</p>
                 )}
@@ -1578,14 +1690,14 @@ function CommentsTab() {
                     >
                       <Check className="h-4 w-4" />
                     </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
+                    <ConfirmDeleteDialog
+                      title="Excluir Comentário"
+                      description={`Você está prestes a excluir o comentário de "${comment.authorName}".`}
+                      requireTyping={false}
+                      onConfirm={() => deleteComment.mutate({ id: comment.id })}
+                      isDeleting={deleteComment.isPending}
                       className="text-destructive hover:text-destructive hover:bg-red-100"
-                      onClick={() => deleteComment.mutate({ id: comment.id })}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    />
                   </div>
                 </div>
               ))}
@@ -1621,13 +1733,13 @@ function CommentsTab() {
                     </div>
                     <p className="text-sm">{comment.content}</p>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={() => deleteComment.mutate({ id: comment.id })}
-                  >
-                    <Trash2 className="h-4 w-4 text-destructive" />
-                  </Button>
+                  <ConfirmDeleteDialog
+                    title="Excluir Comentário"
+                    description={`Você está prestes a excluir o comentário de "${comment.authorName}".`}
+                    requireTyping={false}
+                    onConfirm={() => deleteComment.mutate({ id: comment.id })}
+                    isDeleting={deleteComment.isPending}
+                  />
                 </div>
               ))}
             </div>
@@ -1759,14 +1871,15 @@ function AnnouncementsTab() {
                     >
                       {announcement.active ? "Desativar" : "Ativar"}
                     </Button>
-                    <Button
+                    <ConfirmDeleteDialog
+                      title="Excluir Aviso"
+                      description={`Você está prestes a excluir o aviso "${announcement.title}".`}
+                      requireTyping={false}
+                      onConfirm={() => deleteAnnouncement.mutate({ id: announcement.id })}
+                      isDeleting={deleteAnnouncement.isPending}
                       variant="destructive"
                       size="sm"
-                      onClick={() => deleteAnnouncement.mutate({ id: announcement.id })}
-                      disabled={deleteAnnouncement.isPending}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    />
                   </div>
                 </div>
               ))}
@@ -1914,14 +2027,19 @@ function AdminsTab() {
                     </div>
                   </div>
                   {isOwner && !admin.isOwner && (
-                    <Button
+                    <ConfirmDeleteDialog
+                      title="Remover Administrador"
+                      description={`Você está prestes a remover o administrador "${admin.username}". Ele perderá acesso ao painel.`}
+                      requireTyping={true}
+                      onConfirm={() => deleteAdmin.mutate({ id: admin.id })}
+                      isDeleting={deleteAdmin.isPending}
                       variant="destructive"
                       size="sm"
-                      onClick={() => deleteAdmin.mutate({ id: admin.id })}
-                      disabled={deleteAdmin.isPending}
                     >
-                      Remover
-                    </Button>
+                      <Button variant="destructive" size="sm">
+                        Remover
+                      </Button>
+                    </ConfirmDeleteDialog>
                   )}
                 </div>
               ))}
@@ -1945,6 +2063,11 @@ function SettingsTab() {
   const { data: tournamentMusic } = trpc.settings.get.useQuery({ key: "tournamentMusic" });
   const { data: tournamentBackground } = trpc.settings.get.useQuery({ key: "tournamentBackground" });
   const { data: heroBackground } = trpc.settings.get.useQuery({ key: "heroBackground" });
+  
+  // Configurações de torneio
+  const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType" });
+  const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup" });
+  const { data: knockoutSize } = trpc.settings.get.useQuery({ key: "knockoutSize" });
 
   const setSetting = trpc.settings.set.useMutation({
     onSuccess: () => {
@@ -1991,6 +2114,11 @@ function SettingsTab() {
   const [name, setName] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [organizer, setOrganizer] = useState("");
+  
+  // Estados para configurações de torneio
+  const [selectedTournamentType, setSelectedTournamentType] = useState("groups_knockout");
+  const [selectedTeamsQualify, setSelectedTeamsQualify] = useState("2");
+  const [selectedKnockoutSize, setSelectedKnockoutSize] = useState("8");
 
   // Atualizar estados quando os dados carregam
   useEffect(() => {
@@ -2004,6 +2132,18 @@ function SettingsTab() {
   useEffect(() => {
     if (tournamentOrganizer) setOrganizer(tournamentOrganizer);
   }, [tournamentOrganizer]);
+
+  useEffect(() => {
+    if (tournamentType) setSelectedTournamentType(tournamentType);
+  }, [tournamentType]);
+
+  useEffect(() => {
+    if (teamsQualifyPerGroup) setSelectedTeamsQualify(teamsQualifyPerGroup);
+  }, [teamsQualifyPerGroup]);
+
+  useEffect(() => {
+    if (knockoutSize) setSelectedKnockoutSize(knockoutSize);
+  }, [knockoutSize]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -2226,6 +2366,494 @@ function SettingsTab() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Configurações de Formato do Torneio */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="h-5 w-5" />
+            Formato do Torneio
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Tipo de Campeonato */}
+          <div>
+            <Label>Tipo de Campeonato</Label>
+            <p className="text-xs text-muted-foreground mb-2">
+              Define se o campeonato terá fase de grupos, mata-mata ou ambos.
+            </p>
+            <Select value={selectedTournamentType} onValueChange={setSelectedTournamentType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione o tipo" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="groups_only">Apenas Fase de Grupos</SelectItem>
+                <SelectItem value="knockout_only">Apenas Mata-Mata</SelectItem>
+                <SelectItem value="groups_knockout">Grupos + Mata-Mata</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button 
+              onClick={() => setSetting.mutate({ key: "tournamentType", value: selectedTournamentType })}
+              disabled={setSetting.isPending}
+              className="mt-2"
+              size="sm"
+            >
+              Salvar Tipo
+            </Button>
+          </div>
+
+          {/* Quantos classificam por grupo */}
+          {selectedTournamentType !== "knockout_only" && (
+            <div>
+              <Label>Quantos times classificam por grupo?</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                Define quantos primeiros colocados de cada grupo avançam para o mata-mata.
+              </p>
+              <Select value={selectedTeamsQualify} onValueChange={setSelectedTeamsQualify}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1 time por grupo</SelectItem>
+                  <SelectItem value="2">2 times por grupo</SelectItem>
+                  <SelectItem value="3">3 times por grupo</SelectItem>
+                  <SelectItem value="4">4 times por grupo</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => setSetting.mutate({ key: "teamsQualifyPerGroup", value: selectedTeamsQualify })}
+                disabled={setSetting.isPending}
+                className="mt-2"
+                size="sm"
+              >
+                Salvar Classificados
+              </Button>
+            </div>
+          )}
+
+          {/* Tamanho do Mata-Mata */}
+          {selectedTournamentType !== "groups_only" && (
+            <div>
+              <Label>Tamanho do Mata-Mata</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                Quantos times participam do mata-mata. Se houver número ímpar, alguns times passam direto (BYE).
+              </p>
+              <Select value={selectedKnockoutSize} onValueChange={setSelectedKnockoutSize}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="4">4 times (Semi + Final)</SelectItem>
+                  <SelectItem value="8">8 times (Quartas + Semi + Final)</SelectItem>
+                  <SelectItem value="16">16 times (Oitavas + Quartas + Semi + Final)</SelectItem>
+                  <SelectItem value="32">32 times (16-avos + Oitavas + Quartas + Semi + Final)</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                onClick={() => setSetting.mutate({ key: "knockoutSize", value: selectedKnockoutSize })}
+                disabled={setSetting.isPending}
+                className="mt-2"
+                size="sm"
+              >
+                Salvar Tamanho
+              </Button>
+            </div>
+          )}
+
+          {/* Resumo das configurações */}
+          <div className="bg-muted/50 p-4 rounded-lg">
+            <h4 className="font-semibold mb-2">Resumo do Formato</h4>
+            <ul className="text-sm space-y-1">
+              <li>
+                <strong>Tipo:</strong>{" "}
+                {selectedTournamentType === "groups_only" && "Apenas Fase de Grupos"}
+                {selectedTournamentType === "knockout_only" && "Apenas Mata-Mata"}
+                {selectedTournamentType === "groups_knockout" && "Grupos + Mata-Mata"}
+              </li>
+              {selectedTournamentType !== "knockout_only" && (
+                <li>
+                  <strong>Classificados por grupo:</strong> {selectedTeamsQualify} time(s)
+                </li>
+              )}
+              {selectedTournamentType !== "groups_only" && (
+                <li>
+                  <strong>Mata-mata:</strong> {selectedKnockoutSize} times
+                  {selectedKnockoutSize === "4" && " (Semifinal + Final)"}
+                  {selectedKnockoutSize === "8" && " (Quartas + Semi + Final)"}
+                  {selectedKnockoutSize === "16" && " (Oitavas + Quartas + Semi + Final)"}
+                  {selectedKnockoutSize === "32" && " (16-avos + Oitavas + Quartas + Semi + Final)"}
+                </li>
+              )}
+            </ul>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+
+// ==================== SPONSORS TAB ====================
+function SponsorsTab() {
+  const utils = trpc.useUtils();
+  const { data: sponsors, isLoading } = trpc.sponsors.listAdmin.useQuery();
+  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage" });
+  
+  const createSponsor = trpc.sponsors.create.useMutation({
+    onSuccess: () => {
+      utils.sponsors.listAdmin.invalidate();
+      toast.success("Patrocinador criado com sucesso!");
+      setOpen(false);
+      resetForm();
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  
+  const updateSponsor = trpc.sponsors.update.useMutation({
+    onSuccess: () => {
+      utils.sponsors.listAdmin.invalidate();
+      toast.success("Patrocinador atualizado!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  
+  const deleteSponsor = trpc.sponsors.delete.useMutation({
+    onSuccess: () => {
+      utils.sponsors.listAdmin.invalidate();
+      toast.success("Patrocinador removido!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  
+  const uploadLogo = trpc.sponsors.uploadLogo.useMutation({
+    onSuccess: () => {
+      utils.sponsors.listAdmin.invalidate();
+      toast.success("Logo atualizado!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  
+  const setSetting = trpc.settings.set.useMutation({
+    onSuccess: () => {
+      utils.settings.get.invalidate();
+      toast.success("Mensagem salva!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [tier, setTier] = useState<"A" | "B" | "C">("C");
+  const [link, setLink] = useState("");
+  const [description, setDescription] = useState("");
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (sponsorMessage) setMessage(sponsorMessage);
+  }, [sponsorMessage]);
+
+  const resetForm = () => {
+    setName("");
+    setTier("C");
+    setLink("");
+    setDescription("");
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createSponsor.mutate({
+      name,
+      tier,
+      link: link || undefined,
+      description: description || undefined,
+      active: true,
+    });
+  };
+
+  const handleLogoUpload = (sponsorId: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64 = reader.result?.toString().split(',')[1];
+      if (base64) {
+        uploadLogo.mutate({
+          sponsorId,
+          base64,
+          mimeType: file.type
+        });
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const tierLabels: Record<string, string> = {
+    A: "Principal",
+    B: "Patrocinador",
+    C: "Apoiador"
+  };
+
+  const tierColors: Record<string, string> = {
+    A: "bg-gold text-black",
+    B: "bg-secondary",
+    C: "bg-muted"
+  };
+
+  // Separar por tier
+  const tierA = sponsors?.filter(s => s.tier === "A") || [];
+  const tierB = sponsors?.filter(s => s.tier === "B") || [];
+  const tierC = sponsors?.filter(s => s.tier === "C") || [];
+
+  return (
+    <div className="space-y-6">
+      {/* Mensagem de Agradecimento */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Star className="h-5 w-5" />
+            Mensagem de Agradecimento
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Mensagem para exibir na seção de patrocinadores</Label>
+            <Input 
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Ex: Agradecemos aos nossos patrocinadores pelo apoio!"
+            />
+            <Button 
+              onClick={() => setSetting.mutate({ key: "sponsorMessage", value: message })}
+              disabled={setSetting.isPending}
+              className="mt-2"
+              size="sm"
+            >
+              Salvar Mensagem
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Criar Patrocinador */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Patrocinadores ({sponsors?.length || 0})</CardTitle>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                Novo Patrocinador
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Cadastrar Patrocinador</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <Label htmlFor="sponsor-name">Nome *</Label>
+                  <Input 
+                    id="sponsor-name" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    required 
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="sponsor-tier">Nível</Label>
+                  <Select value={tier} onValueChange={(v) => setTier(v as "A" | "B" | "C")}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o nível" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="A">A - Principal (logo grande)</SelectItem>
+                      <SelectItem value="B">B - Patrocinador (logo médio)</SelectItem>
+                      <SelectItem value="C">C - Apoiador (logo pequeno)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <Label htmlFor="sponsor-link">Link (opcional)</Label>
+                  <Input 
+                    id="sponsor-link" 
+                    value={link} 
+                    onChange={(e) => setLink(e.target.value)} 
+                    placeholder="https://..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="sponsor-desc">Descrição (opcional)</Label>
+                  <Input 
+                    id="sponsor-desc" 
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)} 
+                  />
+                </div>
+                <Button type="submit" className="w-full" disabled={createSponsor.isPending}>
+                  {createSponsor.isPending ? "Criando..." : "Criar Patrocinador"}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-16 w-full" />)}
+            </div>
+          ) : sponsors && sponsors.length > 0 ? (
+            <div className="space-y-6">
+              {/* Tier A */}
+              {tierA.length > 0 && (
+                <div>
+                  <Badge className="mb-3 bg-gold text-black">Principais (Nível A)</Badge>
+                  <div className="space-y-2">
+                    {tierA.map((sponsor: any) => (
+                      <SponsorRow 
+                        key={sponsor.id} 
+                        sponsor={sponsor} 
+                        onLogoUpload={handleLogoUpload}
+                        onUpdate={updateSponsor}
+                        onDelete={deleteSponsor}
+                        tierColors={tierColors}
+                        tierLabels={tierLabels}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Tier B */}
+              {tierB.length > 0 && (
+                <div>
+                  <Badge variant="secondary" className="mb-3">Patrocinadores (Nível B)</Badge>
+                  <div className="space-y-2">
+                    {tierB.map((sponsor: any) => (
+                      <SponsorRow 
+                        key={sponsor.id} 
+                        sponsor={sponsor} 
+                        onLogoUpload={handleLogoUpload}
+                        onUpdate={updateSponsor}
+                        onDelete={deleteSponsor}
+                        tierColors={tierColors}
+                        tierLabels={tierLabels}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Tier C */}
+              {tierC.length > 0 && (
+                <div>
+                  <Badge variant="outline" className="mb-3">Apoiadores (Nível C)</Badge>
+                  <div className="space-y-2">
+                    {tierC.map((sponsor: any) => (
+                      <SponsorRow 
+                        key={sponsor.id} 
+                        sponsor={sponsor} 
+                        onLogoUpload={handleLogoUpload}
+                        onUpdate={updateSponsor}
+                        onDelete={deleteSponsor}
+                        tierColors={tierColors}
+                        tierLabels={tierLabels}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-8">
+              Nenhum patrocinador cadastrado
+            </p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function SponsorRow({ 
+  sponsor, 
+  onLogoUpload, 
+  onUpdate, 
+  onDelete,
+  tierColors,
+  tierLabels
+}: { 
+  sponsor: any; 
+  onLogoUpload: (id: number, e: React.ChangeEvent<HTMLInputElement>) => void;
+  onUpdate: any;
+  onDelete: any;
+  tierColors: Record<string, string>;
+  tierLabels: Record<string, string>;
+}) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <div className="flex items-center justify-between p-3 border rounded-lg">
+      <div className="flex items-center gap-3">
+        {sponsor.logoUrl ? (
+          <img 
+            src={sponsor.logoUrl} 
+            alt={sponsor.name}
+            className="w-12 h-12 object-contain rounded"
+          />
+        ) : (
+          <div className="w-12 h-12 bg-muted rounded flex items-center justify-center">
+            <Star className="h-6 w-6 text-muted-foreground" />
+          </div>
+        )}
+        <div>
+          <p className="font-medium">{sponsor.name}</p>
+          <div className="flex items-center gap-2">
+            <Badge className={`text-xs ${tierColors[sponsor.tier]}`}>
+              {tierLabels[sponsor.tier]}
+            </Badge>
+            {!sponsor.active && (
+              <Badge variant="destructive" className="text-xs">Inativo</Badge>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => onLogoUpload(sponsor.id, e)}
+        />
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <Upload className="h-4 w-4" />
+        </Button>
+        <Button 
+          variant="outline" 
+          size="sm"
+          onClick={() => onUpdate.mutate({ id: sponsor.id, active: !sponsor.active })}
+        >
+          {sponsor.active ? "Desativar" : "Ativar"}
+        </Button>
+        <ConfirmDeleteDialog
+          title="Remover Patrocinador"
+          description={`Você está prestes a remover o patrocinador "${sponsor.name}".`}
+          requireTyping={false}
+          onConfirm={() => onDelete.mutate({ id: sponsor.id })}
+          isDeleting={onDelete.isPending}
+          variant="destructive"
+          size="sm"
+        >
+          <Button variant="destructive" size="sm">
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </ConfirmDeleteDialog>
+      </div>
     </div>
   );
 }

@@ -1,18 +1,22 @@
+import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
-import { Target, AlertTriangle, Shield, Flame, Trophy } from "lucide-react";
+import { Target, AlertTriangle, Shield, Flame, Search } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 
 export default function Estatisticas() {
-  const { data: topScorers, isLoading: loadingScorers } = trpc.stats.topScorers.useQuery({ limit: 20 });
-  const { data: topCarded, isLoading: loadingCarded } = trpc.stats.topCarded.useQuery({ limit: 20 });
-  const { data: bestDefenses, isLoading: loadingBest } = trpc.stats.bestDefenses.useQuery({ limit: 10 });
-  const { data: worstDefenses, isLoading: loadingWorst } = trpc.stats.worstDefenses.useQuery({ limit: 10 });
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  const { data: topScorers, isLoading: loadingScorers } = trpc.stats.topScorers.useQuery({ limit: 50 });
+  const { data: topCarded, isLoading: loadingCarded } = trpc.stats.topCarded.useQuery({ limit: 50 });
+  const { data: bestDefenses, isLoading: loadingBest } = trpc.stats.bestDefenses.useQuery({ limit: 20 });
+  const { data: worstDefenses, isLoading: loadingWorst } = trpc.stats.worstDefenses.useQuery({ limit: 20 });
   const { data: teams } = trpc.teams.list.useQuery();
   const { data: players } = trpc.players.list.useQuery();
 
@@ -29,12 +33,51 @@ export default function Estatisticas() {
     return players?.find(p => p.id === playerId)?.name || "Jogador";
   };
 
+  // Filter functions
+  const filterByPlayerName = (playerId: number) => {
+    if (!searchTerm) return true;
+    const playerName = getPlayerName(playerId).toLowerCase();
+    return playerName.includes(searchTerm.toLowerCase());
+  };
+
+  const filterByTeamName = (teamId: number) => {
+    if (!searchTerm) return true;
+    const team = getTeamById(teamId);
+    if (!team) return false;
+    return team.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           (team.lodge && team.lodge.toLowerCase().includes(searchTerm.toLowerCase()));
+  };
+
+  // Filtered data
+  const filteredScorers = topScorers?.filter(s => filterByPlayerName(s.playerId));
+  const filteredCarded = topCarded?.filter(c => filterByPlayerName(c.playerId));
+  const filteredBestDefenses = bestDefenses?.filter(d => filterByTeamName(d.team.id));
+  const filteredWorstDefenses = worstDefenses?.filter(d => filterByTeamName(d.team.id));
+
   return (
     <div className="min-h-screen bg-background masonic-pattern">
       {/* Header */}
       <Header />
 
       <main className="container py-8">
+        {/* Busca de Jogadores */}
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Buscar jogador por nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          {searchTerm && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Filtrando resultados por "{searchTerm}"
+            </p>
+          )}
+        </div>
+
         <Tabs defaultValue="scorers" className="w-full">
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="scorers" className="gap-1 text-xs md:text-sm">
@@ -71,9 +114,9 @@ export default function Estatisticas() {
                       <Skeleton key={i} className="h-12 w-full" />
                     ))}
                   </div>
-                ) : topScorers && topScorers.length > 0 ? (
+                ) : filteredScorers && filteredScorers.length > 0 ? (
                   <div className="space-y-2">
-                    {topScorers.map((scorer, index) => (
+                    {filteredScorers.map((scorer, index) => (
                       <div 
                         key={scorer.playerId} 
                         className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
@@ -90,7 +133,9 @@ export default function Estatisticas() {
                             {index + 1}º
                           </div>
                           <div>
-                            <p className="font-bold">{getPlayerName(scorer.playerId)}</p>
+                            <Link href={`/jogadores/${scorer.playerId}`}>
+                            <p className="font-bold hover:text-primary cursor-pointer">{getPlayerName(scorer.playerId)}</p>
+                          </Link>
                             <p className="text-sm text-muted-foreground">{getTeamWithLodge(scorer.teamId)}</p>
                           </div>
                         </div>
@@ -126,9 +171,9 @@ export default function Estatisticas() {
                       <Skeleton key={i} className="h-12 w-full" />
                     ))}
                   </div>
-                ) : topCarded && topCarded.length > 0 ? (
+                ) : filteredCarded && filteredCarded.length > 0 ? (
                   <div className="space-y-2">
-                    {topCarded.map((player, index) => (
+                    {filteredCarded.map((player, index) => (
                       <div 
                         key={player.playerId} 
                         className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
@@ -142,7 +187,9 @@ export default function Estatisticas() {
                             {index + 1}º
                           </div>
                           <div>
-                            <p className="font-bold">{getPlayerName(player.playerId)}</p>
+                            <Link href={`/jogadores/${player.playerId}`}>
+                            <p className="font-bold hover:text-primary cursor-pointer">{getPlayerName(player.playerId)}</p>
+                          </Link>
                             <p className="text-sm text-muted-foreground">{getTeamWithLodge(player.teamId)}</p>
                           </div>
                         </div>
@@ -185,9 +232,9 @@ export default function Estatisticas() {
                       <Skeleton key={i} className="h-12 w-full" />
                     ))}
                   </div>
-                ) : bestDefenses && bestDefenses.length > 0 ? (
+                ) : filteredBestDefenses && filteredBestDefenses.length > 0 ? (
                   <div className="space-y-2">
-                    {bestDefenses.map((team, index) => (
+                    {filteredBestDefenses.map((team, index) => (
                       <div 
                         key={team.team.id} 
                         className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
@@ -244,9 +291,9 @@ export default function Estatisticas() {
                       <Skeleton key={i} className="h-12 w-full" />
                     ))}
                   </div>
-                ) : worstDefenses && worstDefenses.length > 0 ? (
+                ) : filteredWorstDefenses && filteredWorstDefenses.length > 0 ? (
                   <div className="space-y-2">
-                    {worstDefenses.map((team, index) => (
+                    {filteredWorstDefenses.map((team, index) => (
                       <div 
                         key={team.team.id} 
                         className={`flex items-center justify-between p-3 rounded-lg transition-colors ${

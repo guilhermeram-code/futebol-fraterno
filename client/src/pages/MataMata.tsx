@@ -297,7 +297,7 @@ function BracketMatch({ match, getTeamName, getTeamLogo, getTeamLodge, size = "s
             <div className="text-[10px] text-muted-foreground">{getTeamLodge(match.homeTeamId)}</div>
           )}
         </div>
-        <span className={`font-bold ml-2 ${homeWon ? "text-green-700" : ""}`}>
+        <span className={`font-bold ml-2 score-display ${homeWon ? "text-green-700" : ""}`}>
           {match.played ? match.homeScore : "-"}
         </span>
       </div>
@@ -310,7 +310,7 @@ function BracketMatch({ match, getTeamName, getTeamLogo, getTeamLodge, size = "s
             <div className="text-[10px] text-muted-foreground">{getTeamLodge(match.awayTeamId)}</div>
           )}
         </div>
-        <span className={`font-bold ml-2 ${awayWon ? "text-green-700" : ""}`}>
+        <span className={`font-bold ml-2 score-display ${awayWon ? "text-green-700" : ""}`}>
           {match.played ? match.awayScore : "-"}
         </span>
       </div>
@@ -344,9 +344,9 @@ function MatchCard({ match, getTeamName, isFinal }: MatchCardProps) {
         <div className="px-4 text-center">
           {match.played ? (
             <div className="flex items-center gap-2">
-              <span className="text-xl font-bold">{match.homeScore}</span>
+              <span className="text-xl font-bold score-display">{match.homeScore}</span>
               <span className="text-muted-foreground">x</span>
-              <span className="text-xl font-bold">{match.awayScore}</span>
+              <span className="text-xl font-bold score-display">{match.awayScore}</span>
             </div>
           ) : (
             <span className="text-muted-foreground">vs</span>

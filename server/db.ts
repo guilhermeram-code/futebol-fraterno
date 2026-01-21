@@ -13,7 +13,8 @@ import {
   tournamentSettings, InsertTournamentSetting,
   announcements, InsertAnnouncement, Announcement,
   adminEmails, InsertAdminEmail, AdminEmail,
-  adminUsers, InsertAdminUser, AdminUser
+  adminUsers, InsertAdminUser, AdminUser,
+  sponsors, InsertSponsor, Sponsor
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -201,6 +202,13 @@ export async function getAllPlayers() {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(players).orderBy(asc(players.name));
+}
+
+export async function getPlayerById(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(players).where(eq(players.id, id));
+  return result[0] || null;
 }
 
 // ==================== MATCHES ====================
@@ -563,6 +571,93 @@ export async function getTeamStats(teamId: number) {
   };
 }
 
+// Estatísticas apenas da fase de grupos (para classificação)
+export async function getTeamStatsGroupOnly(teamId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Filtra apenas jogos da fase de grupos (phase = 'groups')
+  const teamMatches = await db.select().from(matches)
+    .where(
+      and(
+        eq(matches.played, true),
+        eq(matches.phase, 'groups'),
+        sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
+      )
+    );
+  
+  let wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
+  
+  teamMatches.forEach(match => {
+    const isHome = match.homeTeamId === teamId;
+    const teamScore = isHome ? match.homeScore! : match.awayScore!;
+    const opponentScore = isHome ? match.awayScore! : match.homeScore!;
+    
+    goalsFor += teamScore;
+    goalsAgainst += opponentScore;
+    
+    if (teamScore > opponentScore) wins++;
+    else if (teamScore === opponentScore) draws++;
+    else losses++;
+  });
+  
+  return {
+    played: teamMatches.length,
+    wins,
+    draws,
+    losses,
+    goalsFor,
+    goalsAgainst,
+    goalDifference: goalsFor - goalsAgainst,
+    points: wins * 3 + draws
+  };
+}
+
+// Estatísticas apenas do mata-mata
+export async function getTeamStatsKnockoutOnly(teamId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  // Busca todos os jogos jogados do time
+  const allTeamMatches = await db.select().from(matches)
+    .where(
+      and(
+        eq(matches.played, true),
+        sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
+      )
+    );
+  
+  // Filtra apenas jogos do mata-mata (phase != 'groups')
+  const teamMatches = allTeamMatches.filter(m => m.phase !== 'groups');
+  
+  let wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
+  
+  teamMatches.forEach(match => {
+    const isHome = match.homeTeamId === teamId;
+    const teamScore = isHome ? match.homeScore! : match.awayScore!;
+    const opponentScore = isHome ? match.awayScore! : match.homeScore!;
+    
+    goalsFor += teamScore;
+    goalsAgainst += opponentScore;
+    
+    if (teamScore > opponentScore) wins++;
+    else if (teamScore === opponentScore) draws++;
+    else losses++;
+  });
+  
+  return {
+    played: teamMatches.length,
+    wins,
+    draws,
+    losses,
+    goalsFor,
+    goalsAgainst,
+    goalDifference: goalsFor - goalsAgainst,
+    // Mata-mata não tem pontos, mas retornamos para consistência
+    points: 0
+  };
+}
+
 export async function getWorstDefenses(limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -796,4 +891,47 @@ export async function deleteAdminUser(id: number): Promise<boolean> {
 
   await db.delete(adminUsers).where(eq(adminUsers.id, id));
   return true;
+}
+
+
+// ==================== SPONSORS ====================
+export async function createSponsor(sponsor: InsertSponsor) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(sponsors).values(sponsor);
+  return { id: result[0].insertId };
+}
+
+export async function updateSponsor(id: number, sponsor: Partial<InsertSponsor>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(sponsors).set(sponsor).where(eq(sponsors.id, id));
+}
+
+export async function deleteSponsor(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(sponsors).where(eq(sponsors.id, id));
+}
+
+export async function getAllSponsors() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(sponsors)
+    .where(eq(sponsors.active, true))
+    .orderBy(asc(sponsors.tier), asc(sponsors.name));
+}
+
+export async function getAllSponsorsAdmin() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(sponsors)
+    .orderBy(asc(sponsors.tier), asc(sponsors.name));
+}
+
+export async function getSponsorById(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.select().from(sponsors).where(eq(sponsors.id, id)).limit(1);
+  return result[0];
 }

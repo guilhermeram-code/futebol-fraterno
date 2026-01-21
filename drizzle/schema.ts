@@ -181,3 +181,21 @@ export const adminUsers = mysqlTable("admin_users", {
 
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type InsertAdminUser = typeof adminUsers.$inferInsert;
+
+
+// Tabela de patrocinadores
+export const sponsors = mysqlTable("sponsors", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  tier: mysqlEnum("tier", ["A", "B", "C"]).default("C").notNull(), // A = Principal, B = Patrocinador, C = Apoiador
+  logoUrl: text("logoUrl"),
+  fileKey: varchar("fileKey", { length: 255 }),
+  link: varchar("link", { length: 500 }), // Link do patrocinador
+  description: text("description"),
+  active: boolean("active").default(true).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Sponsor = typeof sponsors.$inferSelect;
+export type InsertSponsor = typeof sponsors.$inferInsert;

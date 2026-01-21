@@ -2,9 +2,10 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
-import { Users, Shield, Trophy, Target, AlertTriangle, Calendar } from "lucide-react";
+import { Users, Shield, Trophy, Target, AlertTriangle, Calendar, Info } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -15,6 +16,8 @@ export default function TimeDetail() {
 
   const { data: team, isLoading: loadingTeam } = trpc.teams.byId.useQuery({ id: teamId });
   const { data: stats, isLoading: loadingStats } = trpc.teams.stats.useQuery({ id: teamId });
+  const { data: statsGroupOnly } = trpc.teams.statsGroupOnly.useQuery({ id: teamId });
+  const { data: statsKnockoutOnly } = trpc.teams.statsKnockoutOnly.useQuery({ id: teamId });
   const { data: players, isLoading: loadingPlayers } = trpc.players.byTeam.useQuery({ teamId });
   const { data: matches, isLoading: loadingMatches } = trpc.matches.byTeam.useQuery({ teamId });
   const { data: allTeams } = trpc.teams.list.useQuery();
@@ -133,59 +136,128 @@ export default function TimeDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Stats and Players */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-gold-dark">
-                  <Trophy className="h-5 w-5" />
-                  Estatísticas
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loadingStats ? (
-                  <Skeleton className="h-24 w-full" />
-                ) : stats ? (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-4 bg-muted rounded-lg">
-                      <p className="text-3xl font-bold text-gold-dark">{stats.points}</p>
-                      <p className="text-sm text-muted-foreground">Pontos</p>
+            {/* Stats - Fase de Grupos */}
+            {statsGroupOnly && statsGroupOnly.played > 0 && (
+              <Card className="card-shadow">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-gold-dark text-lg">
+                    <Trophy className="h-5 w-5" />
+                    Fase de Grupos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
+                    <div className="text-center p-2 bg-gold-gradient-light rounded-lg">
+                      <p className="text-2xl font-bold text-gold-dark score-display">{statsGroupOnly.points}</p>
+                      <p className="text-xs text-muted-foreground">PTS</p>
                     </div>
-                    <div className="text-center p-4 bg-muted rounded-lg">
-                      <p className="text-3xl font-bold">{stats.played}</p>
-                      <p className="text-sm text-muted-foreground">Jogos</p>
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold score-display">{statsGroupOnly.played}</p>
+                      <p className="text-xs text-muted-foreground">J</p>
                     </div>
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <p className="text-3xl font-bold text-green-600">{stats.wins}</p>
-                      <p className="text-sm text-muted-foreground">Vitórias</p>
+                    <div className="text-center p-2 bg-green-50 rounded-lg">
+                      <p className="text-2xl font-bold text-green-600 score-display">{statsGroupOnly.wins}</p>
+                      <p className="text-xs text-muted-foreground">V</p>
                     </div>
-                    <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                      <p className="text-3xl font-bold text-yellow-600">{stats.draws}</p>
-                      <p className="text-sm text-muted-foreground">Empates</p>
+                    <div className="text-center p-2 bg-yellow-50 rounded-lg">
+                      <p className="text-2xl font-bold text-yellow-600 score-display">{statsGroupOnly.draws}</p>
+                      <p className="text-xs text-muted-foreground">E</p>
                     </div>
-                    <div className="text-center p-4 bg-red-50 rounded-lg">
-                      <p className="text-3xl font-bold text-red-600">{stats.losses}</p>
-                      <p className="text-sm text-muted-foreground">Derrotas</p>
+                    <div className="text-center p-2 bg-red-50 rounded-lg">
+                      <p className="text-2xl font-bold text-red-600 score-display">{statsGroupOnly.losses}</p>
+                      <p className="text-xs text-muted-foreground">D</p>
                     </div>
-                    <div className="text-center p-4 bg-muted rounded-lg">
-                      <p className="text-3xl font-bold">{stats.goalsFor}</p>
-                      <p className="text-sm text-muted-foreground">Gols Pró</p>
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold score-display">{statsGroupOnly.goalsFor}</p>
+                      <p className="text-xs text-muted-foreground">GP</p>
                     </div>
-                    <div className="text-center p-4 bg-muted rounded-lg">
-                      <p className="text-3xl font-bold">{stats.goalsAgainst}</p>
-                      <p className="text-sm text-muted-foreground">Gols Contra</p>
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold score-display">{statsGroupOnly.goalsAgainst}</p>
+                      <p className="text-xs text-muted-foreground">GC</p>
                     </div>
-                    <div className="text-center p-4 bg-muted rounded-lg">
-                      <p className={`text-3xl font-bold ${stats.goalDifference > 0 ? "text-green-600" : stats.goalDifference < 0 ? "text-red-600" : ""}`}>
-                        {stats.goalDifference > 0 ? "+" : ""}{stats.goalDifference}
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className={`text-2xl font-bold score-display ${statsGroupOnly.goalDifference > 0 ? "text-green-600" : statsGroupOnly.goalDifference < 0 ? "text-red-600" : ""}`}>
+                        {statsGroupOnly.goalDifference > 0 ? "+" : ""}{statsGroupOnly.goalDifference}
                       </p>
-                      <p className="text-sm text-muted-foreground">Saldo</p>
+                      <p className="text-xs text-muted-foreground">SG</p>
                     </div>
                   </div>
-                ) : (
-                  <p className="text-center text-muted-foreground">Nenhuma estatística disponível</p>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Stats - Mata-Mata */}
+            {statsKnockoutOnly && statsKnockoutOnly.played > 0 && (
+              <Card className="card-shadow">
+                <CardHeader className="pb-2">
+                  <CardTitle className="flex items-center gap-2 text-gold-dark text-lg">
+                    <Target className="h-5 w-5" />
+                    Mata-Mata
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold score-display">{statsKnockoutOnly.played}</p>
+                      <p className="text-xs text-muted-foreground">J</p>
+                    </div>
+                    <div className="text-center p-2 bg-green-50 rounded-lg">
+                      <p className="text-2xl font-bold text-green-600 score-display">{statsKnockoutOnly.wins}</p>
+                      <p className="text-xs text-muted-foreground">V</p>
+                    </div>
+                    <div className="text-center p-2 bg-yellow-50 rounded-lg">
+                      <p className="text-2xl font-bold text-yellow-600 score-display">{statsKnockoutOnly.draws}</p>
+                      <p className="text-xs text-muted-foreground">E</p>
+                    </div>
+                    <div className="text-center p-2 bg-red-50 rounded-lg">
+                      <p className="text-2xl font-bold text-red-600 score-display">{statsKnockoutOnly.losses}</p>
+                      <p className="text-xs text-muted-foreground">D</p>
+                    </div>
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold score-display">{statsKnockoutOnly.goalsFor}</p>
+                      <p className="text-xs text-muted-foreground">GP</p>
+                    </div>
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className="text-2xl font-bold score-display">{statsKnockoutOnly.goalsAgainst}</p>
+                      <p className="text-xs text-muted-foreground">GC</p>
+                    </div>
+                    <div className="text-center p-2 bg-muted rounded-lg">
+                      <p className={`text-2xl font-bold score-display ${statsKnockoutOnly.goalDifference > 0 ? "text-green-600" : statsKnockoutOnly.goalDifference < 0 ? "text-red-600" : ""}`}>
+                        {statsKnockoutOnly.goalDifference > 0 ? "+" : ""}{statsKnockoutOnly.goalDifference}
+                      </p>
+                      <p className="text-xs text-muted-foreground">SG</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Stats - Geral (se não tiver nenhum jogo) */}
+            {loadingStats ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-gold-dark">
+                    <Trophy className="h-5 w-5" />
+                    Estatísticas
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Skeleton className="h-24 w-full" />
+                </CardContent>
+              </Card>
+            ) : (!statsGroupOnly || statsGroupOnly.played === 0) && (!statsKnockoutOnly || statsKnockoutOnly.played === 0) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-gold-dark">
+                    <Trophy className="h-5 w-5" />
+                    Estatísticas
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-muted-foreground">Nenhum jogo realizado ainda</p>
+                </CardContent>
+              </Card>
+            )}
 
             {/* Players */}
             <Card>
@@ -296,8 +368,30 @@ export default function TimeDetail() {
                             )}
                           </div>
                           <div className="flex items-center justify-between">
-                            <span className="font-medium">
-                              {isHome ? "vs" : "@"} {getTeamName(opponentId)}
+                            <span className="font-medium flex items-center gap-1">
+                              {isHome ? (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <span className="cursor-help text-green-600">🏠</span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Jogando em casa (mandante)</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              ) : (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <span className="cursor-help text-muted-foreground">✈️</span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>Jogando fora de casa (visitante)</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )} vs {getTeamName(opponentId)}
                             </span>
                             {match.played ? (
                               <span className="font-bold">
