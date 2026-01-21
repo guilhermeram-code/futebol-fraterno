@@ -331,6 +331,11 @@ export const appRouter = router({
 
   // ==================== GOALS ====================
   goals: router({
+    list: publicProcedure
+      .query(async () => {
+        return db.getAllGoals();
+      }),
+    
     byMatch: publicProcedure
       .input(z.object({ matchId: z.number() }))
       .query(async ({ input }) => {
@@ -504,6 +509,24 @@ export const appRouter = router({
       .mutation(async ({ input }) => {
         await db.deletePhoto(input.id);
         return { success: true };
+      }),
+  }),
+
+  // ==================== UPLOAD GENÉRICO ====================
+  upload: router({
+    image: adminProcedure
+      .input(z.object({
+        base64: z.string(),
+        mimeType: z.string(),
+        folder: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const buffer = Buffer.from(input.base64, 'base64');
+        const ext = input.mimeType.split('/')[1] || 'jpg';
+        const folder = input.folder || 'uploads';
+        const fileKey = `${folder}/${nanoid()}.${ext}`;
+        const { url } = await storagePut(fileKey, buffer, input.mimeType);
+        return { url, fileKey };
       }),
   }),
 
@@ -776,6 +799,48 @@ export const appRouter = router({
     // Logout admin (frontend limpa o localStorage)
     logout: publicProcedure
       .mutation(async () => {
+        return { success: true };
+      }),
+  }),
+
+  // ==================== SUPPORT MESSAGES ====================
+  supportMessages: router({
+    byTeam: publicProcedure
+      .input(z.object({ teamId: z.number() }))
+      .query(async ({ input }) => {
+        return db.getSupportMessagesByTeam(input.teamId);
+      }),
+    
+    pending: adminProcedure.query(async () => {
+      return db.getPendingSupportMessages();
+    }),
+    
+    all: adminProcedure.query(async () => {
+      return db.getAllSupportMessages();
+    }),
+    
+    create: publicProcedure
+      .input(z.object({
+        teamId: z.number(),
+        authorName: z.string().min(1),
+        authorLodge: z.string().optional(),
+        message: z.string().min(1).max(500),
+      }))
+      .mutation(async ({ input }) => {
+        return db.createSupportMessage(input);
+      }),
+    
+    approve: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.approveSupportMessage(input.id);
+        return { success: true };
+      }),
+    
+    delete: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await db.deleteSupportMessage(input.id);
         return { success: true };
       }),
   }),

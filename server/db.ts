@@ -14,7 +14,8 @@ import {
   announcements, InsertAnnouncement, Announcement,
   adminEmails, InsertAdminEmail, AdminEmail,
   adminUsers, InsertAdminUser, AdminUser,
-  sponsors, InsertSponsor, Sponsor
+  sponsors, InsertSponsor, Sponsor,
+  supportMessages, InsertSupportMessage, SupportMessage
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -337,6 +338,12 @@ export async function getGoalsByPlayer(playerId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(goals).where(eq(goals.playerId, playerId));
+}
+
+export async function getAllGoals() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(goals);
 }
 
 // ==================== CARDS ====================
@@ -934,4 +941,51 @@ export async function getSponsorById(id: number) {
   if (!db) throw new Error("Database not available");
   const result = await db.select().from(sponsors).where(eq(sponsors.id, id)).limit(1);
   return result[0];
+}
+
+
+// ==================== SUPPORT MESSAGES ====================
+export async function createSupportMessage(message: InsertSupportMessage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(supportMessages).values(message);
+  return { id: result[0].insertId };
+}
+
+export async function getSupportMessagesByTeam(teamId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(supportMessages)
+    .where(and(
+      eq(supportMessages.teamId, teamId),
+      eq(supportMessages.approved, true)
+    ))
+    .orderBy(desc(supportMessages.createdAt));
+}
+
+export async function getAllSupportMessages() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(supportMessages)
+    .orderBy(desc(supportMessages.createdAt));
+}
+
+export async function getPendingSupportMessages() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(supportMessages)
+    .where(eq(supportMessages.approved, false))
+    .orderBy(desc(supportMessages.createdAt));
+}
+
+export async function approveSupportMessage(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(supportMessages).set({ approved: true }).where(eq(supportMessages.id, id));
+}
+
+export async function deleteSupportMessage(id: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(supportMessages).where(eq(supportMessages.id, id));
 }

@@ -34,7 +34,8 @@ import {
   ChevronRight,
   Check,
   LogOut,
-  Star
+  Star,
+  Heart
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { ResultsRegistration } from "@/components/ResultsRegistration";
@@ -159,6 +160,10 @@ export default function Admin() {
               <Star className="h-4 w-4 hidden md:block" />
               Patrocinadores
             </TabsTrigger>
+            <TabsTrigger value="support-messages" className="gap-1 text-xs">
+              <Heart className="h-4 w-4 hidden md:block" />
+              Apoio
+            </TabsTrigger>
             <TabsTrigger value="settings" className="gap-1 text-xs">
               <Settings className="h-4 w-4 hidden md:block" />
               Configurações
@@ -203,6 +208,10 @@ export default function Admin() {
 
           <TabsContent value="sponsors">
             <SponsorsTab />
+          </TabsContent>
+
+          <TabsContent value="support-messages">
+            <SupportMessagesTab />
           </TabsContent>
 
           <TabsContent value="settings">
@@ -626,6 +635,8 @@ function PlayersTab() {
     setPhotoUrl("");
   };
 
+  const uploadImage = trpc.upload.image.useMutation();
+
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -637,22 +648,26 @@ function PlayersTab() {
     
     setUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) throw new Error('Erro no upload');
-      
-      const { url } = await response.json();
-      setPhotoUrl(url);
-      toast.success("Foto enviada!");
+      // Converter arquivo para base64
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(',')[1];
+        const result = await uploadImage.mutateAsync({
+          base64,
+          mimeType: file.type,
+          folder: 'players',
+        });
+        setPhotoUrl(result.url);
+        toast.success("Foto enviada!");
+        setUploading(false);
+      };
+      reader.onerror = () => {
+        toast.error("Erro ao ler arquivo");
+        setUploading(false);
+      };
+      reader.readAsDataURL(file);
     } catch (error) {
       toast.error("Erro ao enviar foto");
-    } finally {
       setUploading(false);
     }
   };
@@ -1323,6 +1338,12 @@ function MatchesTab() {
                     {match.played ? ` ${match.homeScore} x ${match.awayScore} ` : " vs "}
                     {getTeamNameWithLodge(match.awayTeamId)}
                   </p>
+                  {match.matchDate && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      📅 {new Date(match.matchDate).toLocaleDateString('pt-BR')} às {new Date(match.matchDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      {match.location && ` • 📍 ${match.location}`}
+                    </p>
+                  )}
                 </div>
                 <ConfirmDeleteDialog
                   title="Excluir Jogo"
@@ -1457,9 +1478,24 @@ function ResultsTabOld() {
                     setPenalties(false);
                   }}
                 >
-                  <p className="font-medium">
-                    {getTeamNameWithLodge(match.homeTeamId)} vs {getTeamNameWithLodge(match.awayTeamId)}
-                  </p>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-xs opacity-70 mb-1">
+                        {match.phase === 'groups' ? 'Fase de Grupos' : match.phase === 'round16' ? 'Oitavas' : match.phase === 'quarters' ? 'Quartas' : match.phase === 'semis' ? 'Semi' : 'Final'}
+                        {match.round && ` - R${match.round}`}
+                      </p>
+                      <p className="font-medium">
+                        {getTeamNameWithLodge(match.homeTeamId)} vs {getTeamNameWithLodge(match.awayTeamId)}
+                      </p>
+                    </div>
+                    {match.matchDate && (
+                      <span className="text-xs opacity-70">
+                        {new Date(match.matchDate).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })}
+                        {' '}{new Date(match.matchDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    )}
+                  </div>
+                  <Badge variant="outline" className="mt-2">Pendente</Badge>
                 </div>
               ))
             ) : (
@@ -3002,6 +3038,148 @@ function SponsorRow({
           </Button>
         </ConfirmDeleteDialog>
       </div>
+    </div>
+  );
+}
+
+
+// ==================== SUPPORT MESSAGES TAB ====================
+function SupportMessagesTab() {
+  const utils = trpc.useUtils();
+  const { data: allMessages, isLoading } = trpc.supportMessages.all.useQuery();
+  const { data: teams } = trpc.teams.list.useQuery();
+  
+  const approveMessage = trpc.supportMessages.approve.useMutation({
+    onSuccess: () => {
+      utils.supportMessages.all.invalidate();
+      utils.supportMessages.byTeam.invalidate();
+      toast.success("Mensagem aprovada!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  
+  const deleteMessage = trpc.supportMessages.delete.useMutation({
+    onSuccess: () => {
+      utils.supportMessages.all.invalidate();
+      utils.supportMessages.byTeam.invalidate();
+      toast.success("Mensagem excluída!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
+
+  const getTeamName = (teamId: number) => {
+    return teams?.find(t => t.id === teamId)?.name || `Time #${teamId}`;
+  };
+
+  const pendingMessages = allMessages?.filter((m: any) => !m.approved) || [];
+  const approvedMessages = allMessages?.filter((m: any) => m.approved) || [];
+
+  return (
+    <div className="space-y-6">
+      {/* Mensagens Pendentes */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-amber-500"></span>
+            Pendentes de Aprovação ({pendingMessages.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map(i => <Skeleton key={i} className="h-20 w-full" />)}
+            </div>
+          ) : pendingMessages.length > 0 ? (
+            <div className="space-y-2">
+              {pendingMessages.map((msg: any) => (
+                <div key={msg.id} className="flex items-start justify-between p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <Badge variant="secondary" className="bg-gold/20 text-gold-dark">
+                        <Shield className="h-3 w-3 mr-1" />
+                        {getTeamName(msg.teamId)}
+                      </Badge>
+                      <span className="font-medium text-sm">{msg.authorName}</span>
+                      {msg.authorLodge && (
+                        <Badge variant="outline" className="text-xs">{msg.authorLodge}</Badge>
+                      )}
+                      <Badge variant="outline" className="text-xs bg-amber-100 text-amber-800 border-amber-300">
+                        Pendente
+                      </Badge>
+                    </div>
+                    <p className="text-sm mt-2">"{msg.message}"</p>
+                  </div>
+                  <div className="flex gap-1 ml-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="text-green-600 hover:text-green-700 hover:bg-green-100"
+                      onClick={() => approveMessage.mutate({ id: msg.id })}
+                    >
+                      <Check className="h-4 w-4" />
+                    </Button>
+                    <ConfirmDeleteDialog
+                      title="Excluir Mensagem"
+                      description={`Você está prestes a excluir a mensagem de "${msg.authorName}".`}
+                      requireTyping={false}
+                      onConfirm={() => deleteMessage.mutate({ id: msg.id })}
+                      isDeleting={deleteMessage.isPending}
+                      className="text-destructive hover:text-destructive hover:bg-red-100"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-4">Nenhuma mensagem pendente</p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Mensagens Aprovadas */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span className="h-3 w-3 rounded-full bg-green-500"></span>
+            Aprovadas ({approvedMessages.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {approvedMessages.length > 0 ? (
+            <div className="space-y-2">
+              {approvedMessages.map((msg: any) => (
+                <div key={msg.id} className="flex items-start justify-between p-3 bg-muted rounded-lg">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <Badge variant="secondary" className="bg-gold/20 text-gold-dark">
+                        <Shield className="h-3 w-3 mr-1" />
+                        {getTeamName(msg.teamId)}
+                      </Badge>
+                      <span className="font-medium text-sm">{msg.authorName}</span>
+                      {msg.authorLodge && (
+                        <Badge variant="outline" className="text-xs">{msg.authorLodge}</Badge>
+                      )}
+                      <Badge variant="outline" className="text-xs bg-green-100 text-green-800 border-green-300">
+                        Aprovada
+                      </Badge>
+                    </div>
+                    <p className="text-sm mt-2">"{msg.message}"</p>
+                  </div>
+                  <ConfirmDeleteDialog
+                    title="Excluir Mensagem"
+                    description={`Você está prestes a excluir a mensagem de "${msg.authorName}".`}
+                    requireTyping={false}
+                    onConfirm={() => deleteMessage.mutate({ id: msg.id })}
+                    isDeleting={deleteMessage.isPending}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-4">Nenhuma mensagem aprovada</p>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

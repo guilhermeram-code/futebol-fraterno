@@ -33,9 +33,23 @@ export default function Jogos() {
     return groups?.find(g => g.id === groupId)?.name || "";
   };
 
-  const formatMatchDate = (date: Date | null) => {
+  const formatMatchDate = (date: Date | string | null) => {
     if (!date) return "Data a definir";
-    return format(new Date(date), "dd 'de' MMMM 'às' HH:mm", { locale: ptBR });
+    // Se for string ISO, criar Date diretamente
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return format(d, "dd/MM - HH:mm", { locale: ptBR });
+  };
+
+  const formatMatchDateShort = (date: Date | string | null) => {
+    if (!date) return "";
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return format(d, "dd/MM", { locale: ptBR });
+  };
+
+  const formatMatchTime = (date: Date | string | null) => {
+    if (!date) return "";
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return format(d, "HH:mm", { locale: ptBR });
   };
 
   const phaseLabels: Record<string, string> = {

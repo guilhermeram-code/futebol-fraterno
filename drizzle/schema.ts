@@ -201,3 +201,18 @@ export const sponsors = mysqlTable("sponsors", {
 
 export type Sponsor = typeof sponsors.$inferSelect;
 export type InsertSponsor = typeof sponsors.$inferInsert;
+
+
+// Tabela de mensagens de apoio aos times (torcedores)
+export const supportMessages = mysqlTable("support_messages", {
+  id: int("id").autoincrement().primaryKey(),
+  teamId: int("teamId").notNull(),
+  authorName: varchar("authorName", { length: 255 }).notNull(),
+  authorLodge: varchar("authorLodge", { length: 255 }), // Loja do autor
+  message: text("message").notNull(),
+  approved: boolean("approved").default(false).notNull(), // Precisa aprovação do admin
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SupportMessage = typeof supportMessages.$inferSelect;
+export type InsertSupportMessage = typeof supportMessages.$inferInsert;

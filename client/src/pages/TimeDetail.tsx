@@ -2,13 +2,18 @@ import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
-import { Users, Shield, Trophy, Target, AlertTriangle, Calendar, Info } from "lucide-react";
+import { Users, Shield, Trophy, Target, Calendar, Award, ShieldCheck, ShieldX, MessageCircle, Send, Heart } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 export default function TimeDetail() {
   const params = useParams<{ id: string }>();
@@ -22,6 +27,50 @@ export default function TimeDetail() {
   const { data: matches, isLoading: loadingMatches } = trpc.matches.byTeam.useQuery({ teamId });
   const { data: allTeams } = trpc.teams.list.useQuery();
   const { data: groups } = trpc.groups.list.useQuery();
+  const { data: topScorers } = trpc.goals.topScorers.useQuery({ limit: 100 });
+  const { data: allPlayers } = trpc.players.list.useQuery();
+  const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 100 });
+  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 100 });
+  const { data: supportMessages, refetch: refetchMessages } = trpc.supportMessages.byTeam.useQuery({ teamId });
+
+  const [showMessageForm, setShowMessageForm] = useState(false);
+  const [authorName, setAuthorName] = useState("");
+  const [authorLodge, setAuthorLodge] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const createMessage = trpc.supportMessages.create.useMutation({
+    onSuccess: () => {
+      toast.success("Mensagem enviada! Aguarde aprovação do administrador.");
+      setShowMessageForm(false);
+      setAuthorName("");
+      setAuthorLodge("");
+      setMessage("");
+      refetchMessages();
+    },
+    onError: () => {
+      toast.error("Erro ao enviar mensagem. Tente novamente.");
+    },
+  });
+
+  const handleSubmitMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authorName.trim() || !message.trim()) {
+      toast.error("Preencha seu nome e a mensagem.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      await createMessage.mutateAsync({
+        teamId,
+        authorName: authorName.trim(),
+        authorLodge: authorLodge.trim() || undefined,
+        message: message.trim(),
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const getTeamName = (id: number) => {
     return allTeams?.find(t => t.id === id)?.name || "Time";
@@ -35,6 +84,68 @@ export default function TimeDetail() {
   const formatMatchDate = (date: Date | null) => {
     if (!date) return "Data a definir";
     return format(new Date(date), "dd/MM/yyyy", { locale: ptBR });
+  };
+
+  // Encontrar artilheiro do time
+  const teamTopScorer = useMemo(() => {
+    if (!topScorers || !players || !allPlayers) return null;
+    
+    // Filtrar apenas jogadores deste time
+    const teamPlayerIds = players.map(p => p.id);
+    const teamScorers = topScorers.filter(s => teamPlayerIds.includes(s.playerId));
+    
+    if (teamScorers.length === 0) return null;
+    
+    // Pegar o maior artilheiro do time
+    const topTeamScorer = teamScorers[0];
+    const player = allPlayers.find(p => p.id === topTeamScorer.playerId);
+    
+    if (!player) return null;
+    
+    return {
+      player,
+      goals: topTeamScorer.goalCount
+    };
+  }, [topScorers, players, allPlayers]);
+
+  // Verificar se o time é a melhor defesa do campeonato
+  const isBestDefense = useMemo(() => {
+    if (!bestDefenses || bestDefenses.length === 0) return false;
+    return bestDefenses[0].team?.id === teamId;
+  }, [bestDefenses, teamId]);
+
+  // Verificar se o time é a pior defesa do campeonato (frangueiro)
+  const isWorstDefense = useMemo(() => {
+    if (!worstDefenses || worstDefenses.length === 0) return false;
+    return worstDefenses[0].team?.id === teamId;
+  }, [worstDefenses, teamId]);
+
+  // Verificar se o artilheiro do time é o artilheiro do campeonato
+  const isTopScorerOfChampionship = useMemo(() => {
+    if (!topScorers || topScorers.length === 0 || !teamTopScorer) return false;
+    return topScorers[0].playerId === teamTopScorer.player.id;
+  }, [topScorers, teamTopScorer]);
+
+  // Mensagens comemorativas
+  const getTopScorerMessage = () => {
+    if (!teamTopScorer) return null;
+    
+    if (isTopScorerOfChampionship) {
+      return `🏆 ${teamTopScorer.player.name} é o ARTILHEIRO DO CAMPEONATO com ${teamTopScorer.goals} gols! Que craque!`;
+    }
+    return `⚽ ${teamTopScorer.player.name} é o artilheiro do time com ${teamTopScorer.goals} gol${teamTopScorer.goals > 1 ? 's' : ''}!`;
+  };
+
+  const getBestDefenseMessage = () => {
+    if (!isBestDefense) return null;
+    const goalsAgainst = bestDefenses?.[0]?.goalsAgainst || 0;
+    return `🛡️ MELHOR DEFESA DO CAMPEONATO! Apenas ${goalsAgainst} gol${goalsAgainst !== 1 ? 's' : ''} sofrido${goalsAgainst !== 1 ? 's' : ''}. Muralha impenetrável!`;
+  };
+
+  const getWorstDefenseMessage = () => {
+    if (!isWorstDefense) return null;
+    const goalsAgainst = worstDefenses?.[0]?.goalsAgainst || 0;
+    return `🥅 Ops... ${goalsAgainst} gols sofridos. O goleiro está precisando de óculos! 👓`;
   };
 
   if (loadingTeam) {
@@ -62,6 +173,8 @@ export default function TimeDetail() {
       </div>
     );
   }
+
+  const hasAchievements = teamTopScorer || isBestDefense || isWorstDefense;
 
   return (
     <div className="min-h-screen bg-background masonic-pattern">
@@ -109,7 +222,7 @@ export default function TimeDetail() {
                       {players?.length || 0} jogadores
                     </Badge>
                   </div>
-                  {/* Mensagem de Apoio */}
+                  {/* Mensagem de Apoio do Admin */}
                   {team.supportMessage && (
                     <div className="mt-4 p-3 rounded-lg bg-gold/20 border border-gold/30">
                       <p className="text-sm md:text-base italic text-gold">
@@ -155,6 +268,81 @@ export default function TimeDetail() {
             </CardContent>
           </Card>
         </div>
+
+        {/* Conquistas e Destaques */}
+        {hasAchievements && (
+          <div className="mb-6">
+            <Card className="border-gold/30 bg-gradient-to-r from-gold/5 to-gold/10">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center gap-2 text-gold-dark">
+                  <Award className="h-5 w-5" />
+                  Conquistas e Destaques
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {/* Artilheiro do Time */}
+                  {teamTopScorer && (
+                    <div className={`p-4 rounded-lg ${isTopScorerOfChampionship ? 'bg-gradient-to-r from-yellow-100 to-amber-100 border-2 border-yellow-400' : 'bg-green-50 border border-green-200'}`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 rounded-full ${isTopScorerOfChampionship ? 'bg-yellow-400' : 'bg-green-500'}`}>
+                          <Target className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <p className={`font-bold ${isTopScorerOfChampionship ? 'text-yellow-800' : 'text-green-800'}`}>
+                            {isTopScorerOfChampionship ? '🏆 ARTILHEIRO DO CAMPEONATO' : '⚽ Artilheiro do Time'}
+                          </p>
+                          <p className={`text-sm ${isTopScorerOfChampionship ? 'text-yellow-700' : 'text-green-700'}`}>
+                            {getTopScorerMessage()}
+                          </p>
+                          <Link href={`/jogadores/${teamTopScorer.player.id}`}>
+                            <span className="text-xs text-primary hover:underline cursor-pointer">
+                              Ver estatísticas do jogador →
+                            </span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Melhor Defesa */}
+                  {isBestDefense && (
+                    <div className="p-4 rounded-lg bg-gradient-to-r from-blue-100 to-cyan-100 border-2 border-blue-400">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-full bg-blue-500">
+                          <ShieldCheck className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-blue-800">🛡️ MELHOR DEFESA DO CAMPEONATO</p>
+                          <p className="text-sm text-blue-700">
+                            {getBestDefenseMessage()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pior Defesa (Frangueiro) */}
+                  {isWorstDefense && (
+                    <div className="p-4 rounded-lg bg-gradient-to-r from-red-50 to-orange-50 border border-red-200">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-full bg-red-400">
+                          <ShieldX className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-red-700">🥅 Frangueiro</p>
+                          <p className="text-sm text-red-600">
+                            {getWorstDefenseMessage()}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Stats and Players */}
@@ -295,28 +483,131 @@ export default function TimeDetail() {
                   <Skeleton className="h-48 w-full" />
                 ) : players && players.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {players.map(player => (
-                      <div 
-                        key={player.id} 
-                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors"
+                    {players.map(player => {
+                      const isTopScorer = teamTopScorer?.player.id === player.id;
+                      return (
+                        <Link key={player.id} href={`/jogadores/${player.id}`}>
+                          <div 
+                            className={`flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors cursor-pointer ${isTopScorer ? 'bg-yellow-50 border border-yellow-200' : ''}`}
+                          >
+                            <div className={`h-10 w-10 rounded-full flex items-center justify-center ${isTopScorer ? 'bg-yellow-400' : 'bg-primary/10'}`}>
+                              <span className={`font-bold ${isTopScorer ? 'text-white' : 'text-primary'}`}>
+                                {player.number || "-"}
+                              </span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium flex items-center gap-1">
+                                {player.name}
+                                {isTopScorer && <Target className="h-4 w-4 text-yellow-600" />}
+                              </p>
+                              {player.position && (
+                                <p className="text-xs text-muted-foreground">{player.position}</p>
+                              )}
+                            </div>
+                            {isTopScorer && (
+                              <Badge className="bg-yellow-400 text-yellow-900">
+                                {teamTopScorer.goals} gols
+                              </Badge>
+                            )}
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-center text-muted-foreground py-4">
+                    Nenhum jogador cadastrado
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Mensagens de Apoio da Torcida */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-gold-dark">
+                  <Heart className="h-5 w-5 text-red-500" />
+                  Mensagens da Torcida
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {/* Formulário para enviar mensagem */}
+                {!showMessageForm ? (
+                  <Button 
+                    variant="outline" 
+                    className="w-full mb-4 border-gold text-gold hover:bg-gold/10"
+                    onClick={() => setShowMessageForm(true)}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-2" />
+                    Enviar mensagem de apoio
+                  </Button>
+                ) : (
+                  <form onSubmit={handleSubmitMessage} className="mb-4 p-4 bg-muted rounded-lg space-y-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <Input
+                        placeholder="Seu nome *"
+                        value={authorName}
+                        onChange={(e) => setAuthorName(e.target.value)}
+                        required
+                      />
+                      <Input
+                        placeholder="Sua loja (opcional)"
+                        value={authorLodge}
+                        onChange={(e) => setAuthorLodge(e.target.value)}
+                      />
+                    </div>
+                    <Textarea
+                      placeholder="Escreva sua mensagem de apoio ao time... (máx. 500 caracteres)"
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value.slice(0, 500))}
+                      required
+                      rows={3}
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      {message.length}/500 caracteres • Sua mensagem será exibida após aprovação do administrador
+                    </p>
+                    <div className="flex gap-2">
+                      <Button type="submit" disabled={submitting} className="bg-gold hover:bg-gold-dark">
+                        <Send className="h-4 w-4 mr-2" />
+                        {submitting ? "Enviando..." : "Enviar"}
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        onClick={() => {
+                          setShowMessageForm(false);
+                          setAuthorName("");
+                          setAuthorLodge("");
+                          setMessage("");
+                        }}
                       >
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                          <span className="font-bold text-primary">
-                            {player.number || "-"}
+                        Cancelar
+                      </Button>
+                    </div>
+                  </form>
+                )}
+
+                {/* Lista de mensagens aprovadas */}
+                {supportMessages && supportMessages.length > 0 ? (
+                  <div className="space-y-3 max-h-96 overflow-y-auto">
+                    {supportMessages.map(msg => (
+                      <div key={msg.id} className="p-3 bg-gradient-to-r from-gold/5 to-gold/10 rounded-lg border border-gold/20">
+                        <p className="text-sm mb-2">"{msg.message}"</p>
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span className="font-medium">
+                            — {msg.authorName}
+                            {msg.authorLodge && ` (${msg.authorLodge})`}
                           </span>
-                        </div>
-                        <div>
-                          <p className="font-medium">{player.name}</p>
-                          {player.position && (
-                            <p className="text-xs text-muted-foreground">{player.position}</p>
-                          )}
+                          <span>
+                            {format(new Date(msg.createdAt), "dd/MM/yyyy", { locale: ptBR })}
+                          </span>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
                   <p className="text-center text-muted-foreground py-4">
-                    Nenhum jogador cadastrado
+                    Nenhuma mensagem ainda. Seja o primeiro a apoiar o time!
                   </p>
                 )}
               </CardContent>

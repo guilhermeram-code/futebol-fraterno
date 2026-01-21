@@ -178,3 +178,15 @@
 - [ ] Relatórios PDF visual (para WhatsApp)
 - [ ] Relatórios PDF completo (gerencial)
 - [ ] Relatórios Excel/CSV
+
+## BUGS E FUNCIONALIDADES - Reportados 21/01/2026
+
+- [x] BUG: Erro ao subir foto do jogador - CORRIGIDO (usando tRPC)
+- [x] BUG: Horário do jogo - agora exibe corretamente no formato local
+- [x] Mostrar horário do jogo no admin (aba Jogos e Resultados)
+- [x] Mostrar descrição do patrocinador na tela principal
+- [x] DELETAR página de Relatórios
+- [x] Criar página de Patrocinadores (no lugar de Relatórios)
+- [x] Criar página de Jogadores (entre Jogos e Times) com busca por nome
+- [x] Mostrar artilheiro/melhor defesa dentro da página do time com msg comemorativa
+- [x] Sistema de mensagens de apoio ao time (torcedor envia, admin aprova)

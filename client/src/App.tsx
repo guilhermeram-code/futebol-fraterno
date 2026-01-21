@@ -15,7 +15,8 @@ import Galeria from "./pages/Galeria";
 import JogadorDetail from "./pages/JogadorDetail";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
-import Relatorios from "./pages/Relatorios";
+import Patrocinadores from "./pages/Patrocinadores";
+import Jogadores from "./pages/Jogadores";
 
 function Router() {
   return (
@@ -26,10 +27,11 @@ function Router() {
       <Route path="/times" component={Times} />
       <Route path="/times/:id" component={TimeDetail} />
       <Route path="/estatisticas" component={Estatisticas} />
+      <Route path="/jogadores" component={Jogadores} />
       <Route path="/jogadores/:id" component={JogadorDetail} />
       <Route path="/mata-mata" component={MataMata} />
       <Route path="/galeria" component={Galeria} />
-      <Route path="/relatorios" component={Relatorios} />
+      <Route path="/patrocinadores" component={Patrocinadores} />
       <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/404" component={NotFound} />

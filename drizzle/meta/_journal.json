@@ -64,6 +64,13 @@
       "when": 1768961309270,
       "tag": "0008_nasty_bloodaxe",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1768965286664,
+      "tag": "0009_high_hellcat",
+      "breakpoints": true
     }
   ]
 }

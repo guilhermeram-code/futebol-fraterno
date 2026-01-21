@@ -272,7 +272,7 @@ export default function Times() {
             })}
           </div>
           )
-        ) : (
+        ) : filteredTeams && filteredTeams.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
               <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
@@ -283,7 +283,7 @@ export default function Times() {
               </p>
             </CardContent>
           </Card>
-        )}
+        ) : null}
       </main>
 
       <AudioPlayer />

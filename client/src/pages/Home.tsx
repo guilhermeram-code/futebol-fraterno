@@ -784,6 +784,9 @@ function SponsorsSection() {
                           )}
                         </div>
                         <p className="text-center text-sm font-medium mt-2">{sponsor.name}</p>
+                        {sponsor.description && (
+                          <p className="text-center text-xs text-muted-foreground mt-1 max-w-[160px]">{sponsor.description}</p>
+                        )}
                       </a>
                     );
                   })}
@@ -823,6 +826,9 @@ function SponsorsSection() {
                           )}
                         </div>
                         <p className="text-center text-xs mt-1">{sponsor.name}</p>
+                        {sponsor.description && (
+                          <p className="text-center text-xs text-muted-foreground max-w-[120px]">{sponsor.description}</p>
+                        )}
                       </a>
                     );
                   })}
