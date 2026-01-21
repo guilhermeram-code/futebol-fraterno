@@ -27,7 +27,7 @@ import { ptBR } from "date-fns/locale";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
-  const { settings } = useTournament();
+  const { settings, isLoading: loadingSettings } = useTournament();
   const { setMusicUrl } = useMusic();
 
   // Atualizar URL da música quando as configurações carregarem
@@ -87,19 +87,29 @@ export default function Home() {
         {/* Overlay para garantir legibilidade */}
         <div className={`absolute inset-0 ${settings.heroBackground ? 'bg-black/40' : 'bg-gold-gradient'}`} />
         <div className="container text-center relative z-10">
-          <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
-            <img 
-              src={`${settings.tournamentLogo}?v=${Date.now()}`} 
-              alt={settings.tournamentName} 
-              className="w-full h-full object-contain scale-90"
-            />
-          </div>
-          <h2 className="text-4xl font-bold text-primary-foreground mb-2">
-            {settings.tournamentName}
-          </h2>
-          <p className="text-xl text-primary-foreground/80 mb-6">
-            {settings.tournamentOrganizer}
-          </p>
+          {loadingSettings ? (
+            <>
+              <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 bg-muted animate-pulse" />
+              <div className="h-10 w-96 mx-auto bg-muted animate-pulse rounded mb-2" />
+              <div className="h-6 w-64 mx-auto bg-muted animate-pulse rounded mb-6" />
+            </>
+          ) : (
+            <>
+              <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
+                <img 
+                  src={`${settings.tournamentLogo}?v=${Date.now()}`} 
+                  alt={settings.tournamentName} 
+                  className="w-full h-full object-contain scale-90"
+                />
+              </div>
+              <h2 className="text-4xl font-bold text-primary-foreground mb-2">
+                {settings.tournamentName}
+              </h2>
+              <p className="text-xl text-primary-foreground/80 mb-6">
+                {settings.tournamentOrganizer}
+              </p>
+            </>
+          )}
           <div className="flex justify-center gap-4 flex-wrap">
             <Link href="/classificacao">
               <Button size="lg" variant="secondary" className="gap-2">
@@ -517,18 +527,29 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-secondary text-secondary-foreground py-8 mt-12">
         <div className="container text-center">
-          <img 
-            src={`${settings.tournamentLogo}?v=${Date.now()}`} 
-            alt={settings.tournamentName} 
-            className="mx-auto h-20 w-20 rounded-full object-cover border-2 border-primary mb-4"
-          />
-          <p className="text-gold font-bold text-lg mb-2">{settings.tournamentName}</p>
-          <p className="text-muted-foreground text-sm">
-            {settings.tournamentOrganizer}
-          </p>
-          <p className="text-muted-foreground text-xs mt-4">
-            {settings.tournamentSubtitle}
-          </p>
+          {loadingSettings ? (
+            <>
+              <div className="mx-auto h-20 w-20 rounded-full bg-muted animate-pulse border-2 border-primary mb-4" />
+              <div className="h-6 w-64 mx-auto bg-muted animate-pulse rounded mb-2" />
+              <div className="h-4 w-48 mx-auto bg-muted animate-pulse rounded" />
+              <div className="h-3 w-40 mx-auto bg-muted animate-pulse rounded mt-4" />
+            </>
+          ) : (
+            <>
+              <img 
+                src={`${settings.tournamentLogo}?v=${Date.now()}`} 
+                alt={settings.tournamentName} 
+                className="mx-auto h-20 w-20 rounded-full object-cover border-2 border-primary mb-4"
+              />
+              <p className="text-gold font-bold text-lg mb-2">{settings.tournamentName}</p>
+              <p className="text-muted-foreground text-sm">
+                {settings.tournamentOrganizer}
+              </p>
+              <p className="text-muted-foreground text-xs mt-4">
+                {settings.tournamentSubtitle}
+              </p>
+            </>
+          )}
         </div>
       </footer>
 

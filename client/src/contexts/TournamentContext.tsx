@@ -34,7 +34,16 @@ export function TournamentProvider({ children }: { children: ReactNode }) {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const settings: TournamentSettings = {
+  // Se ainda está carregando e não tem dados, retorna valores vazios para evitar flash
+  const settings: TournamentSettings = isLoading && !data ? {
+    tournamentName: "",
+    tournamentSubtitle: "",
+    tournamentOrganizer: "",
+    tournamentLogo: "",
+    tournamentMusic: "",
+    tournamentBackground: "",
+    heroBackground: "",
+  } : {
     tournamentName: data?.tournamentName || defaultSettings.tournamentName,
     tournamentSubtitle: data?.tournamentSubtitle || defaultSettings.tournamentSubtitle,
     tournamentOrganizer: data?.tournamentOrganizer || defaultSettings.tournamentOrganizer,

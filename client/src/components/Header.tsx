@@ -14,7 +14,7 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
-  const { settings } = useTournament();
+  const { settings, isLoading } = useTournament();
   const [, navigate] = useLocation();
 
   const { data: players } = trpc.players.list.useQuery();
@@ -64,15 +64,27 @@ export function Header() {
           {/* Logo */}
           <Link href="/">
             <div className="flex items-center gap-4 cursor-pointer">
-              <img 
-                src={`${settings.tournamentLogo}?v=${Date.now()}`} 
-                alt={settings.tournamentName} 
-                className="h-12 w-12 md:h-16 md:w-16 rounded-full object-cover border-2 border-primary shadow-lg"
-              />
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold text-gold">{settings.tournamentName}</h1>
-                <p className="text-xs md:text-sm text-muted-foreground">{settings.tournamentSubtitle}</p>
-              </div>
+              {isLoading ? (
+                <>
+                  <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-muted animate-pulse border-2 border-primary" />
+                  <div>
+                    <div className="h-6 w-48 bg-muted animate-pulse rounded mb-1" />
+                    <div className="h-4 w-32 bg-muted animate-pulse rounded" />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <img 
+                    src={`${settings.tournamentLogo}?v=${Date.now()}`} 
+                    alt={settings.tournamentName} 
+                    className="h-12 w-12 md:h-16 md:w-16 rounded-full object-cover border-2 border-primary shadow-lg"
+                  />
+                  <div>
+                    <h1 className="text-xl md:text-2xl font-bold text-gold">{settings.tournamentName}</h1>
+                    <p className="text-xs md:text-sm text-muted-foreground">{settings.tournamentSubtitle}</p>
+                  </div>
+                </>
+              )}
             </div>
           </Link>
 

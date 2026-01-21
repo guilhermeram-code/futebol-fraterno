@@ -205,3 +205,10 @@
 - [x] Reordenar abas do painel admin: Configurações primeiro
 - [x] Reordenar abas do painel admin: Admins último
 - [x] Corrigir flash de conteúdo antigo ao carregar página (cache busting)
+
+
+## BUG CRÍTICO - Flash de Dados Antigos (21/01/2026)
+
+- [x] Eliminar flash de dados hardcoded antigos ao recarregar página
+- [x] Implementar loading skeleton enquanto dados do banco carregam
+- [x] Remover valores padrão hardcoded (Campeonato Fraterno, Loja José Moreira)
