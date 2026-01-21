@@ -1,0 +1,35 @@
+{
+  "query": "SELECT id, matchDate, CONVERT_TZ(matchDate, '+00:00', '-03:00') as matchDate_BR FROM matches WHERE matchDate IS NOT NULL ORDER BY id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, matchDate, CONVERT_TZ(matchDate, '+00:00', '-03:00') as matchDate_BR FROM matches WHERE matchDate IS NOT NULL ORDER BY id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "120008",
+      "matchDate": "2026-01-23 10:00:00",
+      "matchDate_BR": "2026-01-23 07:00:00.000000"
+    },
+    {
+      "id": "120007",
+      "matchDate": "2026-01-22 11:00:00",
+      "matchDate_BR": "2026-01-22 08:00:00.000000"
+    },
+    {
+      "id": "120006",
+      "matchDate": "2026-01-22 10:00:00",
+      "matchDate_BR": "2026-01-22 07:00:00.000000"
+    },
+    {
+      "id": "120005",
+      "matchDate": "2026-01-21 10:50:00",
+      "matchDate_BR": "2026-01-21 07:50:00.000000"
+    },
+    {
+      "id": "120004",
+      "matchDate": "2026-01-21 23:31:00",
+      "matchDate_BR": "2026-01-21 20:31:00.000000"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tmatchDate\tmatchDate_BR\n120008\t2026-01-23 10:00:00\t2026-01-23 07:00:00.000000\n120007\t2026-01-22 11:00:00\t2026-01-22 08:00:00.000000\n120006\t2026-01-22 10:00:00\t2026-01-22 07:00:00.000000\n120005\t2026-01-21 10:50:00\t2026-01-21 07:50:00.000000\n120004\t2026-01-21 23:31:00\t2026-01-21 20:31:00.000000\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}

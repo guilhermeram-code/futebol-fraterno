@@ -552,11 +552,16 @@ export async function getTeamStats(teamId: number) {
     );
   
   let wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
+  let validMatches = 0;
   
   teamMatches.forEach(match => {
+    // Só contabiliza se o jogo tiver resultado (scores não nulos)
+    if (match.homeScore === null || match.awayScore === null) return;
+    
+    validMatches++;
     const isHome = match.homeTeamId === teamId;
-    const teamScore = isHome ? match.homeScore! : match.awayScore!;
-    const opponentScore = isHome ? match.awayScore! : match.homeScore!;
+    const teamScore = isHome ? match.homeScore : match.awayScore;
+    const opponentScore = isHome ? match.awayScore : match.homeScore;
     
     goalsFor += teamScore;
     goalsAgainst += opponentScore;
@@ -567,7 +572,7 @@ export async function getTeamStats(teamId: number) {
   });
   
   return {
-    played: teamMatches.length,
+    played: validMatches,
     wins,
     draws,
     losses,
@@ -594,11 +599,16 @@ export async function getTeamStatsGroupOnly(teamId: number) {
     );
   
   let wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
+  let validMatches = 0;
   
   teamMatches.forEach(match => {
+    // Só contabiliza se o jogo tiver resultado (scores não nulos)
+    if (match.homeScore === null || match.awayScore === null) return;
+    
+    validMatches++;
     const isHome = match.homeTeamId === teamId;
-    const teamScore = isHome ? match.homeScore! : match.awayScore!;
-    const opponentScore = isHome ? match.awayScore! : match.homeScore!;
+    const teamScore = isHome ? match.homeScore : match.awayScore;
+    const opponentScore = isHome ? match.awayScore : match.homeScore;
     
     goalsFor += teamScore;
     goalsAgainst += opponentScore;
@@ -609,7 +619,7 @@ export async function getTeamStatsGroupOnly(teamId: number) {
   });
   
   return {
-    played: teamMatches.length,
+    played: validMatches,
     wins,
     draws,
     losses,
@@ -638,11 +648,16 @@ export async function getTeamStatsKnockoutOnly(teamId: number) {
   const teamMatches = allTeamMatches.filter(m => m.phase !== 'groups');
   
   let wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
+  let validMatches = 0;
   
   teamMatches.forEach(match => {
+    // Só contabiliza se o jogo tiver resultado (scores não nulos)
+    if (match.homeScore === null || match.awayScore === null) return;
+    
+    validMatches++;
     const isHome = match.homeTeamId === teamId;
-    const teamScore = isHome ? match.homeScore! : match.awayScore!;
-    const opponentScore = isHome ? match.awayScore! : match.homeScore!;
+    const teamScore = isHome ? match.homeScore : match.awayScore;
+    const opponentScore = isHome ? match.awayScore : match.homeScore;
     
     goalsFor += teamScore;
     goalsAgainst += opponentScore;
@@ -653,7 +668,7 @@ export async function getTeamStatsKnockoutOnly(teamId: number) {
   });
   
   return {
-    played: teamMatches.length,
+    played: validMatches,
     wins,
     draws,
     losses,

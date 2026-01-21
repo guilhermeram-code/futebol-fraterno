@@ -1,0 +1,70 @@
+{
+  "query": "SELECT p.id, p.name, p.teamId FROM players p LEFT JOIN teams t ON p.teamId = t.id WHERE t.id IS NULL;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT p.id, p.name, p.teamId FROM players p LEFT JOIN teams t ON p.teamId = t.id WHERE t.id IS NULL;",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Guilherme",
+      "teamId": "30002"
+    },
+    {
+      "id": "30002",
+      "name": "Marcelinho",
+      "teamId": "30002"
+    },
+    {
+      "id": "30003",
+      "name": "Italo",
+      "teamId": "30003"
+    },
+    {
+      "id": "30004",
+      "name": "Jorge",
+      "teamId": "30003"
+    },
+    {
+      "id": "30005",
+      "name": "Francisco",
+      "teamId": "30004"
+    },
+    {
+      "id": "30006",
+      "name": "Pedro",
+      "teamId": "30004"
+    },
+    {
+      "id": "30007",
+      "name": "Joao",
+      "teamId": "30005"
+    },
+    {
+      "id": "30008",
+      "name": "Felipe",
+      "teamId": "30005"
+    },
+    {
+      "id": "30009",
+      "name": "Carlos",
+      "teamId": "30006"
+    },
+    {
+      "id": "30010",
+      "name": "Paulo",
+      "teamId": "30006"
+    },
+    {
+      "id": "60001",
+      "name": "marcelinhoo",
+      "teamId": "30002"
+    },
+    {
+      "id": "60002",
+      "name": "tttt",
+      "teamId": "30002"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tteamId\n30001\tGuilherme\t30002\n30002\tMarcelinho\t30002\n30003\tItalo\t30003\n30004\tJorge\t30003\n30005\tFrancisco\t30004\n30006\tPedro\t30004\n30007\tJoao\t30005\n30008\tFelipe\t30005\n30009\tCarlos\t30006\n30010\tPaulo\t30006\n60001\tmarcelinhoo\t30002\n60002\ttttt\t30002\n",
+  "stderr": "",
+  "execution_time_ms": 74
+}

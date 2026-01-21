@@ -190,3 +190,11 @@
 - [x] Criar página de Jogadores (entre Jogos e Times) com busca por nome
 - [x] Mostrar artilheiro/melhor defesa dentro da página do time com msg comemorativa
 - [x] Sistema de mensagens de apoio ao time (torcedor envia, admin aprova)
+
+
+## BUGS E FUNCIONALIDADES - Reportados 21/01/2026 (Segunda Rodada)
+
+- [x] Limpar jogadores órfãos (sem time válido) do banco de dados
+- [x] Adicionar botão de editar jogador no admin (ao lado da lixeira)
+- [x] BUG CRÍTICO: Horário do jogo salvo errado (10h → 7h = 3 horas de diferença timezone)
+- [x] BUG: Jogo sem resultado não pode contabilizar pontos na página do time

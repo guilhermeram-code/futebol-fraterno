@@ -266,9 +266,16 @@ export const appRouter = router({
         bracketSide: z.enum(['left', 'right']).optional(),
       }))
       .mutation(async ({ input }) => {
+        // O datetime-local envia no formato "2026-01-27T10:00" (horário local do usuário)
+        // Precisamos interpretar como horário de Brasília (GMT-3) e salvar como UTC
+        let matchDateUTC: Date | undefined;
+        if (input.matchDate) {
+          // Adiciona o offset de Brasília (-03:00) para interpretar corretamente
+          matchDateUTC = new Date(input.matchDate + ':00-03:00');
+        }
         const matchData = {
           ...input,
-          matchDate: input.matchDate ? new Date(input.matchDate) : undefined,
+          matchDate: matchDateUTC,
         };
         return db.createMatch(matchData);
       }),
@@ -292,9 +299,15 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         const { id, matchDate, ...data } = input;
+        // O datetime-local envia no formato "2026-01-27T10:00" (horário local do usuário)
+        // Precisamos interpretar como horário de Brasília (GMT-3) e salvar como UTC
+        let matchDateUTC: Date | undefined;
+        if (matchDate) {
+          matchDateUTC = new Date(matchDate + ':00-03:00');
+        }
         const updateData = {
           ...data,
-          matchDate: matchDate ? new Date(matchDate) : undefined,
+          matchDate: matchDateUTC,
         };
         await db.updateMatch(id, updateData);
         return { success: true };

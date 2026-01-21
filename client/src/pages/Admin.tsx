@@ -613,8 +613,26 @@ function PlayersTab() {
     },
     onError: (error) => toast.error(error.message)
   });
+  const updatePlayer = trpc.players.update.useMutation({
+    onSuccess: () => {
+      utils.players.list.invalidate();
+      toast.success("Jogador atualizado!");
+      setEditOpen(false);
+      setEditingPlayer(null);
+    },
+    onError: (error) => toast.error(error.message)
+  });
 
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingPlayer, setEditingPlayer] = useState<any>(null);
+  const [editName, setEditName] = useState("");
+  const [editNumber, setEditNumber] = useState("");
+  const [editPosition, setEditPosition] = useState("");
+  const [editTeamId, setEditTeamId] = useState("");
+  const [editPhotoUrl, setEditPhotoUrl] = useState("");
+  const [editUploading, setEditUploading] = useState(false);
+  const editFileInputRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const [position, setPosition] = useState("");
@@ -680,6 +698,63 @@ function PlayersTab() {
       position: position || undefined,
       teamId: parseInt(teamId),
       photoUrl: photoUrl || undefined
+    });
+  };
+
+  const handleEditPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Arquivo muito grande. Máximo 5MB.");
+      return;
+    }
+    
+    setEditUploading(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const base64 = (reader.result as string).split(',')[1];
+        const result = await uploadImage.mutateAsync({
+          base64,
+          mimeType: file.type,
+          folder: 'players',
+        });
+        setEditPhotoUrl(result.url);
+        toast.success("Foto enviada!");
+        setEditUploading(false);
+      };
+      reader.onerror = () => {
+        toast.error("Erro ao ler arquivo");
+        setEditUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      toast.error("Erro ao enviar foto");
+      setEditUploading(false);
+    }
+  };
+
+  const openEditDialog = (player: any) => {
+    setEditingPlayer(player);
+    setEditName(player.name);
+    setEditNumber(player.number?.toString() || "");
+    setEditPosition(player.position || "");
+    setEditTeamId(player.teamId.toString());
+    setEditPhotoUrl(player.photoUrl || "");
+    setEditOpen(true);
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingPlayer) return;
+    updatePlayer.mutate({
+      id: editingPlayer.id,
+      name: editName,
+      number: editNumber ? parseInt(editNumber) : undefined,
+      position: editPosition || undefined,
+      teamId: parseInt(editTeamId),
+      photoUrl: editPhotoUrl || undefined
     });
   };
 
@@ -923,14 +998,24 @@ function PlayersTab() {
                                       )}
                                     </div>
                                   </div>
-                                  <ConfirmDeleteDialog
-                                    title="Excluir Jogador"
-                                    description={`Você está prestes a excluir o jogador "${player.name}". Todos os gols e cartões registrados serão removidos.`}
-                                    requireTyping={false}
-                                    onConfirm={() => deletePlayer.mutate({ id: player.id })}
-                                    isDeleting={deletePlayer.isPending}
-                                    className="h-8 w-8"
-                                  />
+                                  <div className="flex items-center gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8"
+                                      onClick={() => openEditDialog(player)}
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <ConfirmDeleteDialog
+                                      title="Excluir Jogador"
+                                      description={`Você está prestes a excluir o jogador "${player.name}". Todos os gols e cartões registrados serão removidos.`}
+                                      requireTyping={false}
+                                      onConfirm={() => deletePlayer.mutate({ id: player.id })}
+                                      isDeleting={deletePlayer.isPending}
+                                      className="h-8 w-8"
+                                    />
+                                  </div>
                                 </div>
                               ))}
                             </div>
@@ -947,6 +1032,97 @@ function PlayersTab() {
           <p className="text-center text-muted-foreground py-8">Nenhum jogador cadastrado</p>
         )}
       </CardContent>
+
+      {/* Dialog de Edição de Jogador */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Jogador</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="editPlayerName">Nome *</Label>
+              <Input 
+                id="editPlayerName" 
+                value={editName} 
+                onChange={(e) => setEditName(e.target.value)} 
+                required 
+              />
+            </div>
+            <div>
+              <Label htmlFor="editPlayerNumber">Número</Label>
+              <Input 
+                id="editPlayerNumber" 
+                type="number"
+                value={editNumber} 
+                onChange={(e) => setEditNumber(e.target.value)} 
+              />
+            </div>
+            <div>
+              <Label htmlFor="editPlayerPosition">Posição</Label>
+              <Select value={editPosition} onValueChange={setEditPosition}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a posição" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Goleiro">Goleiro</SelectItem>
+                  <SelectItem value="Defensor">Defensor</SelectItem>
+                  <SelectItem value="Meio-campo">Meio-campo</SelectItem>
+                  <SelectItem value="Atacante">Atacante</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="editPlayerTeam">Time *</Label>
+              <Select value={editTeamId} onValueChange={setEditTeamId} required>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione o time" />
+                </SelectTrigger>
+                <SelectContent>
+                  {teams?.map(t => (
+                    <SelectItem key={t.id} value={t.id.toString()}>
+                      {t.name} {t.lodge && `(${t.lodge})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Foto do Jogador</Label>
+              <div className="flex items-center gap-3 mt-2">
+                {editPhotoUrl ? (
+                  <img src={editPhotoUrl} alt="Foto" className="h-16 w-16 rounded-full object-cover border" />
+                ) : (
+                  <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center border">
+                    <Users className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                )}
+                <div className="flex-1">
+                  <input
+                    ref={editFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleEditPhotoUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => editFileInputRef.current?.click()}
+                    disabled={editUploading}
+                  >
+                    {editUploading ? "Enviando..." : editPhotoUrl ? "Trocar Foto" : "Escolher Foto"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <Button type="submit" className="w-full" disabled={updatePlayer.isPending || !editTeamId}>
+              {updatePlayer.isPending ? "Salvando..." : "Salvar Alterações"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
