@@ -10,11 +10,13 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
+import { useCampaign } from "@/App";
 import { Users, Shield, ChevronRight, Search, TrendingUp, Flame, LayoutGrid, List, Trophy } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Times() {
+  const { slug } = useCampaign();
   const { campaignId } = useTournament();
   const { data: teams, isLoading } = trpc.teams.list.useQuery({ campaignId });
   const { data: groups } = trpc.groups.list.useQuery({ campaignId });
@@ -322,7 +324,7 @@ function TeamCard({
   };
 
   return (
-    <Link href={`/times/${team.id}`}>
+    <Link href={`/${slug}/times/${team.id}`}>
       <Card className="card-hover cursor-pointer h-full card-shadow">
         <CardContent className="p-4">
           <div className="flex items-center gap-4">

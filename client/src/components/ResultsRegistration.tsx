@@ -20,11 +20,11 @@ interface CardEntry {
   cardType: "yellow" | "red";
 }
 
-export function ResultsRegistration() {
+export function ResultsRegistration({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: matches } = trpc.matches.list.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: players } = trpc.players.list.useQuery();
+  const { data: matches } = trpc.matches.list.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: players } = trpc.players.list.useQuery({ campaignId });
   
   const registerResult = trpc.matches.registerResult.useMutation({
     onSuccess: () => {

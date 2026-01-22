@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
+import { useCampaign } from "@/App";
 import { Calendar, Clock, Trophy, MapPin, Filter } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
@@ -14,6 +15,7 @@ import { ptBR } from "date-fns/locale";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Jogos() {
+  const { slug } = useCampaign();
   const { campaignId } = useTournament();
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
   const [selectedPhase, setSelectedPhase] = useState<string>("all");
@@ -200,7 +202,7 @@ export default function Jogos() {
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                               <div className="flex items-center gap-4 flex-1">
                                 <div className="text-center flex-1">
-                                  <Link href={`/times/${match.homeTeamId}`}>
+                                  <Link href={`/${slug}/times/${match.homeTeamId}`}>
                                     <div className="hover:text-primary cursor-pointer">
                                       <p className="font-bold text-lg">{getTeamName(match.homeTeamId)}</p>
                                       {getTeamLodge(match.homeTeamId) && (
@@ -218,7 +220,7 @@ export default function Jogos() {
                                   <p className="text-2xl font-bold text-muted-foreground">VS</p>
                                 </div>
                                 <div className="text-center flex-1">
-                                  <Link href={`/times/${match.awayTeamId}`}>
+                                  <Link href={`/${slug}/times/${match.awayTeamId}`}>
                                     <div className="hover:text-primary cursor-pointer">
                                       <p className="font-bold text-lg">{getTeamName(match.awayTeamId)}</p>
                                       {getTeamLodge(match.awayTeamId) && (
@@ -284,7 +286,7 @@ export default function Jogos() {
                             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                               <div className="flex items-center gap-4 flex-1">
                                 <div className="text-center flex-1">
-                                  <Link href={`/times/${match.homeTeamId}`}>
+                                  <Link href={`/${slug}/times/${match.homeTeamId}`}>
                                     <div className="hover:text-primary cursor-pointer">
                                       <p className={`font-bold text-lg ${
                                         match.homeScore! > match.awayScore! ? "text-green-600" : ""
@@ -315,7 +317,7 @@ export default function Jogos() {
                                   )}
                                 </div>
                                 <div className="text-center flex-1">
-                                  <Link href={`/times/${match.awayTeamId}`}>
+                                  <Link href={`/${slug}/times/${match.awayTeamId}`}>
                                     <div className="hover:text-primary cursor-pointer">
                                       <p className={`font-bold text-lg ${
                                         match.awayScore! > match.homeScore! ? "text-green-600" : ""

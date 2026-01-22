@@ -762,3 +762,32 @@
   - Investigação: Query `comments.listAll` já passa `campaignId` corretamente (linha 2003)
   - Causa real: Simplesmente não há comentários enviados
   - Status: ✅ NÃO É BUG - Código funcionando corretamente
+
+
+## BUGS CRÍTICOS - Vídeo do Usuário (22/01/2026 - 20:17)
+
+- [x] BUG CRÍTICO #1: Jogadores aparecem todos juntos (não separam por time)
+  - Causa: Agrupamento por `lodge` sem incluir `teamId` na chave
+  - Solução: Mudei `lodgeKey` para `${groupId}-${lodge}-${team.id}` (linha 822 de Admin.tsx)
+  - Status: ✅ RESOLVIDO
+  
+- [x] BUG CRÍTICO #2: Jogos criados não aparecem na aba "Resultados"
+  - Causa: `ResultsRegistration` não recebia `campaignId`
+  - Solução: Adicionei prop `campaignId` e passei para as 3 queries
+  - Status: ✅ RESOLVIDO
+  
+- [x] BUG CRÍTICO #3: Links redirecionam para campeonato errado
+  - Causa: 13 links hardcoded sem slug (`/jogadores/:id`, `/times/:id`)
+  - Solução: Adicionei `useCampaign()` e mudei para `/${slug}/jogadores/:id`
+  - Arquivos corrigidos: 9 arquivos (Admin.tsx, ResultsRegistration.tsx, Jogadores.tsx, Classificacao.tsx, Estatisticas.tsx, JogadorDetail.tsx, Jogos.tsx, TimeDetail.tsx, Times.tsx)
+  - Status: ✅ RESOLVIDO
+  
+- [ ] BUG CRÍTICO #3: Clique em jogador/time redireciona para campeonato errado
+  - Ao clicar em jogador ou time no campeonato "tufao"
+  - Sistema redireciona para "/futebol-fraterno" (campeonato demo)
+  - Esperado: Permanecer no campeonato atual (/tufao)
+  
+- [ ] BUG CRÍTICO #4: Funciona em "futebol-fraterno" mas não em novos campeonatos
+  - No campeonato demo tudo funciona (jogos, comentários, jogadores)
+  - Em campeonatos novos nada funciona
+  - Causa: Queries não estão usando campaignId do slug da URL

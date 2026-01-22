@@ -812,14 +812,14 @@ function PlayersTab({ campaignId }: { campaignId: number }) {
     // Grupo "Sem Grupo" para times sem grupo
     groupMap.set(0, { group: { id: 0, campaignId: 1, name: "Sem Grupo", createdAt: new Date() }, lodges: new Map() });
     
-    // Organizar por grupo e loja
+    // Organizar por grupo e loja (incluindo teamId para separar times com mesma loja)
     players.forEach(player => {
       const team = teams.find(t => t.id === player.teamId);
       if (!team) return;
       
       const groupId = team.groupId || 0;
       const lodge = team.lodge || "Sem Loja";
-      const lodgeKey = `${groupId}-${lodge}`;
+      const lodgeKey = `${groupId}-${lodge}-${team.id}`; // Incluir teamId para separar times
       
       const groupData = groupMap.get(groupId);
       if (!groupData) return;
@@ -1551,7 +1551,7 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
 
 // ==================== RESULTS TAB ====================
 function ResultsTab({ campaignId }: { campaignId: number }) {
-  return <ResultsRegistration />;
+  return <ResultsRegistration campaignId={campaignId} />;
 }
 
 function ResultsTabOld({ campaignId }: { campaignId: number }) {

@@ -10,6 +10,7 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Classificacao() {
+  const { slug } = useCampaign();
   const { campaignId } = useTournament();
   const searchParams = new URLSearchParams(useSearch());
   const selectedGroupId = searchParams.get("grupo");
@@ -133,7 +134,7 @@ function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { grou
                         </span>
                       </td>
                       <td className="py-2 px-1">
-                        <Link href={`/times/${row.team.id}`}>
+                        <Link href={`/${slug}/times/${row.team.id}`}>
                           <div className="hover:text-primary cursor-pointer">
                             <span className="font-medium">{row.team.name}</span>
                             {row.team.lodge && (

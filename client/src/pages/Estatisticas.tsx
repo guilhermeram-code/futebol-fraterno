@@ -7,11 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
+import { useCampaign } from "@/App";
 import { Target, AlertTriangle, Shield, Flame, Search } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Estatisticas() {
+  const { slug } = useCampaign();
   const { campaignId } = useTournament();
   const [searchTerm, setSearchTerm] = useState("");
   
@@ -135,7 +137,7 @@ export default function Estatisticas() {
                             {index + 1}º
                           </div>
                           <div>
-                            <Link href={`/jogadores/${scorer.playerId}`}>
+                            <Link href={`/${slug}/jogadores/${scorer.playerId}`}>
                             <p className="font-bold hover:text-primary cursor-pointer">{getPlayerName(scorer.playerId)}</p>
                           </Link>
                             <p className="text-sm text-muted-foreground">{getTeamWithLodge(scorer.teamId)}</p>
@@ -189,7 +191,7 @@ export default function Estatisticas() {
                             {index + 1}º
                           </div>
                           <div>
-                            <Link href={`/jogadores/${player.playerId}`}>
+                            <Link href={`/${slug}/jogadores/${player.playerId}`}>
                             <p className="font-bold hover:text-primary cursor-pointer">{getPlayerName(player.playerId)}</p>
                           </Link>
                             <p className="text-sm text-muted-foreground">{getTeamWithLodge(player.teamId)}</p>
@@ -253,7 +255,7 @@ export default function Estatisticas() {
                             {index + 1}º
                           </div>
                           <div>
-                            <Link href={`/times/${team.team.id}`}>
+                            <Link href={`/${slug}/times/${team.team.id}`}>
                               <p className="font-bold hover:text-primary cursor-pointer">{team.team.name}</p>
                             </Link>
                             <p className="text-sm text-muted-foreground">
@@ -312,7 +314,7 @@ export default function Estatisticas() {
                             {index + 1}º
                           </div>
                           <div>
-                            <Link href={`/times/${team.team.id}`}>
+                            <Link href={`/${slug}/times/${team.team.id}`}>
                               <p className="font-bold hover:text-primary cursor-pointer">{team.team.name}</p>
                             </Link>
                             <p className="text-sm text-muted-foreground">

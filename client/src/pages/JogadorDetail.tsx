@@ -7,8 +7,10 @@ import { Link, useParams } from "wouter";
 import { User, Target, AlertTriangle, Trophy, ArrowLeft, Shield } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
+import { useCampaign } from "@/App";
 
 export default function JogadorDetail() {
+  const { slug } = useCampaign();
   const { campaignId } = useTournament();
   const params = useParams<{ id: string }>();
   const playerId = parseInt(params.id || "0");
@@ -105,7 +107,7 @@ export default function JogadorDetail() {
 
               {/* Team Info */}
               {team && (
-                <Link href={`/times/${team.id}`}>
+                <Link href={`/${slug}/times/${team.id}`}>
                   <div className="flex items-center gap-3 p-4 rounded-lg bg-muted hover:bg-muted/80 transition-colors cursor-pointer">
                     {team.logoUrl ? (
                       <img 

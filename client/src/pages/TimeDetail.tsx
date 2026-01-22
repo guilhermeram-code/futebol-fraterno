@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
+import { useCampaign } from "@/App";
 import { Users, Shield, Trophy, Target, Calendar, Award, ShieldCheck, ShieldX, MessageCircle, Send, Heart } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
@@ -17,6 +18,7 @@ import { toast } from "sonner";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function TimeDetail() {
+  const { slug } = useCampaign();
   const { campaignId } = useTournament();
   const params = useParams<{ id: string }>();
   const teamId = parseInt(params.id || "0");
@@ -297,7 +299,7 @@ export default function TimeDetail() {
                           <p className={`text-sm ${isTopScorerOfChampionship ? 'text-yellow-700' : 'text-green-700'}`}>
                             {getTopScorerMessage()}
                           </p>
-                          <Link href={`/jogadores/${teamTopScorer.player.id}`}>
+                          <Link href={`/${slug}/jogadores/${teamTopScorer.player.id}`}>
                             <span className="text-xs text-primary hover:underline cursor-pointer">
                               Ver estatísticas do jogador →
                             </span>
@@ -488,7 +490,7 @@ export default function TimeDetail() {
                     {players.map(player => {
                       const isTopScorer = teamTopScorer?.player.id === player.id;
                       return (
-                        <Link key={player.id} href={`/jogadores/${player.id}`}>
+                        <Link key={player.id} href={`/${slug}/jogadores/${player.id}`}>
                           <div 
                             className={`flex items-center gap-3 p-2 rounded-lg hover:bg-muted transition-colors cursor-pointer ${isTopScorer ? 'bg-yellow-50 border border-yellow-200' : ''}`}
                           >

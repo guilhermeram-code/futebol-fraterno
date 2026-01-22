@@ -10,9 +10,11 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { useTournament } from "@/contexts/TournamentContext";
+import { useCampaign } from "@/App";
 
 export default function Jogadores() {
   const { campaignId } = useTournament();
+  const { slug } = useCampaign();
   const { data: players, isLoading: playersLoading } = trpc.players.list.useQuery({ campaignId });
   const { data: teams } = trpc.teams.list.useQuery({ campaignId });
   const { data: groups } = trpc.groups.list.useQuery({ campaignId });
@@ -214,7 +216,7 @@ export default function Jogadores() {
               const groupName = getGroupName(player.teamId);
               
               return (
-                <Link key={player.id} href={`/jogadores/${player.id}`}>
+                <Link key={player.id} href={`/${slug}/jogadores/${player.id}`}>
                   <Card className="cursor-pointer hover:shadow-lg transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
