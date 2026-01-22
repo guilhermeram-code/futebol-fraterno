@@ -29,10 +29,10 @@ import {
 
 // Planos disponíveis
 const PLANS = [
-  { id: "2months", name: "Iniciante", duration: "2 meses", price: 49.90, pricePerMonth: 24.95 },
-  { id: "3months", name: "Popular", duration: "3 meses", price: 69.90, pricePerMonth: 23.30, popular: true },
-  { id: "6months", name: "Semestral", duration: "6 meses", price: 119.90, pricePerMonth: 19.98 },
-  { id: "12months", name: "Anual", duration: "12 meses", price: 199.90, pricePerMonth: 16.66, bestValue: true },
+  { id: "basic", name: "Iniciante", duration: "2 meses", price: 49.90, pricePerMonth: 24.95 },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 69.90, pricePerMonth: 23.30, popular: true },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 119.90, pricePerMonth: 19.98 },
+  { id: "annual", name: "Anual", duration: "12 meses", price: 199.90, pricePerMonth: 16.66, bestValue: true },
 ];
 
 // Funcionalidades do produto
@@ -648,7 +648,7 @@ export default function LandingPage() {
             </Button>
 
             <p className="text-xs text-center text-gray-500">
-              Pagamento seguro via Stripe. Você será redirecionado para finalizar.
+              Pagamento seguro via Mercado Pago. Aceita PIX, cartão e boleto.
             </p>
           </div>
         </DialogContent>

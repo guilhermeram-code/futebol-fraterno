@@ -301,3 +301,10 @@
 - [ ] Testar pagamento completo com cartão de crédito (aguardando usuário)
 - [ ] Testar pagamento completo com boleto (aguardando usuário)
 - [ ] Remover código do Stripe (opcional - manter como fallback)
+
+
+## BUGS REPORTADOS - Checkout Mercado Pago (22/01/2026)
+
+- [x] BUG CRÍTICO: Erro "Plano inválido" ao tentar finalizar checkout - CORRIGIDO (IDs alinhados: basic, popular, extended, annual)
+- [x] BUG: Texto ainda menciona "Stripe" ao invés de "Mercado Pago" - CORRIGIDO (texto atualizado para "Pagamento seguro via Mercado Pago. Aceita PIX, cartão e boleto.")
+- [x] Investigar mapeamento de IDs dos planos (2months, 3months vs basic, popular) - CORRIGIDO
