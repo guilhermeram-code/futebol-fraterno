@@ -1185,3 +1185,50 @@ export async function deleteSupportMessage(id: number) {
   if (!db) throw new Error("Database not available");
   await db.delete(supportMessages).where(eq(supportMessages.id, id));
 }
+
+// ==================== ADMIN FUNCTIONS ====================
+export async function getAdminStats() {
+  const database = await getDb();
+  if (!database) return null;
+
+  // Faturamento total
+  const [revenueResult] = await database
+    .select({ total: sql<number>`SUM(${purchases.amountPaid})` })
+    .from(purchases)
+    .where(eq(purchases.status, "completed"));
+
+  // Campeonatos ativos
+  const [activeCampaignsResult] = await database
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(campaigns)
+    .where(eq(campaigns.isActive, true));
+
+  // Total de campeonatos
+  const [totalCampaignsResult] = await database
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(campaigns);
+
+  // Total de usuários
+  const [totalUsersResult] = await database
+    .select({ count: sql<number>`COUNT(*)` })
+    .from(users);
+
+  return {
+    totalRevenue: Number(revenueResult?.total || 0),
+    activeCampaigns: Number(activeCampaignsResult?.count || 0),
+    totalCampaigns: Number(totalCampaignsResult?.count || 0),
+    totalUsers: Number(totalUsersResult?.count || 0),
+  };
+}
+
+export async function getAllCampaignsForAdmin() {
+  const database = await getDb();
+  if (!database) return [];
+
+  const allCampaigns = await database
+    .select()
+    .from(campaigns)
+    .orderBy(desc(campaigns.createdAt));
+
+  return allCampaigns;
+}

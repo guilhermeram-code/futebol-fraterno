@@ -32,6 +32,24 @@ const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
 export const appRouter = router({
   system: systemRouter,
   
+  admin: router({
+    getStats: adminProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+      
+      const stats = await db.getAdminStats();
+      return stats;
+    }),
+    
+    getAllCampaigns: adminProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+      
+      const campaigns = await db.getAllCampaignsForAdmin();
+      return campaigns;
+    }),
+  }),
+  
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {

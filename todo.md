@@ -392,14 +392,21 @@
 - [x] Adicionar rota /login no App.tsx
 - [x] Adicionar rota /change-password no App.tsx
 
+### Integração Webhook + Email
+- [x] Atualizar webhook para criar senha temporária automaticamente (JÁ IMPLEMENTADO)
+- [x] Integrar envio de email com credenciais após pagamento (JÁ IMPLEMENTADO)
+- [ ] Testar fluxo completo de compra
+
 ### Painel Admin do Organizador
 - [ ] Verificar se painel admin já existe e funciona
 - [ ] Adicionar verificação de permissão (só dono pode editar)
 
 ### SEU Painel Admin (Dono do PeladaPro)
-- [ ] Criar página de dashboard com lista de campeonatos
-- [ ] Mostrar faturamento total
-- [ ] Mostrar campeonatos ativos/expirados
+- [ ] Criar página /admin com dashboard
+- [ ] Listar todos os campeonatos (nome, slug, data de criação, status)
+- [ ] Mostrar faturamento total (soma de todas as compras)
+- [ ] Mostrar estatísticas (campeonatos ativos, expirados, total de usuários)
+- [ ] Adicionar filtros (por status, por período)
 - [ ] Adicionar rota /admin no App.tsx
 
 ### Testes
@@ -407,3 +414,13 @@
 - [x] Testar login com email/senha (3 testes passando)
 - [ ] Testar alteração de senha
 - [ ] Testar acesso ao painel admin do campeonato
+
+
+## PAINEL ADMIN DO DONO - 22/01/2026
+
+- [x] Criar router admin com procedures getStats e getAllCampaigns
+- [x] Criar página AdminDashboard (/admin-dashboard)
+- [x] Exibir estatísticas: faturamento total, campeonatos ativos, total de campeonatos, total de usuários
+- [x] Listar todos os campeonatos com status (ativo/expirado)
+- [x] Testes automatizados (6 testes passando - 100%)
+- [x] Proteção de acesso (apenas guilhermeram@gmail.com)

@@ -22,6 +22,7 @@ import LandingPage from "./pages/LandingPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import Login from "./pages/Login";
 import ChangePassword from "./pages/ChangePassword";
+import AdminDashboard from "./pages/AdminDashboard";
 import { createContext, useContext, useState, useEffect } from "react";
 import { trpc } from "./lib/trpc";
 
@@ -165,7 +166,7 @@ function MainRouter() {
   // Lista de rotas que NÃO são slugs de campeonato
   const reservedRoutes = [
     'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
-    'mata-mata', 'galeria', 'patrocinadores', 'admin', '404', 'landing', 'checkout', 'login', 'change-password'
+    'mata-mata', 'galeria', 'patrocinadores', 'admin', '404', 'landing', 'checkout', 'login', 'change-password', 'admin-dashboard'
   ];
   
   // Verificar se é a landing page (raiz)
@@ -187,6 +188,11 @@ function MainRouter() {
   // Página de alteração de senha
   if (location === '/change-password') {
     return <ChangePassword />;
+  }
+  
+  // Painel admin do dono do PeladaPro
+  if (location === '/admin-dashboard') {
+    return <AdminDashboard />;
   }
   
   // Página de sucesso do checkout
