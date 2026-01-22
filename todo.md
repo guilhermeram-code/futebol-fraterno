@@ -535,3 +535,18 @@
 - [x] Criar testes automatizados (5/5 passando)
 - [ ] Testar envio real após pagamento (requer GMAIL_APP_PASSWORD configurada)
 - [ ] Remover dependência do Resend (opcional)
+
+
+## CORREÇÕES DO CLAUDE EXTERNO #2 (22/01/2026)
+
+- [x] 1. URL /admin dá erro - Adicionado 'admin' aos reservedRoutes + redirecionamento para /admin-dashboard
+- [x] 2. Jogadores vazam entre campeonatos - getPlayerById agora filtra por campaignId
+- [x] 3. Logo vai para raiz - Header usa useCampaign() para navegação contextual
+- [x] 4. Email não envia - JÁ OK + migrado para Gmail SMTP
+- [x] 5. Upload não funciona - Logs de debug adicionados em todos os uploads
+
+### Arquivos a Modificar:
+- [x] client/src/App.tsx
+- [x] server/db.ts
+- [x] server/routers.ts
+- [x] client/src/components/Header.tsx
