@@ -525,3 +525,13 @@
 - [x] 3. Adicionar funcionalidade "Ver credenciais do organizador" (dialog com todos os dados)
 - [x] 4. Adicionar gráficos de receita (por mês, por plano) - 2 cards com breakdown
 - [ ] 5. Adicionar estatísticas avançadas (taxa de conversão, churn rate) - requer mais dados históricos
+
+
+## MIGRAÇÃO DE EMAIL - Resend → Gmail SMTP (22/01/2026)
+
+- [x] Instalar pacote nodemailer (v7.0.12)
+- [x] Reescrever sendWelcomeEmail.ts para usar Gmail SMTP
+- [x] Adicionar GMAIL_APP_PASSWORD no env.ts
+- [x] Criar testes automatizados (5/5 passando)
+- [ ] Testar envio real após pagamento (requer GMAIL_APP_PASSWORD configurada)
+- [ ] Remover dependência do Resend (opcional)

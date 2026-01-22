@@ -1,7 +1,5 @@
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 import { ENV } from "./env";
-
-const resend = new Resend(ENV.resendApiKey);
 
 interface SendWelcomeEmailInput {
   email: string;
@@ -14,11 +12,13 @@ interface SendWelcomeEmailInput {
 
 /**
  * Envia email de boas-vindas para o organizador do campeonato
+ * Usa Gmail SMTP via Nodemailer
  * @param input Dados do email
  */
 export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<boolean> {
   const campaignUrl = `https://peladapro.com.br/${input.campaignSlug}`;
-  const changePasswordUrl = `https://peladapro.com.br/change-password`;
+  const adminUrl = `https://peladapro.com.br/${input.campaignSlug}/admin`;
+  const changePasswordUrl = `https://peladapro.com.br/${input.campaignSlug}/admin`; // Pode alterar senha no próprio admin
 
   const emailHtml = `
 <!DOCTYPE html>
@@ -122,16 +122,16 @@ export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<bo
       
       <div class="info-box">
         <p><strong>🔗 Acesse seu campeonato:</strong></p>
-        <p><a href="${campaignUrl}" class="button">Acessar Campeonato</a></p>
+        <p><a href="${campaignUrl}" class="button">Ver Site do Campeonato</a></p>
         <p style="font-size: 12px; color: #6b7280;">${campaignUrl}</p>
       </div>
       
       <div class="credentials">
-        <p><strong>🔐 Suas credenciais de acesso:</strong></p>
-        <p><strong>Email:</strong> ${input.email}</p>
-        <p><strong>Senha temporária:</strong> ${input.temporaryPassword}</p>
+        <p><strong>🔐 Suas credenciais de acesso ao Painel Admin:</strong></p>
+        <p><strong>URL do Admin:</strong> <a href="${adminUrl}">${adminUrl}</a></p>
+        <p><strong>Email (login):</strong> ${input.email}</p>
+        <p><strong>Senha temporária:</strong> <code style="background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 16px;">${input.temporaryPassword}</code></p>
         <p class="warning">⚠️ IMPORTANTE: Por segurança, altere sua senha assim que fizer o primeiro acesso.</p>
-        <p><a href="${changePasswordUrl}">Alterar senha agora</a></p>
       </div>
       
       <div class="info-box">
@@ -142,10 +142,10 @@ export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<bo
       <div class="steps">
         <p><strong>🚀 Próximos passos:</strong></p>
         <ol>
-          <li>Acesse seu campeonato usando o link acima</li>
-          <li>Faça login com suas credenciais</li>
-          <li>Altere sua senha temporária</li>
-          <li>Comece a adicionar times, jogadores e jogos!</li>
+          <li>Acesse o <strong>Painel Admin</strong> usando o link acima</li>
+          <li>Faça login com seu email e senha temporária</li>
+          <li>Configure seu campeonato (logo, times, grupos)</li>
+          <li>Compartilhe o link do campeonato com os jogadores!</li>
         </ol>
       </div>
       
@@ -156,7 +156,7 @@ export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<bo
     <div class="footer">
       <p>Abraços,<br><strong>Equipe PeladaPro</strong> ⚽</p>
       <p style="font-size: 12px; margin-top: 20px;">
-        Este é um email automático, por favor não responda diretamente.
+        Este é um email automático. Para suporte, responda para contato@meucontomagico.com.br
       </p>
     </div>
   </div>
@@ -165,24 +165,49 @@ export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<bo
   `.trim();
 
   try {
-    console.log("[Email] Enviando email de boas-vindas para:", input.email);
+    console.log("[Email] Configurando transporte Gmail SMTP...");
     
-    const { data, error } = await resend.emails.send({
-      from: "PeladaPro <contato@meucontomagico.com.br>", // Usando domínio verificado do usuário
-      to: [input.email],
+    // Verificar se GMAIL_APP_PASSWORD está configurada
+    if (!ENV.gmailAppPassword) {
+      console.error("[Email] ❌ GMAIL_APP_PASSWORD não configurada!");
+      console.error("[Email] Configure em Settings → Secrets no painel do Manus");
+      return false;
+    }
+
+    // Criar transporte Nodemailer com Gmail SMTP
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'contato@meucontomagico.com.br',
+        pass: ENV.gmailAppPassword,
+      },
+    });
+
+    console.log("[Email] Enviando email de boas-vindas para:", input.email);
+    console.log("[Email] De: contato@meucontomagico.com.br");
+    console.log("[Email] Campeonato:", input.campaignName);
+    console.log("[Email] URL Admin:", adminUrl);
+    
+    const info = await transporter.sendMail({
+      from: '"PeladaPro" <contato@meucontomagico.com.br>',
+      to: input.email,
       subject: `🎉 Seu campeonato ${input.campaignName} foi criado!`,
       html: emailHtml,
     });
 
-    if (error) {
-      console.error("[Email] Erro ao enviar email:", error);
-      return false;
-    }
-
-    console.log("[Email] ✅ Email enviado com sucesso! ID:", data?.id);
+    console.log("[Email] ✅ Email enviado com sucesso!");
+    console.log("[Email] Message ID:", info.messageId);
+    console.log("[Email] Response:", info.response);
     return true;
   } catch (error) {
-    console.error("[Email] Exceção ao enviar email:", error);
+    console.error("[Email] ❌ Erro ao enviar email:", error);
+    
+    // Log detalhado do erro
+    if (error instanceof Error) {
+      console.error("[Email] Mensagem:", error.message);
+      console.error("[Email] Stack:", error.stack);
+    }
+    
     return false;
   }
 }
