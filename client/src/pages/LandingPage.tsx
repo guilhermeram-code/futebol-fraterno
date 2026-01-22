@@ -114,6 +114,7 @@ export default function LandingPage() {
     campaignName: "",
     slug: "",
     email: "",
+    emailConfirm: "",
     phone: "",
     couponCode: "",
   });
@@ -263,7 +264,7 @@ export default function LandingPage() {
                 </Button>
               </div>
               <p className="text-sm text-gray-500 mt-4">
-                A partir de <span className="font-semibold text-emerald-600">R$ 16,66/mês</span> • Configuração em 5 minutos
+                A partir de <span className="font-semibold text-emerald-600">R$ 29,11/mês</span> • Configuração em 5 minutos
               </p>
             </div>
 
@@ -517,7 +518,7 @@ export default function LandingPage() {
             <div className="flex items-center gap-6">
               <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
               <a href="#" className="hover:text-white transition-colors">Privacidade</a>
-              <a href="#" className="hover:text-white transition-colors">Suporte</a>
+              <a href="mailto:contato@meucontomagico.com.br" className="hover:text-white transition-colors">contato@meucontomagico.com.br</a>
             </div>
           </div>
         </div>
@@ -525,12 +526,12 @@ export default function LandingPage() {
 
       {/* Image Preview Modal */}
       <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-        <DialogContent className="max-w-4xl p-0 overflow-hidden">
+        <DialogContent className="max-w-7xl max-h-[90vh] p-0 overflow-hidden">
           {previewImage && (
             <img 
               src={previewImage} 
               alt="Preview" 
-              className="w-full"
+              className="w-full h-auto object-contain max-h-[85vh]"
             />
           )}
         </DialogContent>
@@ -609,6 +610,24 @@ export default function LandingPage() {
             </div>
 
             <div>
+              <Label htmlFor="emailConfirm" className="text-gray-700">Confirmar Email</Label>
+              <Input
+                id="emailConfirm"
+                type="email"
+                placeholder="seu@email.com"
+                value={formData.emailConfirm}
+                onChange={(e) => setFormData({ ...formData, emailConfirm: e.target.value })}
+                className="border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+              />
+              {formData.emailConfirm && formData.email !== formData.emailConfirm && (
+                <p className="text-sm text-red-500 mt-1">✗ Os emails não coincidem</p>
+              )}
+              {formData.emailConfirm && formData.email === formData.emailConfirm && (
+                <p className="text-sm text-emerald-600 mt-1">✓ Emails coincidem</p>
+              )}
+            </div>
+
+            <div>
               <Label htmlFor="phone" className="text-gray-700">WhatsApp</Label>
               <Input
                 id="phone"
@@ -648,6 +667,8 @@ export default function LandingPage() {
                 !formData.campaignName || 
                 !formData.slug || 
                 !formData.email || 
+                !formData.emailConfirm ||
+                formData.email !== formData.emailConfirm ||
                 !slugCheck?.available
               }
             >

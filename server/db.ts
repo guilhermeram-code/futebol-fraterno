@@ -1236,8 +1236,24 @@ export async function getAllCampaignsForAdmin() {
   if (!database) return [];
 
   const allCampaigns = await database
-    .select()
+    .select({
+      id: campaigns.id,
+      name: campaigns.name,
+      slug: campaigns.slug,
+      organizerName: campaigns.organizerName,
+      organizerEmail: campaigns.organizerEmail,
+      organizerPhone: campaigns.organizerPhone,
+      isActive: campaigns.isActive,
+      isDemo: campaigns.isDemo,
+      purchaseId: campaigns.purchaseId,
+      createdAt: campaigns.createdAt,
+      // Dados da compra
+      expiresAt: purchases.expiresAt,
+      planType: purchases.planType,
+      amountPaid: purchases.amountPaid,
+    })
     .from(campaigns)
+    .leftJoin(purchases, eq(campaigns.purchaseId, purchases.id))
     .orderBy(desc(campaigns.createdAt));
 
   return allCampaigns;

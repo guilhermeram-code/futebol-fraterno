@@ -507,3 +507,21 @@
 - [x] Teste 3: Logo vai para /{slug} ao invés de / - PASSOU
 - [ ] Teste 4: Email com credenciais após pagamento - PENDENTE (requer pagamento real)
 - [ ] Teste 5: Upload de fotos - PENDENTE (requer login no admin)
+
+
+## FASE 2 - Correções Rápidas (UX/UI) - 22/01/2026
+
+- [x] 1. Remover música da landing page (não havia música implementada)
+- [x] 2. Corrigir texto "R$ 16,66/mês" para "R$ 29,11/mês" (menor preço do plano anual)
+- [x] 3. Link do logo do time (já corrigido pelo Claude - vai para /{slug})
+- [x] 4. Adicionar campo de confirmação de email no checkout com validação
+- [x] 5. Adicionar contato@meucontomagico.com.br no footer
+- [x] 6. Corrigir tamanho do lightbox de imagens (max-w-7xl + max-h-90vh)
+
+## FASE 3 - Melhorias no Admin Dashboard do Dono - 22/01/2026
+
+- [x] 1. Adicionar coluna "Dias até expiração" na tabela de campeonatos (badge com contador)
+- [x] 2. Adicionar botão "Deletar campeonato" (com dialog de confirmação)
+- [x] 3. Adicionar funcionalidade "Ver credenciais do organizador" (dialog com todos os dados)
+- [x] 4. Adicionar gráficos de receita (por mês, por plano) - 2 cards com breakdown
+- [ ] 5. Adicionar estatísticas avançadas (taxa de conversão, churn rate) - requer mais dados históricos
