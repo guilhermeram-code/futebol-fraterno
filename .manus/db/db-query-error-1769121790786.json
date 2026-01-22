@@ -1,0 +1,8 @@
+{
+  "query": "SELECT id, username, password, name, campaignId FROM adminUsers LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, username, password, name, campaignId FROM adminUsers LIMIT 5;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1146 (42S02) at line 1: Table 'evjulgqohrnqtu98ru5t2m.adminUsers' doesn't exist"
+  ]
+}

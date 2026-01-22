@@ -48,6 +48,16 @@ export const appRouter = router({
       const campaigns = await db.getAllCampaignsForAdmin();
       return campaigns;
     }),
+
+    deleteCampaign: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+        
+        await db.deleteCampaign(input.id);
+        return { success: true };
+      }),
   }),
   
   auth: router({

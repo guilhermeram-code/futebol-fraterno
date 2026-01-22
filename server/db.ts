@@ -1260,10 +1260,20 @@ export async function getAllCampaignsForAdmin() {
       amountPaid: purchases.amountPaid,
       expiresAt: purchases.expiresAt,
       purchaseStatus: purchases.status,
+      plainPassword: purchases.plainPassword,
     })
     .from(campaigns)
     .leftJoin(purchases, eq(campaigns.purchaseId, purchases.id))
     .orderBy(desc(campaigns.createdAt));
 
   return allCampaigns;
+}
+
+
+export async function deleteCampaign(id: number) {
+  const database = await getDb();
+  if (!database) return;
+
+  // Deletar campeonato (cascade vai deletar dados relacionados)
+  await database.delete(campaigns).where(eq(campaigns.id, id));
 }

@@ -84,9 +84,22 @@ export default function AdminDashboard() {
     setDeleteDialog({ open: true, campaignId });
   };
 
+  const deleteCampaign = trpc.admin.deleteCampaign.useMutation({
+    onSuccess: () => {
+      toast.success("Campeonato excluído com sucesso!");
+      trpc.useUtils().admin.getAllCampaigns.invalidate();
+      trpc.useUtils().admin.getStats.invalidate();
+      setDeleteDialog({ open: false, campaignId: null });
+    },
+    onError: (error: any) => {
+      toast.error(`Erro ao excluir: ${error.message}`);
+    },
+  });
+
   const confirmDelete = () => {
-    toast.info("Funcionalidade de exclusão será implementada em breve");
-    setDeleteDialog({ open: false, campaignId: null });
+    if (deleteDialog.campaignId) {
+      deleteCampaign.mutate({ id: deleteDialog.campaignId });
+    }
   };
 
   // Calcular estatísticas adicionais
@@ -333,6 +346,12 @@ export default function AdminDashboard() {
                 </p>
               </div>
               <div>
+                <label className="text-sm font-medium text-muted-foreground">Senha</label>
+                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
+                  {credentialsDialog.campaign.plainPassword || "Não disponível (campeonato antigo)"}
+                </p>
+              </div>
+              <div>
                 <label className="text-sm font-medium text-muted-foreground">URL do Campeonato</label>
                 <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
                   https://peladapro.com.br/{credentialsDialog.campaign.slug}
@@ -344,12 +363,7 @@ export default function AdminDashboard() {
                   https://peladapro.com.br/{credentialsDialog.campaign.slug}/admin
                 </p>
               </div>
-              <div className="bg-yellow-50 border border-yellow-200 rounded p-3">
-                <p className="text-sm text-yellow-800">
-                  <strong>Nota:</strong> A senha foi enviada por email para o organizador no momento da compra.
-                  Para resetar a senha, o organizador deve usar a função "Esqueci minha senha" na tela de login.
-                </p>
-              </div>
+
             </div>
           )}
           <DialogFooter>

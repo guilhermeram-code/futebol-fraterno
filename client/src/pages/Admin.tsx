@@ -274,7 +274,8 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
     createTeam.mutate({
       name,
       lodge: lodge || undefined,
-      groupId: groupId ? parseInt(groupId) : undefined
+      groupId: groupId ? parseInt(groupId) : undefined,
+      campaignId
     });
   };
 
@@ -360,7 +361,7 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
                       {groups.find(g => g.id === team.groupId)?.name}
                     </Badge>
                   )}
-                  <AddPlayerToTeamButton teamId={team.id} teamName={team.name} />
+                  <AddPlayerToTeamButton teamId={team.id} teamName={team.name} campaignId={campaignId} />
                   <TeamSupportMessageButton teamId={team.id} teamName={team.name} currentMessage={team.supportMessage} />
                   <TeamLogoUpload teamId={team.id} />
                   <ConfirmDeleteDialog
@@ -431,7 +432,7 @@ function TeamLogoUpload({ teamId }: { teamId: number }) {
 }
 
 // ==================== ADD PLAYER TO TEAM BUTTON ====================
-function AddPlayerToTeamButton({ teamId, teamName }: { teamId: number; teamName: string }) {
+function AddPlayerToTeamButton({ teamId, teamName, campaignId }: { teamId: number; teamName: string; campaignId: number }) {
   const utils = trpc.useUtils();
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
@@ -460,7 +461,8 @@ function AddPlayerToTeamButton({ teamId, teamName }: { teamId: number; teamName:
       name: name.trim(),
       teamId,
       number: number ? parseInt(number) : undefined,
-      position: position || undefined
+      position: position || undefined,
+      campaignId
     });
   };
 
@@ -703,7 +705,8 @@ function PlayersTab({ campaignId }: { campaignId: number }) {
       number: number ? parseInt(number) : undefined,
       position: position || undefined,
       teamId: parseInt(teamId),
-      photoUrl: photoUrl || undefined
+      photoUrl: photoUrl || undefined,
+      campaignId
     });
   };
 
@@ -1168,7 +1171,7 @@ function GroupsTab({ campaignId }: { campaignId: number }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    createGroup.mutate({ name });
+    createGroup.mutate({ name, campaignId });
   };
 
   const getTeamsInGroup = (groupId: number) => {
@@ -1351,7 +1354,8 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
       round: round ? parseInt(round) : undefined,
       matchDate: matchDate || undefined,
       location: location || undefined,
-      bracketSide: (bracketSide as 'left' | 'right' | undefined) || undefined
+      bracketSide: (bracketSide as 'left' | 'right' | undefined) || undefined,
+      campaignId
     });
   };
 
@@ -1919,7 +1923,8 @@ function PhotosTab({ campaignId }: { campaignId: number }) {
       uploadPhoto.mutate({
         base64,
         mimeType: file.type,
-        caption: caption || undefined
+        caption: caption || undefined,
+        campaignId
       });
       setCaption("");
     };
@@ -2158,7 +2163,7 @@ function AnnouncementsTab({ campaignId }: { campaignId: number }) {
       toast.error("Preencha título e conteúdo!");
       return;
     }
-    createAnnouncement.mutate({ title, content, active: true });
+    createAnnouncement.mutate({ title, content, active: true, campaignId });
   };
 
   const toggleActive = (id: number, currentActive: boolean) => {
@@ -2297,7 +2302,7 @@ function AdminsTab({ campaignId }: { campaignId: number }) {
       toast.error("Senha deve ter no mínimo 4 caracteres!");
       return;
     }
-    createAdmin.mutate({ username, password, name: name || undefined, isOwner: false });
+    createAdmin.mutate({ username, password, name: name || undefined, isOwner: false, campaignId });
   };
 
   const isOwner = adminUser?.isOwner || false;
@@ -2937,6 +2942,7 @@ function SponsorsTab({ campaignId }: { campaignId: number }) {
       link: link || undefined,
       description: description || undefined,
       active: true,
+      campaignId
     });
   };
 

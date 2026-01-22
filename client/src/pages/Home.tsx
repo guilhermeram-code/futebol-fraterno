@@ -3,7 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Header } from "@/components/Header";
 import { trpc } from "@/lib/trpc";
 import { useTournament } from "@/contexts/TournamentContext";
-import { useMusic } from "@/contexts/MusicContext";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,14 +28,6 @@ import { ptBR } from "date-fns/locale";
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
   const { settings, isLoading: loadingSettings, campaignId } = useTournament();
-  const { setMusicUrl } = useMusic();
-
-  // Atualizar URL da música quando as configurações carregarem
-  useEffect(() => {
-    if (settings.tournamentMusic) {
-      setMusicUrl(settings.tournamentMusic);
-    }
-  }, [settings.tournamentMusic, setMusicUrl]);
   
   const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery({ campaignId });
   const { data: upcomingMatches, isLoading: loadingUpcoming } = trpc.matches.upcoming.useQuery({ limit: 5, campaignId });

@@ -176,8 +176,8 @@ export async function handlePaymentApproved(paymentData: any) {
       })
       .$returningId();
 
-    // Registrar compra
-    await db.insert(purchases).values({
+     // Criar purchase (senha será adicionada depois)
+    const purchaseResult = await db.insert(purchases).values({
       customerName: campaignName,
       customerEmail: email,
       customerPhone: whatsapp,
@@ -194,6 +194,7 @@ export async function handlePaymentApproved(paymentData: any) {
       expiresAt,
       createdAt: new Date(),
     });
+    const purchaseId = purchaseResult[0].insertId;
 
     // Criar conta de usuário para o organizador
     let temporaryPassword = "";
@@ -207,6 +208,14 @@ export async function handlePaymentApproved(paymentData: any) {
     } catch (error: any) {
       console.error(`[MercadoPago] Erro ao criar usuário:`, error.message);
       // Se usuário já existe, continua sem criar
+    }
+
+    // Salvar senha em texto plano no purchase
+    if (temporaryPassword && purchaseId) {
+      await db.update(purchases)
+        .set({ plainPassword: temporaryPassword })
+        .where(eq(purchases.id, purchaseId));
+      console.log(`[MercadoPago] Senha salva no purchase ${purchaseId}`);
     }
 
     // Enviar email de boas-vindas

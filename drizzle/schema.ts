@@ -47,6 +47,7 @@ export const purchases = mysqlTable("purchases", {
   stripePaymentIntentId: varchar("stripePaymentIntentId", { length: 255 }),
   status: mysqlEnum("status", ["pending", "completed", "failed", "refunded", "expired"]).default("pending"),
   renewalEmailSent: boolean("renewalEmailSent").default(false),
+  plainPassword: varchar("plainPassword", { length: 50 }), // Senha em texto plano para admin
   expiresAt: timestamp("expiresAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
