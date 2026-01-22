@@ -4,6 +4,8 @@ import { campaigns, purchases, reservedSlugs } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { getPlanById, calculateExpirationDate } from "./products";
 import { notifyOwner } from "../_core/notification";
+import { createOrganizerUser } from "../_core/createOrganizerUser";
+import { sendWelcomeEmail } from "../_core/sendWelcomeEmail";
 
 // Inicializar Mercado Pago
 const client = new MercadoPagoConfig({
@@ -176,10 +178,42 @@ export async function handlePaymentApproved(paymentData: any) {
       createdAt: new Date(),
     });
 
+    // Criar conta de usuário para o organizador
+    let temporaryPassword = "";
+    try {
+      const userResult = await createOrganizerUser({
+        email,
+        name: campaignName,
+      });
+      temporaryPassword = userResult.temporaryPassword;
+      console.log(`[MercadoPago] Usuário criado para ${email}`);
+    } catch (error: any) {
+      console.error(`[MercadoPago] Erro ao criar usuário:`, error.message);
+      // Se usuário já existe, continua sem criar
+    }
+
+    // Enviar email de boas-vindas
+    if (temporaryPassword) {
+      try {
+        await sendWelcomeEmail({
+          email,
+          name: campaignName,
+          campaignName,
+          campaignSlug,
+          temporaryPassword,
+          expiresAt,
+        });
+        console.log(`[MercadoPago] Email de boas-vindas enviado para ${email}`);
+      } catch (error: any) {
+        console.error(`[MercadoPago] Erro ao enviar email:`, error.message);
+        // Não falha se email não for enviado
+      }
+    }
+
     // Notificar owner
     await notifyOwner({
       title: "🎉 Nova Venda - Pelada Pro!",
-      content: `Campeonato: ${campaignName}\nSlug: /${campaignSlug}\nEmail: ${email}\nPlano: ${planId} (${planMonths} meses)\nExpira em: ${expiresAt.toLocaleDateString("pt-BR")}`,
+      content: `Campeonato: ${campaignName}\nSlug: /${campaignSlug}\nEmail: ${email}\nPlano: ${planId} (${planMonths} meses)\nExpira em: ${expiresAt.toLocaleDateString("pt-BR")}\nSenha temporária: ${temporaryPassword || "(usuário já existia)"}`,
     });
 
     console.log(`[MercadoPago] Campeonato ${campaignSlug} criado com sucesso!`);

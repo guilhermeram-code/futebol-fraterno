@@ -1,0 +1,8 @@
+{
+  "query": "INSERT INTO campaigns (name, slug, organizerName, organizerEmail, organizerPhone, isActive, isDemo, purchaseId, createdAt, updatedAt) \nSELECT campaignName, campaignSlug, customerName, customerEmail, customerPhone, 1, 0, id, NOW(), NOW() \nFROM purchases \nWHERE customerEmail = 'guilhermeram@gmail.com' \nORDER BY id DESC \nLIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute INSERT INTO campaigns (name, slug, organizerName, organizerEmail, organizerPhone, isActive, isDemo, purchaseId, createdAt, updatedAt) \nSELECT campaignName, campaignSlug, customerName, customerEmail, customerPhone, 1, 0, id, NOW(), NOW() \nFROM purchases \nWHERE customerEmail = 'guilhermeram@gmail.com' \nORDER BY id DESC \nLIMIT 1;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1062 (23000) at line 1: Duplicate entry '?' for key 'campaigns.campaigns_slug_unique'"
+  ]
+}

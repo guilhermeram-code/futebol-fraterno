@@ -1,0 +1,34 @@
+{
+  "query": "SELECT id, name, slug, organizerEmail FROM campaigns;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, name, slug, organizerEmail FROM campaigns;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Futebol Fraterno 2026",
+      "slug": "futebol-fraterno",
+      "organizerEmail": "admin@futebolfraterno.com"
+    },
+    {
+      "id": "2",
+      "name": "Teste",
+      "slug": "teste",
+      "organizerEmail": "guilhermeram@gmail.com"
+    },
+    {
+      "id": "30001",
+      "name": "Campeonato Teste MP",
+      "slug": "teste-mp-demo",
+      "organizerEmail": "teste@peladapro.com.br"
+    },
+    {
+      "id": "60001",
+      "name": "Copa Amigos 2026",
+      "slug": "copa-amigos-2026",
+      "organizerEmail": "demo@peladapro.com.br"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\torganizerEmail\n1\tFutebol Fraterno 2026\tfutebol-fraterno\tadmin@futebolfraterno.com\n2\tTeste\tteste\tguilhermeram@gmail.com\n30001\tCampeonato Teste MP\tteste-mp-demo\tteste@peladapro.com.br\n60001\tCopa Amigos 2026\tcopa-amigos-2026\tdemo@peladapro.com.br\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

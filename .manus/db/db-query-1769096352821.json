@@ -1,0 +1,22 @@
+{
+  "query": "SELECT CONCAT('\"', slug, '\"') as slug_quoted FROM campaigns;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT CONCAT('\"', slug, '\"') as slug_quoted FROM campaigns;",
+  "rows": [
+    {
+      "slug_quoted": "\"copa-amigos-2026\""
+    },
+    {
+      "slug_quoted": "\"futebol-fraterno\""
+    },
+    {
+      "slug_quoted": "\"teste\""
+    },
+    {
+      "slug_quoted": "\"teste-mp-demo\""
+    }
+  ],
+  "messages": [],
+  "stdout": "slug_quoted\n\"copa-amigos-2026\"\n\"futebol-fraterno\"\n\"teste\"\n\"teste-mp-demo\"\n",
+  "stderr": "",
+  "execution_time_ms": 73
+}

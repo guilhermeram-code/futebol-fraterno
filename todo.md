@@ -365,3 +365,45 @@
 - [x] Alterar título da aba do navegador de "Futebol Fraterno 2026" para "PeladaPro - Organize Seu Campeonato"
 - [x] Adicionar logo do PeladaPro no favicon (bola verde com coroa)
 - [x] Criar documentação de como habilitar Mercado Pago em produção
+
+
+## INVESTIGAÇÃO WEBHOOK MERCADO PAGO - 22/01/2026
+
+- [ ] Verificar se pagamento foi registrado no banco de dados (tabela purchases)
+- [ ] Verificar logs do servidor para identificar erros no webhook
+- [ ] Verificar se webhook está configurado no Mercado Pago
+- [ ] Criar campeonato manualmente se necessário (amigos2026)
+
+
+## SISTEMA COMPLETO DE PÓS-PAGAMENTO - 22/01/2026
+
+### Backend (JÁ IMPLEMENTADO)
+- [x] Webhook do Mercado Pago configurado
+- [x] Criação automática de campeonato após pagamento
+- [x] Criação automática de conta de usuário
+- [x] Geração de senha temporária
+- [x] Template de email de boas-vindas
+
+### Frontend - Login/Senha
+- [x] Criar tela de login (email/senha)
+- [x] Criar procedure tRPC para login
+- [x] Criar tela de alteração de senha
+- [x] Criar procedure tRPC para alterar senha
+- [x] Adicionar rota /login no App.tsx
+- [x] Adicionar rota /change-password no App.tsx
+
+### Painel Admin do Organizador
+- [ ] Verificar se painel admin já existe e funciona
+- [ ] Adicionar verificação de permissão (só dono pode editar)
+
+### SEU Painel Admin (Dono do PeladaPro)
+- [ ] Criar página de dashboard com lista de campeonatos
+- [ ] Mostrar faturamento total
+- [ ] Mostrar campeonatos ativos/expirados
+- [ ] Adicionar rota /admin no App.tsx
+
+### Testes
+- [ ] Testar fluxo completo de compra
+- [x] Testar login com email/senha (3 testes passando)
+- [ ] Testar alteração de senha
+- [ ] Testar acesso ao painel admin do campeonato

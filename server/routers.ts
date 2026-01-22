@@ -5,10 +5,15 @@ import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import * as db from "./db";
+import { getCampaignsByEmail } from "./db-campaigns-by-email";
+import { getDb } from "./db";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe/checkout";
 import { createCheckoutSession as createMercadoPagoCheckout } from "./mercadopago/checkout";
+import { verifyPassword, hashPassword } from "./_core/password";
+import { users } from "../drizzle/schema";
+import { eq } from "drizzle-orm";
 
 // Default campaign ID for backwards compatibility (futebol-fraterno)
 const DEFAULT_CAMPAIGN_ID = 1;
@@ -34,6 +39,88 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+    
+    loginWithPassword: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        password: z.string(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+
+        // Buscar usuário por email
+        const [user] = await database
+          .select()
+          .from(users)
+          .where(eq(users.email, input.email))
+          .limit(1);
+
+        if (!user) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
+        }
+
+        // Verificar senha
+        if (!user.passwordHash || !verifyPassword(input.password, user.passwordHash)) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
+        }
+
+        // Buscar campeonato do usuário
+        const userCampaigns = await getCampaignsByEmail(input.email);
+        const campaignSlug = userCampaigns.length > 0 ? userCampaigns[0].slug : null;
+
+        // TODO: Criar sessão de login (cookie)
+        // Por enquanto, apenas retorna sucesso
+        return {
+          success: true,
+          user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+          campaignSlug,
+        };
+      }),
+    
+    changePassword: protectedProcedure
+      .input(z.object({
+        currentPassword: z.string(),
+        newPassword: z.string().min(8),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const user = ctx.user;
+        if (!user) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Usuário não autenticado' });
+        }
+
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+
+        // Buscar usuário completo
+        const [fullUser] = await database
+          .select()
+          .from(users)
+          .where(eq(users.id, user.id))
+          .limit(1);
+
+        if (!fullUser || !fullUser.passwordHash) {
+          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Usuário não possui senha cadastrada' });
+        }
+
+        // Verificar senha atual
+        if (!verifyPassword(input.currentPassword, fullUser.passwordHash)) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha atual incorreta' });
+        }
+
+        // Atualizar senha
+        const newPasswordHash = hashPassword(input.newPassword);
+        await database
+          .update(users)
+          .set({ passwordHash: newPasswordHash })
+          .where(eq(users.id, user.id));
+
+        return { success: true };
+      }),
   }),
 
   // ==================== CAMPAIGNS (MULTI-TENANT) ====================

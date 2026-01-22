@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, customerName, campaignName, planType FROM purchases WHERE customerEmail = 'guilhermeram@gmail.com' ORDER BY id DESC LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, customerName, campaignName, planType FROM purchases WHERE customerEmail = 'guilhermeram@gmail.com' ORDER BY id DESC LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "customerName": "guilhermeram",
+      "campaignName": "Teste",
+      "planType": "3_months"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcustomerName\tcampaignName\tplanType\n1\tguilhermeram\tTeste\t3_months\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

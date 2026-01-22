@@ -1,0 +1,38 @@
+{
+  "query": "SELECT id, name, slug, LENGTH(slug) as slug_length, HEX(slug) as slug_hex FROM campaigns ORDER BY id DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, name, slug, LENGTH(slug) as slug_length, HEX(slug) as slug_hex FROM campaigns ORDER BY id DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "60001",
+      "name": "Copa Amigos 2026",
+      "slug": "copa-amigos-2026",
+      "slug_length": "16",
+      "slug_hex": "636F70612D616D69676F732D32303236"
+    },
+    {
+      "id": "30001",
+      "name": "Campeonato Teste MP",
+      "slug": "teste-mp-demo",
+      "slug_length": "13",
+      "slug_hex": "74657374652D6D702D64656D6F"
+    },
+    {
+      "id": "2",
+      "name": "Teste",
+      "slug": "teste",
+      "slug_length": "5",
+      "slug_hex": "7465737465"
+    },
+    {
+      "id": "1",
+      "name": "Futebol Fraterno 2026",
+      "slug": "futebol-fraterno",
+      "slug_length": "16",
+      "slug_hex": "66757465626F6C2D6672617465726E6F"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tslug_length\tslug_hex\n60001\tCopa Amigos 2026\tcopa-amigos-2026\t16\t636F70612D616D69676F732D32303236\n30001\tCampeonato Teste MP\tteste-mp-demo\t13\t74657374652D6D702D64656D6F\n2\tTeste\tteste\t5\t7465737465\n1\tFutebol Fraterno 2026\tfutebol-fraterno\t16\t66757465626F6C2D6672617465726E6F\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}

@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, customerName, customerEmail, campaignSlug, planType, amountPaid, status, createdAt FROM purchases ORDER BY id DESC LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, customerName, customerEmail, campaignSlug, planType, amountPaid, status, createdAt FROM purchases ORDER BY id DESC LIMIT 10;",
+  "rows": [
+    {
+      "id": "30001",
+      "customerName": "Teste Mercado Pago",
+      "customerEmail": "teste@peladapro.com.br",
+      "campaignSlug": "teste-mp-demo",
+      "planType": "3_months",
+      "amountPaid": "6990",
+      "status": "completed",
+      "createdAt": "2026-01-22 13:32:17"
+    },
+    {
+      "id": "1",
+      "customerName": "guilhermeram",
+      "customerEmail": "guilhermeram@gmail.com",
+      "campaignSlug": "teste",
+      "planType": "3_months",
+      "amountPaid": "6990",
+      "status": "completed",
+      "createdAt": "2026-01-22 05:22:54"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcustomerName\tcustomerEmail\tcampaignSlug\tplanType\tamountPaid\tstatus\tcreatedAt\n30001\tTeste Mercado Pago\tteste@peladapro.com.br\tteste-mp-demo\t3_months\t6990\tcompleted\t2026-01-22 13:32:17\n1\tguilhermeram\tguilhermeram@gmail.com\tteste\t3_months\t6990\tcompleted\t2026-01-22 05:22:54\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

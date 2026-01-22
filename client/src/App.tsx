@@ -20,6 +20,8 @@ import Patrocinadores from "./pages/Patrocinadores";
 import Jogadores from "./pages/Jogadores";
 import LandingPage from "./pages/LandingPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
+import Login from "./pages/Login";
+import ChangePassword from "./pages/ChangePassword";
 import { createContext, useContext, useState, useEffect } from "react";
 import { trpc } from "./lib/trpc";
 
@@ -163,7 +165,7 @@ function MainRouter() {
   // Lista de rotas que NÃO são slugs de campeonato
   const reservedRoutes = [
     'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
-    'mata-mata', 'galeria', 'patrocinadores', 'admin', '404', 'landing', 'checkout'
+    'mata-mata', 'galeria', 'patrocinadores', 'admin', '404', 'landing', 'checkout', 'login', 'change-password'
   ];
   
   // Verificar se é a landing page (raiz)
@@ -175,6 +177,16 @@ function MainRouter() {
   // Se for landing page ou raiz, mostrar página de vendas
   if (location === '/landing' || isLandingPage) {
     return <LandingPage />;
+  }
+  
+  // Página de login
+  if (location === '/login') {
+    return <Login />;
+  }
+  
+  // Página de alteração de senha
+  if (location === '/change-password') {
+    return <ChangePassword />;
   }
   
   // Página de sucesso do checkout
