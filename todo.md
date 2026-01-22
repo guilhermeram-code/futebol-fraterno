@@ -261,3 +261,25 @@
 ### FASE 7: Publicar
 - [ ] Configurar Stripe produção
 - [ ] Conectar peladapro.com.br
+
+
+## MELHORIAS LANDING PAGE DE VENDAS (22/01/2026)
+
+### Design e Identidade Visual
+- [x] Criar logo/símbolo do Pelada Pro (identidade visual) - bola verde com coroa dourada
+- [x] Redesenhar com cores mais suaves e agradáveis (verde menta, branco, dourado)
+- [x] Remover fundo escuro - usar fundo claro/branco
+- [x] Melhorar tipografia e espaçamentos
+
+### Screenshots e Demonstração
+- [x] Capturar screenshots das funcionalidades do Futebol Fraterno (6 screenshots)
+- [x] Criar seção de galeria de funcionalidades com imagens reais
+- [x] Mostrar: classificação, artilheiros, jogos, painel admin, mata-mata
+- [x] Adicionar descrições das funcionalidades nas imagens
+- [x] Modal de preview para ampliar screenshots
+
+### Apresentação Profissional
+- [x] Melhorar textos e copywriting
+- [x] Adicionar social proof (+500 campeonatos criados)
+- [x] Melhorar seção de preços (destaque Popular e Melhor Custo-Benefício)
+- [x] Seção "Como Funciona" em 3 passos
