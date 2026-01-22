@@ -1,0 +1,22 @@
+{
+  "query": "\nSELECT \n  c.id,\n  c.name,\n  c.slug,\n  c.organizerEmail,\n  c.isActive,\n  c.purchaseId,\n  p.planType,\n  p.amountPaid,\n  p.status,\n  p.expiresAt\nFROM campaigns c\nLEFT JOIN purchases p ON c.purchaseId = p.id\nWHERE c.slug = 'teste-mp-demo';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  c.id,\n  c.name,\n  c.slug,\n  c.organizerEmail,\n  c.isActive,\n  c.purchaseId,\n  p.planType,\n  p.amountPaid,\n  p.status,\n  p.expiresAt\nFROM campaigns c\nLEFT JOIN purchases p ON c.purchaseId = p.id\nWHERE c.slug = 'teste-mp-demo';\n",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Campeonato Teste MP",
+      "slug": "teste-mp-demo",
+      "organizerEmail": "teste@peladapro.com.br",
+      "isActive": "1",
+      "purchaseId": "30001",
+      "planType": "3_months",
+      "amountPaid": "6990",
+      "status": "completed",
+      "expiresAt": "2026-04-22 13:32:17"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\torganizerEmail\tisActive\tpurchaseId\tplanType\tamountPaid\tstatus\texpiresAt\n30001\tCampeonato Teste MP\tteste-mp-demo\tteste@peladapro.com.br\t1\t30001\t3_months\t6990\tcompleted\t2026-04-22 13:32:17\n",
+  "stderr": "",
+  "execution_time_ms": 62
+}

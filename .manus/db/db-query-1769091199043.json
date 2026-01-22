@@ -1,0 +1,15 @@
+{
+  "query": "-- Criar campeonato demo \"Copa Amigos 2026\"\nINSERT INTO campaigns (slug, name, organizerName, organizerEmail, logoUrl, heroBackgroundUrl, isDemo, createdAt, updatedAt)\nVALUES ('copa-amigos-2026', 'Copa Amigos 2026', 'Organização Amigos FC', 'demo@peladapro.com.br', '/demo/team1.jpg', NULL, 1, NOW(), NOW());\n\nSELECT id, slug, name FROM campaigns WHERE slug = 'copa-amigos-2026';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute -- Criar campeonato demo \"Copa Amigos 2026\"\nINSERT INTO campaigns (slug, name, organizerName, organizerEmail, logoUrl, heroBackgroundUrl, isDemo, createdAt, updatedAt)\nVALUES ('copa-amigos-2026', 'Copa Amigos 2026', 'Organização Amigos FC', 'demo@peladapro.com.br', '/demo/team1.jpg', NULL, 1, NOW(), NOW());\n\nSELECT id, slug, name FROM campaigns WHERE slug = 'copa-amigos-2026';",
+  "rows": [
+    {
+      "id": "60001",
+      "slug": "copa-amigos-2026",
+      "name": "Copa Amigos 2026"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tslug\tname\n60001\tcopa-amigos-2026\tCopa Amigos 2026\n",
+  "stderr": "",
+  "execution_time_ms": 76
+}

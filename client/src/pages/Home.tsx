@@ -95,11 +95,11 @@ export default function Home() {
             </>
           ) : (
             <>
-              <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black flex items-center justify-center">
+              <div className="mx-auto h-48 w-48 rounded-full border-4 border-white shadow-2xl mb-6 overflow-hidden bg-black">
                 <img 
                   src={`${settings.tournamentLogo}?v=${Date.now()}`} 
                   alt={settings.tournamentName} 
-                  className="w-full h-full object-contain scale-90"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <h2 className="text-4xl font-bold text-primary-foreground mb-2">

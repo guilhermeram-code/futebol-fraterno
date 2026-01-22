@@ -308,3 +308,42 @@
 - [x] BUG CRÍTICO: Erro "Plano inválido" ao tentar finalizar checkout - CORRIGIDO (IDs alinhados: basic, popular, extended, annual)
 - [x] BUG: Texto ainda menciona "Stripe" ao invés de "Mercado Pago" - CORRIGIDO (texto atualizado para "Pagamento seguro via Mercado Pago. Aceita PIX, cartão e boleto.")
 - [x] Investigar mapeamento de IDs dos planos (2months, 3months vs basic, popular) - CORRIGIDO
+
+
+## NOVAS FUNCIONALIDADES - 22/01/2026
+
+### Atualização de Preços e Promoção
+- [x] Atualizar preços para valores moderados (R$ 129, 179, 299, 499)
+- [x] Adicionar badge "PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO"
+- [x] Criar cupom "LANCAMENTO50" com 50% de desconto (backend pronto)
+- [x] Mostrar preço original riscado + preço promocional
+- [x] Atualizar products.ts do Mercado Pago com novos preços
+
+### Correção Visual - Logo Circular
+- [x] Corrigir CSS do logo para preencher todo o círculo (object-fit: cover + border-radius: 50%)
+- [x] Aplicar correção no círculo grande (hero)
+- [x] Aplicar correção no círculo pequeno (header)
+
+### Campeonato Demo Completo
+- [ ] Criar "Copa Amigos 2026" como campeonato demo
+- [ ] Adicionar 8 times com logos profissionais
+- [ ] Criar 2 grupos (A e B) com 4 times cada
+- [ ] Adicionar 12+ jogos completos com resultados
+- [ ] Adicionar 20+ jogadores com fotos e estatísticas
+- [ ] Preencher artilheiros, cartões, melhores defesas
+- [ ] Adicionar 8-10 fotos na galeria
+- [ ] Adicionar 4-5 patrocinadores com logos
+- [ ] Adicionar comentários da torcida
+- [ ] Configurar chaves mata-mata
+
+### Sistema de Autenticação Simples
+- [x] Criar tabela password_reset_tokens para recuperação de senha
+- [x] Tabela admin_users já possui campo password (hash bcrypt)
+- [ ] Criar rota tRPC para criação de senha inicial
+- [ ] Criar rota tRPC para login (email + senha)
+- [ ] Criar rota tRPC para recuperação de senha
+- [ ] Criar página /criar-senha com formulário
+- [ ] Criar página /recuperar-senha com formulário
+- [ ] Implementar envio de email automático após compra
+- [ ] Atualizar página /admin para usar nova autenticação
+- [ ] Adicionar opção "Alterar Senha" no painel admin

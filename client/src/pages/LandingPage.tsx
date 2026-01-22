@@ -29,10 +29,10 @@ import {
 
 // Planos disponíveis
 const PLANS = [
-  { id: "basic", name: "Iniciante", duration: "2 meses", price: 49.90, pricePerMonth: 24.95 },
-  { id: "popular", name: "Popular", duration: "3 meses", price: 69.90, pricePerMonth: 23.30, popular: true },
-  { id: "extended", name: "Semestral", duration: "6 meses", price: 119.90, pricePerMonth: 19.98 },
-  { id: "annual", name: "Anual", duration: "12 meses", price: 199.90, pricePerMonth: 16.66, bestValue: true },
+  { id: "basic", name: "Iniciante", duration: "2 meses", price: 129, originalPrice: 129, pricePerMonth: 64.50 },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 179, originalPrice: 179, pricePerMonth: 59.67, popular: true },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 299, originalPrice: 299, pricePerMonth: 49.83 },
+  { id: "annual", name: "Anual", duration: "12 meses", price: 499, originalPrice: 499, pricePerMonth: 41.58, bestValue: true },
 ];
 
 // Funcionalidades do produto
@@ -360,6 +360,11 @@ export default function LandingPage() {
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
               Preços acessíveis para campeonatos de todos os tamanhos. Sem taxas escondidas.
             </p>
+            <div className="mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg animate-pulse">
+              <Sparkles className="w-5 h-5" />
+              🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 50% OFF
+              <Sparkles className="w-5 h-5" />
+            </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {PLANS.map((plan) => (
@@ -389,10 +394,14 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4">
-                    <span className="text-4xl font-bold text-gray-900">R$ {plan.price.toFixed(2).replace(".", ",")}</span>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg text-gray-400 line-through">R$ {plan.originalPrice.toFixed(2).replace(".", ",")}</span>
+                      <Badge className="bg-red-500 text-white text-xs">-50%</Badge>
+                    </div>
+                    <span className="text-4xl font-bold text-emerald-600">R$ {(plan.price / 2).toFixed(2).replace(".", ",")}</span>
                   </div>
                   <p className="text-sm text-gray-500 mb-6">
-                    Equivale a <span className="font-semibold text-emerald-600">R$ {plan.pricePerMonth.toFixed(2).replace(".", ",")}/mês</span>
+                    Equivale a <span className="font-semibold text-emerald-600">R$ {(plan.pricePerMonth / 2).toFixed(2).replace(".", ",")}/mês</span>
                   </p>
                   <ul className="space-y-3 mb-6">
                     <li className="flex items-center gap-2 text-gray-700 text-sm">

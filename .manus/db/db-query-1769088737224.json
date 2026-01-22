@@ -1,0 +1,31 @@
+{
+  "query": "\n-- Criar uma compra (purchase) simulando pagamento aprovado\nINSERT INTO purchases (\n  customerName,\n  customerEmail,\n  customerPhone,\n  campaignName,\n  campaignSlug,\n  planType,\n  amountPaid,\n  currency,\n  couponCode,\n  discountAmount,\n  status,\n  expiresAt,\n  createdAt,\n  updatedAt\n) VALUES (\n  'Teste Mercado Pago',\n  'teste@peladapro.com.br',\n  '11999887766',\n  'Campeonato Teste MP',\n  'teste-mp-demo',\n  '3_months',\n  6990,\n  'BRL',\n  NULL,\n  0,\n  'completed',\n  DATE_ADD(NOW(), INTERVAL 3 MONTH),\n  NOW(),\n  NOW()\n);\n\n-- Pegar o ID da compra criada\nSET @purchase_id = LAST_INSERT_ID();\n\n-- Criar o campeonato associado à compra\nINSERT INTO campaigns (\n  name,\n  slug,\n  organizerName,\n  organizerEmail,\n  organizerPhone,\n  isActive,\n  isDemo,\n  purchaseId,\n  createdAt,\n  updatedAt\n) VALUES (\n  'Campeonato Teste MP',\n  'teste-mp-demo',\n  'Teste Mercado Pago',\n  'teste@peladapro.com.br',\n  '11999887766',\n  1,\n  0,\n  @purchase_id,\n  NOW(),\n  NOW()\n);\n\n-- Verificar se foi criado\nSELECT * FROM campaigns WHERE slug = 'teste-mp-demo';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \n-- Criar uma compra (purchase) simulando pagamento aprovado\nINSERT INTO purchases (\n  customerName,\n  customerEmail,\n  customerPhone,\n  campaignName,\n  campaignSlug,\n  planType,\n  amountPaid,\n  currency,\n  couponCode,\n  discountAmount,\n  status,\n  expiresAt,\n  createdAt,\n  updatedAt\n) VALUES (\n  'Teste Mercado Pago',\n  'teste@peladapro.com.br',\n  '11999887766',\n  'Campeonato Teste MP',\n  'teste-mp-demo',\n  '3_months',\n  6990,\n  'BRL',\n  NULL,\n  0,\n  'completed',\n  DATE_ADD(NOW(), INTERVAL 3 MONTH),\n  NOW(),\n  NOW()\n);\n\n-- Pegar o ID da compra criada\nSET @purchase_id = LAST_INSERT_ID();\n\n-- Criar o campeonato associado à compra\nINSERT INTO campaigns (\n  name,\n  slug,\n  organizerName,\n  organizerEmail,\n  organizerPhone,\n  isActive,\n  isDemo,\n  purchaseId,\n  createdAt,\n  updatedAt\n) VALUES (\n  'Campeonato Teste MP',\n  'teste-mp-demo',\n  'Teste Mercado Pago',\n  'teste@peladapro.com.br',\n  '11999887766',\n  1,\n  0,\n  @purchase_id,\n  NOW(),\n  NOW()\n);\n\n-- Verificar se foi criado\nSELECT * FROM campaigns WHERE slug = 'teste-mp-demo';\n",
+  "rows": [
+    {
+      "id": "30001",
+      "name": "Campeonato Teste MP",
+      "slug": "teste-mp-demo",
+      "organizerName": "Teste Mercado Pago",
+      "organizerEmail": "teste@peladapro.com.br",
+      "organizerPhone": "11999887766",
+      "logoUrl": "NULL",
+      "musicUrl": "NULL",
+      "backgroundUrl": "NULL",
+      "heroBackgroundUrl": "NULL",
+      "subtitle": "NULL",
+      "tournamentType": "groups_and_knockout",
+      "teamsPerGroupAdvancing": "2",
+      "knockoutSize": "4",
+      "isActive": "1",
+      "isDemo": "0",
+      "purchaseId": "30001",
+      "createdAt": "2026-01-22 13:32:17",
+      "updatedAt": "2026-01-22 13:32:17"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\torganizerName\torganizerEmail\torganizerPhone\tlogoUrl\tmusicUrl\tbackgroundUrl\theroBackgroundUrl\tsubtitle\ttournamentType\tteamsPerGroupAdvancing\tknockoutSize\tisActive\tisDemo\tpurchaseId\tcreatedAt\tupdatedAt\n30001\tCampeonato Teste MP\tteste-mp-demo\tTeste Mercado Pago\tteste@peladapro.com.br\t11999887766\tNULL\tNULL\tNULL\tNULL\tNULL\tgroups_and_knockout\t2\t4\t1\t0\t30001\t2026-01-22 13:32:17\t2026-01-22 13:32:17\n",
+  "stderr": "",
+  "execution_time_ms": 97
+}
