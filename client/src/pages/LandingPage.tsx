@@ -132,11 +132,11 @@ export default function LandingPage() {
     { enabled: formData.couponCode.length >= 3 }
   );
 
-  // Mutation para criar sessão de checkout
-  const checkoutMutation = trpc.checkout.createSession.useMutation({
+  // Mutation para criar sessão de checkout (Mercado Pago)
+  const checkoutMutation = trpc.checkout.createMercadoPagoSession.useMutation({
     onSuccess: (data) => {
-      if (data.url) {
-        window.open(data.url, '_blank');
+      if (data.checkoutUrl) {
+        window.open(data.checkoutUrl, '_blank');
       }
     },
     onError: (error) => {
@@ -152,9 +152,9 @@ export default function LandingPage() {
     checkoutMutation.mutate({
       planId: selectedPlan.id,
       campaignName: formData.campaignName,
-      slug: formData.slug,
+      campaignSlug: formData.slug,
       email: formData.email,
-      phone: formData.phone || undefined,
+      whatsapp: formData.phone || "",
       couponCode: formData.couponCode || undefined,
     });
   };

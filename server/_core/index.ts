@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { handleStripeWebhook } from "../stripe/webhook";
+import { handleMercadoPagoWebhook } from "../mercadopago/webhook";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -32,9 +33,12 @@ async function startServer() {
   const app = express();
   const server = createServer(app);
   
-  // IMPORTANTE: Webhook do Stripe DEVE vir ANTES do body parser JSON
-  // porque precisa do raw body para verificar a assinatura
+  // IMPORTANTE: Webhooks DEVEM vir ANTES do body parser JSON
+  // Stripe precisa do raw body para verificar a assinatura
   app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
+  
+  // Mercado Pago webhook (pode usar JSON parser normal)
+  app.post("/api/mercadopago/webhook", handleMercadoPagoWebhook);
   
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));

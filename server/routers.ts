@@ -8,6 +8,7 @@ import * as db from "./db";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe/checkout";
+import { createCheckoutSession as createMercadoPagoCheckout } from "./mercadopago/checkout";
 
 // Default campaign ID for backwards compatibility (futebol-fraterno)
 const DEFAULT_CAMPAIGN_ID = 1;
@@ -72,8 +73,9 @@ export const appRouter = router({
       }),
   }),
 
-  // ==================== CHECKOUT (STRIPE) ====================
+  // ==================== CHECKOUT ====================
   checkout: router({
+    // Stripe (legacy)
     createSession: publicProcedure
       .input(z.object({
         planId: z.string(),
@@ -87,6 +89,24 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         const origin = ctx.req.headers.origin || 'http://localhost:3000';
         return createCheckoutSession({
+          ...input,
+          origin,
+        });
+      }),
+    
+    // Mercado Pago (novo)
+    createMercadoPagoSession: publicProcedure
+      .input(z.object({
+        planId: z.string(),
+        campaignName: z.string().min(1),
+        campaignSlug: z.string().min(3).max(30),
+        email: z.string().email(),
+        whatsapp: z.string(),
+        couponCode: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const origin = ctx.req.headers.origin || 'http://localhost:3000';
+        return createMercadoPagoCheckout({
           ...input,
           origin,
         });

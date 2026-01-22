@@ -283,3 +283,21 @@
 - [x] Adicionar social proof (+500 campeonatos criados)
 - [x] Melhorar seção de preços (destaque Popular e Melhor Custo-Benefício)
 - [x] Seção "Como Funciona" em 3 passos
+
+
+## INTEGRAÇÃO MERCADO PAGO (22/01/2026)
+
+### Substituir Stripe por Mercado Pago
+- [x] Instalar SDK do Mercado Pago (mercadopago)
+- [x] Configurar credenciais de teste no .env (MERCADOPAGO_ACCESS_TOKEN, MERCADOPAGO_PUBLIC_KEY)
+- [x] Criar serviço de checkout do Mercado Pago (server/mercadopago/checkout.ts)
+- [x] Criar webhook do Mercado Pago (server/mercadopago/webhook.ts)
+- [x] Atualizar landing page para usar Mercado Pago (LandingPage.tsx)
+- [x] Criar produtos/planos (server/mercadopago/products.ts)
+- [x] Criar rota tRPC createMercadoPagoSession
+- [x] Testes automatizados (4 testes passando - validação de credenciais, checkout, slugs, planos)
+- [x] Corrigir bug do auto_return (removido para evitar erro)
+- [ ] Testar pagamento completo com PIX (aguardando usuário)
+- [ ] Testar pagamento completo com cartão de crédito (aguardando usuário)
+- [ ] Testar pagamento completo com boleto (aguardando usuário)
+- [ ] Remover código do Stripe (opcional - manter como fallback)
