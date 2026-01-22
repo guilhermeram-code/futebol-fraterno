@@ -37,8 +37,8 @@ async function startServer() {
   // Stripe precisa do raw body para verificar a assinatura
   app.post("/api/stripe/webhook", express.raw({ type: "application/json" }), handleStripeWebhook);
   
-  // Mercado Pago webhook (pode usar JSON parser normal)
-  app.post("/api/mercadopago/webhook", handleMercadoPagoWebhook);
+  // Mercado Pago webhook (precisa do JSON parser)
+  app.post("/api/mercadopago/webhook", express.json(), handleMercadoPagoWebhook);
   
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));

@@ -1,0 +1,31 @@
+{
+  "query": "SELECT * FROM campaigns WHERE slug LIKE '%2026%' ORDER BY createdAt DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM campaigns WHERE slug LIKE '%2026%' ORDER BY createdAt DESC;",
+  "rows": [
+    {
+      "id": "60001",
+      "name": "Copa Amigos 2026",
+      "slug": "copa-amigos-2026",
+      "organizerName": "Organização Amigos FC",
+      "organizerEmail": "demo@peladapro.com.br",
+      "organizerPhone": "NULL",
+      "logoUrl": "/demo/team1.jpg",
+      "musicUrl": "NULL",
+      "backgroundUrl": "NULL",
+      "heroBackgroundUrl": "NULL",
+      "subtitle": "NULL",
+      "tournamentType": "groups_and_knockout",
+      "teamsPerGroupAdvancing": "2",
+      "knockoutSize": "4",
+      "isActive": "1",
+      "isDemo": "1",
+      "purchaseId": "NULL",
+      "createdAt": "2026-01-22 14:13:19",
+      "updatedAt": "2026-01-22 14:13:19"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\torganizerName\torganizerEmail\torganizerPhone\tlogoUrl\tmusicUrl\tbackgroundUrl\theroBackgroundUrl\tsubtitle\ttournamentType\tteamsPerGroupAdvancing\tknockoutSize\tisActive\tisDemo\tpurchaseId\tcreatedAt\tupdatedAt\n60001\tCopa Amigos 2026\tcopa-amigos-2026\tOrganização Amigos FC\tdemo@peladapro.com.br\tNULL\t/demo/team1.jpg\tNULL\tNULL\tNULL\tNULL\tgroups_and_knockout\t2\t4\t1\t1\tNULL\t2026-01-22 14:13:19\t2026-01-22 14:13:19\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

@@ -119,14 +119,31 @@ export async function handlePaymentApproved(paymentData: any) {
   if (!db) throw new Error("Database connection failed");
 
   try {
+    console.log("[MercadoPago] Processando pagamento aprovado...");
+    console.log("[MercadoPago] external_reference:", paymentData.external_reference);
+    console.log("[MercadoPago] metadata:", JSON.stringify(paymentData.metadata, null, 2));
+    
     // Extrair dados do pagamento
     const metadata = paymentData.metadata || {};
     const campaignSlug = paymentData.external_reference || metadata.campaign_slug;
-    const campaignName = metadata.campaign_name;
-    const email = metadata.email;
-    const whatsapp = metadata.whatsapp;
-    const planId = metadata.plan_id;
-    const planMonths = parseInt(metadata.plan_months || "3");
+    const campaignName = metadata.campaign_name || "Campeonato";
+    const email = metadata.email || paymentData.payer?.email;
+    const whatsapp = metadata.whatsapp || "";
+    const planId = metadata.plan_id || "test";
+    const planMonths = parseInt(metadata.plan_months || "1");
+    
+    // Validar dados essenciais
+    if (!campaignSlug) {
+      console.error("[MercadoPago] ERRO: campaignSlug não encontrado!");
+      throw new Error("campaignSlug não encontrado no pagamento");
+    }
+    
+    if (!email) {
+      console.error("[MercadoPago] ERRO: email não encontrado!");
+      throw new Error("email não encontrado no pagamento");
+    }
+    
+    console.log("[MercadoPago] Dados extraídos:", { campaignSlug, campaignName, email, whatsapp, planId, planMonths });
 
     // Verificar se campeonato já existe
     const [existingCampaign] = await db

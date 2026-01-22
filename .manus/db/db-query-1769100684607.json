@@ -1,0 +1,50 @@
+{
+  "query": "SELECT * FROM purchases ORDER BY createdAt DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM purchases ORDER BY createdAt DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "30001",
+      "customerName": "Teste Mercado Pago",
+      "customerEmail": "teste@peladapro.com.br",
+      "customerPhone": "11999887766",
+      "campaignName": "Campeonato Teste MP",
+      "campaignSlug": "teste-mp-demo",
+      "planType": "3_months",
+      "amountPaid": "6990",
+      "currency": "BRL",
+      "couponCode": "NULL",
+      "discountAmount": "0",
+      "stripeSessionId": "NULL",
+      "stripePaymentIntentId": "NULL",
+      "status": "completed",
+      "renewalEmailSent": "0",
+      "expiresAt": "2026-04-22 13:32:17",
+      "createdAt": "2026-01-22 13:32:17",
+      "updatedAt": "2026-01-22 13:32:17"
+    },
+    {
+      "id": "1",
+      "customerName": "guilhermeram",
+      "customerEmail": "guilhermeram@gmail.com",
+      "customerPhone": "18996718991",
+      "campaignName": "Teste",
+      "campaignSlug": "teste",
+      "planType": "3_months",
+      "amountPaid": "6990",
+      "currency": "BRL",
+      "couponCode": "NULL",
+      "discountAmount": "0",
+      "stripeSessionId": "cs_test_b1vgdECG1u9lHdSwpumGNXqO1nw9cuEZ9NcZA8H7sLm3gL1Aa37b5N0bFz",
+      "stripePaymentIntentId": "pi_3SsGM5G7QzupfQoq1uEqePyy",
+      "status": "completed",
+      "renewalEmailSent": "0",
+      "expiresAt": "2026-04-22 04:22:55",
+      "createdAt": "2026-01-22 05:22:54",
+      "updatedAt": "2026-01-22 05:22:54"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcustomerName\tcustomerEmail\tcustomerPhone\tcampaignName\tcampaignSlug\tplanType\tamountPaid\tcurrency\tcouponCode\tdiscountAmount\tstripeSessionId\tstripePaymentIntentId\tstatus\trenewalEmailSent\texpiresAt\tcreatedAt\tupdatedAt\n30001\tTeste Mercado Pago\tteste@peladapro.com.br\t11999887766\tCampeonato Teste MP\tteste-mp-demo\t3_months\t6990\tBRL\tNULL\t0\tNULL\tNULL\tcompleted\t0\t2026-04-22 13:32:17\t2026-01-22 13:32:17\t2026-01-22 13:32:17\n1\tguilhermeram\tguilhermeram@gmail.com\t18996718991\tTeste\tteste\t3_months\t6990\tBRL\tNULL\t0\tcs_test_b1vgdECG1u9lHdSwpumGNXqO1nw9cuEZ9NcZA8H7sLm3gL1Aa37b5N0bFz\tpi_3SsGM5G7QzupfQoq1uEqePyy\tcompleted\t0\t2026-04-22 04:22:55\t2026-01-22 05:22:54\t2026-01-22 05:22:54\n",
+  "stderr": "",
+  "execution_time_ms": 83
+}

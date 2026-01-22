@@ -424,3 +424,16 @@
 - [x] Listar todos os campeonatos com status (ativo/expirado)
 - [x] Testes automatizados (6 testes passando - 100%)
 - [x] Proteção de acesso (apenas guilhermeram@gmail.com)
+
+
+## BUG CRÍTICO - Webhook Mercado Pago (22/01/2026)
+
+- [x] BUG: Pagamento aprovado mas campeonato não é criado automaticamente
+- [x] Verificar se webhook está configurado corretamente no painel do Mercado Pago
+- [ ] Verificar se metadata está sendo enviado corretamente pelo Mercado Pago
+- [x] Adicionar logs detalhados para debug do webhook
+- [ ] Testar fluxo completo de pagamento → webhook → criação de campeonato
+- [ ] Implementar envio real de emails (atualmente só loga no console)
+
+- [x] Adicionar validação de assinatura secreta no webhook do Mercado Pago
+- [x] Configurar MERCADOPAGO_WEBHOOK_SECRET nas variáveis de ambiente

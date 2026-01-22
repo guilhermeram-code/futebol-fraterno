@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, campaignSlug, customerEmail, planType, status, stripePaymentIntentId, createdAt FROM purchases ORDER BY createdAt DESC LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, campaignSlug, customerEmail, planType, status, stripePaymentIntentId, createdAt FROM purchases ORDER BY createdAt DESC LIMIT 5;",
+  "rows": [
+    {
+      "id": "30001",
+      "campaignSlug": "teste-mp-demo",
+      "customerEmail": "teste@peladapro.com.br",
+      "planType": "3_months",
+      "status": "completed",
+      "stripePaymentIntentId": "NULL",
+      "createdAt": "2026-01-22 13:32:17"
+    },
+    {
+      "id": "1",
+      "campaignSlug": "teste",
+      "customerEmail": "guilhermeram@gmail.com",
+      "planType": "3_months",
+      "status": "completed",
+      "stripePaymentIntentId": "pi_3SsGM5G7QzupfQoq1uEqePyy",
+      "createdAt": "2026-01-22 05:22:54"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcampaignSlug\tcustomerEmail\tplanType\tstatus\tstripePaymentIntentId\tcreatedAt\n30001\tteste-mp-demo\tteste@peladapro.com.br\t3_months\tcompleted\tNULL\t2026-01-22 13:32:17\n1\tteste\tguilhermeram@gmail.com\t3_months\tcompleted\tpi_3SsGM5G7QzupfQoq1uEqePyy\t2026-01-22 05:22:54\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}
