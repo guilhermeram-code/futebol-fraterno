@@ -353,3 +353,15 @@
 
 - [x] Criar redirecionamento da raiz (/) para /landing (página de vendas do Pelada Pro)
 - [x] Garantir que peladapro.com.br sempre mostre a landing page
+
+
+## ALTERAÇÕES CRÍTICAS PELADA PRO - 22/01/2026
+
+- [x] Criar plano teste R$ 1,00 (1 mês) para testes de pagamento real
+- [x] Alterar desconto de 50% para 30% em todos os lugares
+- [x] Recalcular preços promocionais com 30% de desconto
+- [x] Atualizar badge "PROMOÇÃO - 30% OFF"
+- [x] Corrigir modal de checkout para mostrar preço COM desconto (não valor cheio)
+- [x] Alterar título da aba do navegador de "Futebol Fraterno 2026" para "PeladaPro - Organize Seu Campeonato"
+- [x] Adicionar logo do PeladaPro no favicon (bola verde com coroa)
+- [x] Criar documentação de como habilitar Mercado Pago em produção

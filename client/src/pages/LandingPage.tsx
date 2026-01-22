@@ -27,12 +27,13 @@ import {
   CheckCircle2
 } from "lucide-react";
 
-// Planos disponíveis
+// Planos disponíveis (com 30% de desconto)
 const PLANS = [
-  { id: "basic", name: "Iniciante", duration: "2 meses", price: 129, originalPrice: 129, pricePerMonth: 64.50 },
-  { id: "popular", name: "Popular", duration: "3 meses", price: 179, originalPrice: 179, pricePerMonth: 59.67, popular: true },
-  { id: "extended", name: "Semestral", duration: "6 meses", price: 299, originalPrice: 299, pricePerMonth: 49.83 },
-  { id: "annual", name: "Anual", duration: "12 meses", price: 499, originalPrice: 499, pricePerMonth: 41.58, bestValue: true },
+  { id: "test", name: "Teste", duration: "1 mês", price: 1.00, originalPrice: 1.00, pricePerMonth: 1.00, isTest: true },
+  { id: "basic", name: "Iniciante", duration: "2 meses", price: 90.30, originalPrice: 129, pricePerMonth: 45.15 },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 125.30, originalPrice: 179, pricePerMonth: 41.77, popular: true },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 209.30, originalPrice: 299, pricePerMonth: 34.88 },
+  { id: "annual", name: "Anual", duration: "12 meses", price: 349.30, originalPrice: 499, pricePerMonth: 29.11, bestValue: true },
 ];
 
 // Funcionalidades do produto
@@ -362,7 +363,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg animate-pulse">
               <Sparkles className="w-5 h-5" />
-              🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 50% OFF
+              🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 30% OFF
               <Sparkles className="w-5 h-5" />
             </div>
           </div>
@@ -371,13 +372,20 @@ export default function LandingPage() {
               <Card 
                 key={plan.id} 
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl ${
-                  plan.popular 
+                  plan.isTest
+                    ? "border-2 border-blue-500 shadow-lg shadow-blue-100"
+                    : plan.popular 
                     ? "border-2 border-emerald-500 shadow-lg shadow-emerald-100 scale-105" 
                     : plan.bestValue 
                     ? "border-2 border-amber-500 shadow-lg shadow-amber-100"
                     : "border-gray-200 hover:border-emerald-300"
                 }`}
               >
+                {plan.isTest && (
+                  <div className="absolute top-0 left-0 right-0 bg-blue-500 text-white text-center text-sm py-1 font-medium">
+                    Plano Teste
+                  </div>
+                )}
                 {plan.popular && (
                   <div className="absolute top-0 left-0 right-0 bg-emerald-500 text-white text-center text-sm py-1 font-medium">
                     Mais Popular
@@ -388,7 +396,7 @@ export default function LandingPage() {
                     Melhor Custo-Benefício
                   </div>
                 )}
-                <CardHeader className={plan.popular || plan.bestValue ? "pt-10" : ""}>
+                <CardHeader className={plan.isTest || plan.popular || plan.bestValue ? "pt-10" : ""}>
                   <CardTitle className="text-gray-900">{plan.name}</CardTitle>
                   <CardDescription className="text-gray-500">{plan.duration}</CardDescription>
                 </CardHeader>
@@ -396,12 +404,12 @@ export default function LandingPage() {
                   <div className="mb-4">
                     <div className="flex items-center gap-2 mb-1">
                       <span className="text-lg text-gray-400 line-through">R$ {plan.originalPrice.toFixed(2).replace(".", ",")}</span>
-                      <Badge className="bg-red-500 text-white text-xs">-50%</Badge>
+                      <Badge className="bg-red-500 text-white text-xs">-30%</Badge>
                     </div>
-                    <span className="text-4xl font-bold text-emerald-600">R$ {(plan.price / 2).toFixed(2).replace(".", ",")}</span>
+                    <span className="text-4xl font-bold text-emerald-600">R$ {plan.price.toFixed(2).replace(".", ",")}</span>
                   </div>
                   <p className="text-sm text-gray-500 mb-6">
-                    Equivale a <span className="font-semibold text-emerald-600">R$ {(plan.pricePerMonth / 2).toFixed(2).replace(".", ",")}/mês</span>
+                    Equivale a <span className="font-semibold text-emerald-600">R$ {plan.pricePerMonth.toFixed(2).replace(".", ",")}/mês</span>
                   </p>
                   <ul className="space-y-3 mb-6">
                     <li className="flex items-center gap-2 text-gray-700 text-sm">
