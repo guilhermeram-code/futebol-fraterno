@@ -1247,15 +1247,19 @@ export async function getAllCampaignsForAdmin() {
       musicUrl: campaigns.musicUrl,
       backgroundUrl: campaigns.backgroundUrl,
       heroBackgroundUrl: campaigns.heroBackgroundUrl,
+      subtitle: campaigns.subtitle,
+      tournamentType: campaigns.tournamentType,
+      teamsPerGroupAdvancing: campaigns.teamsPerGroupAdvancing,
+      knockoutSize: campaigns.knockoutSize,
       isActive: campaigns.isActive,
       isDemo: campaigns.isDemo,
       purchaseId: campaigns.purchaseId,
       createdAt: campaigns.createdAt,
       updatedAt: campaigns.updatedAt,
-      // Dados da compra
-      expiresAt: purchases.expiresAt,
       planType: purchases.planType,
       amountPaid: purchases.amountPaid,
+      expiresAt: purchases.expiresAt,
+      purchaseStatus: purchases.status,
     })
     .from(campaigns)
     .leftJoin(purchases, eq(campaigns.purchaseId, purchases.id))
