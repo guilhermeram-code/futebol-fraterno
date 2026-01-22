@@ -491,3 +491,19 @@
 - [x] Link de volta no admin - Corrigido para usar /{slug} ao invés de /
 - [x] Redirecionamento após login - Corrigido para usar /{slug}/admin
 - [x] Testes atualizados - 72/72 passando (100%)
+
+
+## CORREÇÕES DO CLAUDE EXTERNO APLICADAS - 22/01/2026
+
+### Arquivos Modificados:
+- [x] client/src/App.tsx - Correção URL /admin + redirecionamento
+- [x] client/src/components/Header.tsx - Logo e links usando slug correto
+- [x] server/db.ts - getPlayerById filtrando por campaignId
+- [x] server/routers.ts - players.byId + logs de debug em uploads
+
+### Testes Realizados:
+- [x] Teste 1: Acessar /admin redireciona para /admin-dashboard - PASSOU
+- [x] Teste 2: Jogadores não vazam entre campeonatos - PASSOU
+- [x] Teste 3: Logo vai para /{slug} ao invés de / - PASSOU
+- [ ] Teste 4: Email com credenciais após pagamento - PENDENTE (requer pagamento real)
+- [ ] Teste 5: Upload de fotos - PENDENTE (requer login no admin)

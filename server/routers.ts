@@ -372,7 +372,7 @@ export const appRouter = router({
     byId: publicProcedure
       .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getPlayerById(input.id);
+        return db.getPlayerById(input.id, input.campaignId ? getCampaignId(input) : undefined);
       }),
     
     byTeam: publicProcedure
@@ -879,11 +879,16 @@ export const appRouter = router({
         campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
+        const campaignId = getCampaignId(input);
+        console.log("[Upload Logo] campaignId:", campaignId);
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'png';
         const fileKey = `tournament/logo-${nanoid()}.${ext}`;
+        console.log("[Upload Logo] fileKey:", fileKey);
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        await db.setSetting(getCampaignId(input), 'tournamentLogo', url);
+        console.log("[Upload Logo] url:", url);
+        await db.setSetting(campaignId, 'tournamentLogo', url);
+        console.log("[Upload Logo] Setting salvo para campaign:", campaignId);
         return { url };
       }),
     
@@ -909,11 +914,16 @@ export const appRouter = router({
         campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
+        const campaignId = getCampaignId(input);
+        console.log("[Upload Background] campaignId:", campaignId);
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'jpg';
         const fileKey = `tournament/background-${nanoid()}.${ext}`;
+        console.log("[Upload Background] fileKey:", fileKey);
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        await db.setSetting(getCampaignId(input), 'tournamentBackground', url);
+        console.log("[Upload Background] url:", url);
+        await db.setSetting(campaignId, 'tournamentBackground', url);
+        console.log("[Upload Background] Setting salvo para campaign:", campaignId);
         return { url };
       }),
     

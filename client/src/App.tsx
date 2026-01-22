@@ -163,14 +163,19 @@ function MainRouter() {
   const potentialSlug = pathParts[0];
   
   // Lista de rotas que NÃO são slugs de campeonato
-  // NOTA: 'admin' foi removido - agora cada campeonato tem seu admin em /{slug}/admin
   const reservedRoutes = [
-    'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
+    'admin', 'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
     'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'change-password', 'admin-dashboard'
   ];
   
   // Verificar se é a landing page (raiz)
   const isLandingPage = location === '/' || location === '';
+  
+  // Redirecionar /admin para /admin-dashboard (painel do dono do PeladaPro)
+  if (location === '/admin') {
+    window.location.href = '/admin-dashboard';
+    return null;
+  }
   
   // Verificar se é uma rota legada (sem slug)
   const isLegacyRoute = reservedRoutes.includes(potentialSlug);

@@ -6,6 +6,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, Trophy, Calendar, Users, BarChart3, Image, Settings, LogIn, Search, User, Star } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { useTournament } from "@/contexts/TournamentContext";
+import { useCampaign } from "@/App";
 import { trpc } from "@/lib/trpc";
 
 export function Header() {
@@ -15,6 +16,7 @@ export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
   const { settings, isLoading } = useTournament();
+  const { slug } = useCampaign();
   const [, navigate] = useLocation();
 
   const { data: players } = trpc.players.list.useQuery();
@@ -42,19 +44,19 @@ export function Header() {
   };
 
   const handlePlayerClick = (playerId: number) => {
-    navigate(`/jogadores/${playerId}`);
+    navigate(`/${slug}/jogadores/${playerId}`);
     setSearchOpen(false);
     setSearchTerm("");
   };
 
   const navItems = [
-    { href: "/classificacao", label: "Classificação", icon: Trophy },
-    { href: "/jogos", label: "Jogos", icon: Calendar },
-    { href: "/jogadores", label: "Jogadores", icon: User },
-    { href: "/times", label: "Times", icon: Users },
-    { href: "/estatisticas", label: "Estatísticas", icon: BarChart3 },
-    { href: "/galeria", label: "Galeria", icon: Image },
-    { href: "/patrocinadores", label: "Patrocinadores", icon: Star },
+    { href: `/${slug}/classificacao`, label: "Classificação", icon: Trophy },
+    { href: `/${slug}/jogos`, label: "Jogos", icon: Calendar },
+    { href: `/${slug}/jogadores`, label: "Jogadores", icon: User },
+    { href: `/${slug}/times`, label: "Times", icon: Users },
+    { href: `/${slug}/estatisticas`, label: "Estatísticas", icon: BarChart3 },
+    { href: `/${slug}/galeria`, label: "Galeria", icon: Image },
+    { href: `/${slug}/patrocinadores`, label: "Patrocinadores", icon: Star },
   ];
 
   return (
@@ -62,7 +64,7 @@ export function Header() {
       <div className="container py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/">
+          <Link href={slug ? `/${slug}` : "/"}>
             <div className="flex items-center gap-4 cursor-pointer">
               {isLoading ? (
                 <>
@@ -150,7 +152,7 @@ export function Header() {
             </div>
             
             {isAuthenticated && user?.role === "admin" ? (
-              <Link href="/admin">
+              <Link href={`/${slug}/admin`}>
                 <Button variant="default" className="bg-primary text-primary-foreground">
                   Painel Admin
                 </Button>
@@ -244,7 +246,7 @@ export function Header() {
               <div className="border-t border-white/10 my-2" />
               
               {isAuthenticated && user?.role === "admin" ? (
-                <Link href="/admin">
+                <Link href={`/${slug}/admin`}>
                   <Button 
                     variant="default" 
                     className="w-full bg-primary text-primary-foreground gap-3"

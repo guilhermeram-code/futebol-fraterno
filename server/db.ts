@@ -351,9 +351,19 @@ export async function getAllPlayers(campaignId: number) {
   return db.select().from(players).where(eq(players.campaignId, campaignId)).orderBy(asc(players.name));
 }
 
-export async function getPlayerById(id: number) {
+export async function getPlayerById(id: number, campaignId?: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  
+  // Se campaignId for fornecido, filtrar por ele (segurança multi-tenant)
+  if (campaignId) {
+    const result = await db.select().from(players).where(
+      and(eq(players.id, id), eq(players.campaignId, campaignId))
+    );
+    return result[0] || null;
+  }
+  
+  // Caso contrário, buscar apenas por ID (para compatibilidade)
   const result = await db.select().from(players).where(eq(players.id, id));
   return result[0] || null;
 }
