@@ -7,14 +7,16 @@ import { Header } from "@/components/Header";
 import { Link, useSearch } from "wouter";
 import { Trophy, Users, EyeOff } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Classificacao() {
+  const { campaignId } = useTournament();
   const searchParams = new URLSearchParams(useSearch());
   const selectedGroupId = searchParams.get("grupo");
   
-  const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery();
-  const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType" });
-  const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup" });
+  const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery({ campaignId });
+  const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType", campaignId });
+  const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup", campaignId });
   
   // Se é só mata-mata, esconder grupos
   const isKnockoutOnly = tournamentType === "knockout_only";
@@ -65,6 +67,7 @@ export default function Classificacao() {
                 groupId={group.id} 
                 groupName={group.name} 
                 qualifyCount={qualifyCount}
+                campaignId={campaignId}
               />
             ))}
           </div>
@@ -83,8 +86,8 @@ export default function Classificacao() {
   );
 }
 
-function GroupStandings({ groupId, groupName, qualifyCount }: { groupId: number; groupName: string; qualifyCount: number }) {
-  const { data: standings, isLoading } = trpc.groups.standings.useQuery({ groupId });
+function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { groupId: number; groupName: string; qualifyCount: number; campaignId: number }) {
+  const { data: standings, isLoading } = trpc.groups.standings.useQuery({ groupId, campaignId });
 
   if (isLoading) {
     return <Skeleton className="h-64 w-full" />;

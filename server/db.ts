@@ -15,7 +15,11 @@ import {
   adminEmails, InsertAdminEmail, AdminEmail,
   adminUsers, InsertAdminUser, AdminUser,
   sponsors, InsertSponsor, Sponsor,
-  supportMessages, InsertSupportMessage, SupportMessage
+  supportMessages, InsertSupportMessage, SupportMessage,
+  campaigns, InsertCampaign, Campaign,
+  purchases, InsertPurchase, Purchase,
+  reservedSlugs, InsertReservedSlug, ReservedSlug,
+  coupons, InsertCoupon, Coupon
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -31,6 +35,142 @@ export async function getDb() {
     }
   }
   return _db;
+}
+
+// ==================== CAMPAIGNS (MULTI-TENANT) ====================
+export async function getCampaignBySlug(slug: string): Promise<Campaign | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [campaign] = await db.select().from(campaigns).where(eq(campaigns.slug, slug));
+  return campaign || null;
+}
+
+export async function getCampaignById(id: number): Promise<Campaign | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [campaign] = await db.select().from(campaigns).where(eq(campaigns.id, id));
+  return campaign || null;
+}
+
+export async function getAllCampaigns(): Promise<Campaign[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(campaigns).orderBy(desc(campaigns.createdAt));
+}
+
+export async function getActiveCampaigns(): Promise<Campaign[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(campaigns).where(eq(campaigns.isActive, true)).orderBy(desc(campaigns.createdAt));
+}
+
+export async function createCampaign(campaign: InsertCampaign): Promise<{ id: number }> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(campaigns).values(campaign);
+  return { id: result[0].insertId };
+}
+
+export async function updateCampaign(id: number, data: Partial<InsertCampaign>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(campaigns).set(data).where(eq(campaigns.id, id));
+}
+
+// ==================== PURCHASES ====================
+export async function createPurchase(purchase: InsertPurchase): Promise<{ id: number }> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(purchases).values(purchase);
+  return { id: result[0].insertId };
+}
+
+export async function getPurchaseBySlug(slug: string): Promise<Purchase | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [purchase] = await db.select().from(purchases).where(eq(purchases.campaignSlug, slug));
+  return purchase || null;
+}
+
+export async function getPurchaseByStripeSession(sessionId: string): Promise<Purchase | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [purchase] = await db.select().from(purchases).where(eq(purchases.stripeSessionId, sessionId));
+  return purchase || null;
+}
+
+export async function updatePurchase(id: number, data: Partial<InsertPurchase>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(purchases).set(data).where(eq(purchases.id, id));
+}
+
+export async function getAllPurchases(): Promise<Purchase[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(purchases).orderBy(desc(purchases.createdAt));
+}
+
+// ==================== RESERVED SLUGS ====================
+export async function isSlugAvailable(slug: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  
+  // Check reserved slugs
+  const [reserved] = await db.select().from(reservedSlugs).where(eq(reservedSlugs.slug, slug));
+  if (reserved) return false;
+  
+  // Check existing campaigns
+  const [campaign] = await db.select().from(campaigns).where(eq(campaigns.slug, slug));
+  if (campaign) return false;
+  
+  return true;
+}
+
+export async function reserveSlug(slug: string, purchaseId?: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(reservedSlugs).values({ 
+    slug, 
+    purchaseId, 
+    reason: purchaseId ? 'purchased' : 'reserved' 
+  });
+}
+
+// ==================== COUPONS ====================
+export async function getCouponByCode(code: string): Promise<Coupon | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [coupon] = await db.select().from(coupons).where(eq(coupons.code, code.toUpperCase()));
+  return coupon || null;
+}
+
+export async function validateCoupon(code: string): Promise<{ valid: boolean; discount: number; message?: string }> {
+  const coupon = await getCouponByCode(code);
+  if (!coupon) return { valid: false, discount: 0, message: 'Cupom não encontrado' };
+  if (!coupon.active) return { valid: false, discount: 0, message: 'Cupom inativo' };
+  if (coupon.expiresAt && new Date(coupon.expiresAt) < new Date()) {
+    return { valid: false, discount: 0, message: 'Cupom expirado' };
+  }
+  if (coupon.maxUses && (coupon.usedCount ?? 0) >= coupon.maxUses) {
+    return { valid: false, discount: 0, message: 'Cupom esgotado' };
+  }
+  return { valid: true, discount: coupon.discountPercent };
+}
+
+export async function useCoupon(code: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(coupons)
+    .set({ usedCount: sql`${coupons.usedCount} + 1` })
+    .where(eq(coupons.code, code.toUpperCase()));
+}
+
+export async function createCoupon(coupon: InsertCoupon): Promise<{ id: number }> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(coupons).values({ ...coupon, code: coupon.code.toUpperCase() });
+  return { id: result[0].insertId };
 }
 
 // ==================== USERS ====================
@@ -75,8 +215,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.role = 'admin';
       updateSet.role = 'admin';
     } else if (user.email) {
-      // Verificar se o email está na lista de admin_emails
-      const isAdmin = await isAdminEmail(user.email);
+      // Verificar se o email está na lista de admin_emails (campaignId = 1 para compatibilidade)
+      const isAdmin = await isAdminEmail(user.email, 1);
       if (isAdmin) {
         values.role = 'admin';
         updateSet.role = 'admin';
@@ -113,10 +253,10 @@ export async function getUserByOpenId(openId: string) {
 }
 
 // ==================== TEAMS ====================
-export async function createTeam(team: InsertTeam) {
+export async function createTeam(campaignId: number, team: Omit<InsertTeam, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(teams).values(team);
+  const result = await db.insert(teams).values({ ...team, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -139,45 +279,49 @@ export async function getTeamById(id: number) {
   return result[0];
 }
 
-export async function getAllTeams() {
+export async function getAllTeams(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(teams).orderBy(asc(teams.name));
+  return db.select().from(teams).where(eq(teams.campaignId, campaignId)).orderBy(asc(teams.name));
 }
 
-export async function getTeamsByGroup(groupId: number) {
+export async function getTeamsByGroup(campaignId: number, groupId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(teams).where(eq(teams.groupId, groupId)).orderBy(asc(teams.name));
+  return db.select().from(teams).where(
+    and(eq(teams.campaignId, campaignId), eq(teams.groupId, groupId))
+  ).orderBy(asc(teams.name));
 }
 
 // ==================== GROUPS ====================
-export async function createGroup(group: InsertGroup) {
+export async function createGroup(campaignId: number, group: Omit<InsertGroup, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(groups).values(group);
+  const result = await db.insert(groups).values({ ...group, campaignId });
   return { id: result[0].insertId };
 }
 
-export async function deleteGroup(id: number) {
+export async function deleteGroup(campaignId: number, id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   // Remove teams from group first
-  await db.update(teams).set({ groupId: null }).where(eq(teams.groupId, id));
+  await db.update(teams).set({ groupId: null }).where(
+    and(eq(teams.campaignId, campaignId), eq(teams.groupId, id))
+  );
   await db.delete(groups).where(eq(groups.id, id));
 }
 
-export async function getAllGroups() {
+export async function getAllGroups(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(groups).orderBy(asc(groups.name));
+  return db.select().from(groups).where(eq(groups.campaignId, campaignId)).orderBy(asc(groups.name));
 }
 
 // ==================== PLAYERS ====================
-export async function createPlayer(player: InsertPlayer) {
+export async function createPlayer(campaignId: number, player: Omit<InsertPlayer, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(players).values(player);
+  const result = await db.insert(players).values({ ...player, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -193,16 +337,18 @@ export async function deletePlayer(id: number) {
   await db.delete(players).where(eq(players.id, id));
 }
 
-export async function getPlayersByTeam(teamId: number) {
+export async function getPlayersByTeam(campaignId: number, teamId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(players).where(eq(players.teamId, teamId)).orderBy(asc(players.number));
+  return db.select().from(players).where(
+    and(eq(players.campaignId, campaignId), eq(players.teamId, teamId))
+  ).orderBy(asc(players.number));
 }
 
-export async function getAllPlayers() {
+export async function getAllPlayers(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(players).orderBy(asc(players.name));
+  return db.select().from(players).where(eq(players.campaignId, campaignId)).orderBy(asc(players.name));
 }
 
 export async function getPlayerById(id: number) {
@@ -213,10 +359,10 @@ export async function getPlayerById(id: number) {
 }
 
 // ==================== MATCHES ====================
-export async function createMatch(match: InsertMatch) {
+export async function createMatch(campaignId: number, match: Omit<InsertMatch, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(matches).values(match);
+  const result = await db.insert(matches).values({ ...match, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -226,12 +372,12 @@ export async function updateMatch(id: number, match: Partial<InsertMatch>) {
   await db.update(matches).set(match).where(eq(matches.id, id));
 }
 
-export async function deleteMatch(id: number) {
+export async function deleteMatch(campaignId: number, id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   // Delete related goals and cards first
-  await db.delete(goals).where(eq(goals.matchId, id));
-  await db.delete(cards).where(eq(cards.matchId, id));
+  await db.delete(goals).where(and(eq(goals.campaignId, campaignId), eq(goals.matchId, id)));
+  await db.delete(cards).where(and(eq(cards.campaignId, campaignId), eq(cards.matchId, id)));
   await db.delete(matches).where(eq(matches.id, id));
 }
 
@@ -242,56 +388,64 @@ export async function getMatchById(id: number) {
   return result[0];
 }
 
-export async function getAllMatches() {
+export async function getAllMatches(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(matches).orderBy(desc(matches.matchDate));
+  return db.select().from(matches).where(eq(matches.campaignId, campaignId)).orderBy(desc(matches.matchDate));
 }
 
-export async function getMatchesByPhase(phase: string) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  return db.select().from(matches).where(eq(matches.phase, phase as any)).orderBy(asc(matches.matchDate));
-}
-
-export async function getMatchesByGroup(groupId: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  return db.select().from(matches).where(eq(matches.groupId, groupId)).orderBy(asc(matches.round), asc(matches.matchDate));
-}
-
-export async function getMatchesByTeam(teamId: number) {
+export async function getMatchesByPhase(campaignId: number, phase: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(matches).where(
-    sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
+    and(eq(matches.campaignId, campaignId), eq(matches.phase, phase as any))
+  ).orderBy(asc(matches.matchDate));
+}
+
+export async function getMatchesByGroup(campaignId: number, groupId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(matches).where(
+    and(eq(matches.campaignId, campaignId), eq(matches.groupId, groupId))
+  ).orderBy(asc(matches.round), asc(matches.matchDate));
+}
+
+export async function getMatchesByTeam(campaignId: number, teamId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  return db.select().from(matches).where(
+    and(
+      eq(matches.campaignId, campaignId),
+      sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
+    )
   ).orderBy(desc(matches.matchDate));
 }
 
-export async function getUpcomingMatches(limit: number = 10) {
+export async function getUpcomingMatches(campaignId: number, limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(matches)
-    .where(eq(matches.played, false))
+    .where(and(eq(matches.campaignId, campaignId), eq(matches.played, false)))
     .orderBy(asc(matches.matchDate))
     .limit(limit);
 }
 
-export async function getRecentMatches(limit: number = 10) {
+export async function getRecentMatches(campaignId: number, limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(matches)
-    .where(eq(matches.played, true))
+    .where(and(eq(matches.campaignId, campaignId), eq(matches.played, true)))
     .orderBy(desc(matches.matchDate))
     .limit(limit);
 }
 
-export async function getHeadToHead(team1Id: number, team2Id: number) {
+export async function getHeadToHead(campaignId: number, team1Id: number, team2Id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(matches)
     .where(
       and(
+        eq(matches.campaignId, campaignId),
         eq(matches.played, true),
         sql`(${matches.homeTeamId} = ${team1Id} AND ${matches.awayTeamId} = ${team2Id}) OR (${matches.homeTeamId} = ${team2Id} AND ${matches.awayTeamId} = ${team1Id})`
       )
@@ -300,10 +454,10 @@ export async function getHeadToHead(team1Id: number, team2Id: number) {
 }
 
 // ==================== GOALS ====================
-export async function createGoal(goal: InsertGoal) {
+export async function createGoal(campaignId: number, goal: Omit<InsertGoal, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(goals).values(goal);
+  const result = await db.insert(goals).values({ ...goal, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -313,13 +467,15 @@ export async function deleteGoal(id: number) {
   await db.delete(goals).where(eq(goals.id, id));
 }
 
-export async function getGoalsByMatch(matchId: number) {
+export async function getGoalsByMatch(campaignId: number, matchId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(goals).where(eq(goals.matchId, matchId)).orderBy(asc(goals.minute));
+  return db.select().from(goals).where(
+    and(eq(goals.campaignId, campaignId), eq(goals.matchId, matchId))
+  ).orderBy(asc(goals.minute));
 }
 
-export async function getTopScorers(limit: number = 10) {
+export async function getTopScorers(campaignId: number, limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const result = await db.select({
@@ -328,29 +484,32 @@ export async function getTopScorers(limit: number = 10) {
     goalCount: sql<number>`COUNT(*)`.as('goalCount')
   })
     .from(goals)
+    .where(eq(goals.campaignId, campaignId))
     .groupBy(goals.playerId, goals.teamId)
     .orderBy(desc(sql`goalCount`))
     .limit(limit);
   return result;
 }
 
-export async function getGoalsByPlayer(playerId: number) {
+export async function getGoalsByPlayer(campaignId: number, playerId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(goals).where(eq(goals.playerId, playerId));
+  return db.select().from(goals).where(
+    and(eq(goals.campaignId, campaignId), eq(goals.playerId, playerId))
+  );
 }
 
-export async function getAllGoals() {
+export async function getAllGoals(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(goals);
+  return db.select().from(goals).where(eq(goals.campaignId, campaignId));
 }
 
 // ==================== CARDS ====================
-export async function createCard(card: InsertCard) {
+export async function createCard(campaignId: number, card: Omit<InsertCard, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(cards).values(card);
+  const result = await db.insert(cards).values({ ...card, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -360,13 +519,15 @@ export async function deleteCard(id: number) {
   await db.delete(cards).where(eq(cards.id, id));
 }
 
-export async function getCardsByMatch(matchId: number) {
+export async function getCardsByMatch(campaignId: number, matchId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(cards).where(eq(cards.matchId, matchId)).orderBy(asc(cards.minute));
+  return db.select().from(cards).where(
+    and(eq(cards.campaignId, campaignId), eq(cards.matchId, matchId))
+  ).orderBy(asc(cards.minute));
 }
 
-export async function getTopCardedPlayers(limit: number = 10) {
+export async function getTopCardedPlayers(campaignId: number, limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const result = await db.select({
@@ -377,8 +538,8 @@ export async function getTopCardedPlayers(limit: number = 10) {
     totalCards: sql<number>`COUNT(*)`.as('totalCards')
   })
     .from(cards)
+    .where(eq(cards.campaignId, campaignId))
     .groupBy(cards.playerId, cards.teamId)
-    // Ordenar por: 1º vermelhos (desc), 2º amarelos (desc)
     .orderBy(
       desc(sql`SUM(CASE WHEN ${cards.cardType} = 'red' THEN 1 ELSE 0 END)`),
       desc(sql`SUM(CASE WHEN ${cards.cardType} = 'yellow' THEN 1 ELSE 0 END)`)
@@ -387,19 +548,20 @@ export async function getTopCardedPlayers(limit: number = 10) {
   return result;
 }
 
-export async function getCardsByPlayer(playerId: number) {
+export async function getCardsByPlayer(campaignId: number, playerId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(cards).where(eq(cards.playerId, playerId));
+  return db.select().from(cards).where(
+    and(eq(cards.campaignId, campaignId), eq(cards.playerId, playerId))
+  );
 }
 
 // ==================== COMMENTS ====================
-export async function createComment(comment: InsertComment) {
+export async function createComment(campaignId: number, comment: Omit<InsertComment, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(comments).values(comment);
+  const result = await db.insert(comments).values({ ...comment, campaignId });
   const insertId = result[0].insertId;
-  // Return the created comment with all fields
   const created = await db.select().from(comments).where(eq(comments.id, insertId)).limit(1);
   return created[0] || { id: insertId, ...comment };
 }
@@ -410,29 +572,33 @@ export async function deleteComment(id: number) {
   await db.delete(comments).where(eq(comments.id, id));
 }
 
-export async function getAllComments(limit: number = 50) {
+export async function getAllComments(campaignId: number, limit: number = 50) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(comments).orderBy(desc(comments.createdAt)).limit(limit);
+  return db.select().from(comments).where(eq(comments.campaignId, campaignId)).orderBy(desc(comments.createdAt)).limit(limit);
 }
 
-export async function getCommentsByMatch(matchId: number) {
+export async function getCommentsByMatch(campaignId: number, matchId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(comments).where(eq(comments.matchId, matchId)).orderBy(desc(comments.createdAt));
+  return db.select().from(comments).where(
+    and(eq(comments.campaignId, campaignId), eq(comments.matchId, matchId))
+  ).orderBy(desc(comments.createdAt));
 }
 
-export async function getCommentsByTeam(teamId: number) {
+export async function getCommentsByTeam(campaignId: number, teamId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(comments).where(eq(comments.teamId, teamId)).orderBy(desc(comments.createdAt));
+  return db.select().from(comments).where(
+    and(eq(comments.campaignId, campaignId), eq(comments.teamId, teamId))
+  ).orderBy(desc(comments.createdAt));
 }
 
 // ==================== PHOTOS ====================
-export async function createPhoto(photo: InsertPhoto) {
+export async function createPhoto(campaignId: number, photo: Omit<InsertPhoto, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(photos).values(photo);
+  const result = await db.insert(photos).values({ ...photo, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -442,30 +608,34 @@ export async function deletePhoto(id: number) {
   await db.delete(photos).where(eq(photos.id, id));
 }
 
-export async function getAllPhotos(limit: number = 100) {
+export async function getAllPhotos(campaignId: number, limit: number = 100) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(photos).orderBy(desc(photos.createdAt)).limit(limit);
+  return db.select().from(photos).where(eq(photos.campaignId, campaignId)).orderBy(desc(photos.createdAt)).limit(limit);
 }
 
-export async function getPhotosByMatch(matchId: number) {
+export async function getPhotosByMatch(campaignId: number, matchId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(photos).where(eq(photos.matchId, matchId)).orderBy(desc(photos.createdAt));
+  return db.select().from(photos).where(
+    and(eq(photos.campaignId, campaignId), eq(photos.matchId, matchId))
+  ).orderBy(desc(photos.createdAt));
 }
 
 // ==================== TOURNAMENT SETTINGS ====================
-export async function getSetting(key: string) {
+export async function getSetting(campaignId: number, key: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.select().from(tournamentSettings).where(eq(tournamentSettings.key, key)).limit(1);
+  const result = await db.select().from(tournamentSettings).where(
+    and(eq(tournamentSettings.campaignId, campaignId), eq(tournamentSettings.key, key))
+  ).limit(1);
   return result[0]?.value ?? "";
 }
 
-export async function getAllSettings() {
+export async function getAllSettings(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.select().from(tournamentSettings);
+  const result = await db.select().from(tournamentSettings).where(eq(tournamentSettings.campaignId, campaignId));
   const settings: Record<string, string> = {};
   result.forEach(row => {
     if (row.key && row.value) {
@@ -475,20 +645,33 @@ export async function getAllSettings() {
   return settings;
 }
 
-export async function setSetting(key: string, value: string) {
+export async function setSetting(campaignId: number, key: string, value: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await db.insert(tournamentSettings).values({ key, value }).onDuplicateKeyUpdate({ set: { value } });
+  // First try to update existing
+  const existing = await db.select().from(tournamentSettings).where(
+    and(eq(tournamentSettings.campaignId, campaignId), eq(tournamentSettings.key, key))
+  ).limit(1);
+  
+  if (existing.length > 0) {
+    await db.update(tournamentSettings).set({ value }).where(eq(tournamentSettings.id, existing[0].id));
+  } else {
+    await db.insert(tournamentSettings).values({ campaignId, key, value });
+  }
 }
 
 // ==================== STATISTICS ====================
-export async function getGroupStandings(groupId: number) {
+export async function getGroupStandings(campaignId: number, groupId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const teamsInGroup = await getTeamsByGroup(groupId);
+  const teamsInGroup = await getTeamsByGroup(campaignId, groupId);
   const matchesInGroup = await db.select().from(matches)
-    .where(and(eq(matches.groupId, groupId), eq(matches.played, true)));
+    .where(and(
+      eq(matches.campaignId, campaignId),
+      eq(matches.groupId, groupId), 
+      eq(matches.played, true)
+    ));
   
   const standings = teamsInGroup.map(team => {
     const teamMatches = matchesInGroup.filter(
@@ -498,6 +681,8 @@ export async function getGroupStandings(groupId: number) {
     let points = 0, wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
     
     teamMatches.forEach(match => {
+      if (match.homeScore === null || match.awayScore === null) return;
+      
       const isHome = match.homeTeamId === team.id;
       const teamScore = isHome ? match.homeScore! : match.awayScore!;
       const opponentScore = isHome ? match.awayScore! : match.homeScore!;
@@ -529,7 +714,6 @@ export async function getGroupStandings(groupId: number) {
     };
   });
   
-  // Sort by points, then goal difference, then goals scored
   standings.sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
     if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
@@ -539,13 +723,14 @@ export async function getGroupStandings(groupId: number) {
   return standings;
 }
 
-export async function getTeamStats(teamId: number) {
+export async function getTeamStats(campaignId: number, teamId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
   const teamMatches = await db.select().from(matches)
     .where(
       and(
+        eq(matches.campaignId, campaignId),
         eq(matches.played, true),
         sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
       )
@@ -555,7 +740,6 @@ export async function getTeamStats(teamId: number) {
   let validMatches = 0;
   
   teamMatches.forEach(match => {
-    // Só contabiliza se o jogo tiver resultado (scores não nulos)
     if (match.homeScore === null || match.awayScore === null) return;
     
     validMatches++;
@@ -583,15 +767,14 @@ export async function getTeamStats(teamId: number) {
   };
 }
 
-// Estatísticas apenas da fase de grupos (para classificação)
-export async function getTeamStatsGroupOnly(teamId: number) {
+export async function getTeamStatsGroupOnly(campaignId: number, teamId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  // Filtra apenas jogos da fase de grupos (phase = 'groups')
   const teamMatches = await db.select().from(matches)
     .where(
       and(
+        eq(matches.campaignId, campaignId),
         eq(matches.played, true),
         eq(matches.phase, 'groups'),
         sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
@@ -602,7 +785,6 @@ export async function getTeamStatsGroupOnly(teamId: number) {
   let validMatches = 0;
   
   teamMatches.forEach(match => {
-    // Só contabiliza se o jogo tiver resultado (scores não nulos)
     if (match.homeScore === null || match.awayScore === null) return;
     
     validMatches++;
@@ -630,28 +812,25 @@ export async function getTeamStatsGroupOnly(teamId: number) {
   };
 }
 
-// Estatísticas apenas do mata-mata
-export async function getTeamStatsKnockoutOnly(teamId: number) {
+export async function getTeamStatsKnockoutOnly(campaignId: number, teamId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  // Busca todos os jogos jogados do time
   const allTeamMatches = await db.select().from(matches)
     .where(
       and(
+        eq(matches.campaignId, campaignId),
         eq(matches.played, true),
         sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
       )
     );
   
-  // Filtra apenas jogos do mata-mata (phase != 'groups')
   const teamMatches = allTeamMatches.filter(m => m.phase !== 'groups');
   
   let wins = 0, draws = 0, losses = 0, goalsFor = 0, goalsAgainst = 0;
   let validMatches = 0;
   
   teamMatches.forEach(match => {
-    // Só contabiliza se o jogo tiver resultado (scores não nulos)
     if (match.homeScore === null || match.awayScore === null) return;
     
     validMatches++;
@@ -675,80 +854,79 @@ export async function getTeamStatsKnockoutOnly(teamId: number) {
     goalsFor,
     goalsAgainst,
     goalDifference: goalsFor - goalsAgainst,
-    // Mata-mata não tem pontos, mas retornamos para consistência
     points: 0
   };
 }
 
-export async function getWorstDefenses(limit: number = 10) {
+export async function getWorstDefenses(campaignId: number, limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const allTeams = await getAllTeams();
+  const allTeams = await getAllTeams(campaignId);
   const teamsWithStats = await Promise.all(
     allTeams.map(async team => {
-      const stats = await getTeamStats(team.id);
+      const stats = await getTeamStats(campaignId, team.id);
       return { team, ...stats };
     })
   );
   
-  // Sort by goals against (descending) - worst defenses first
   return teamsWithStats
     .filter(t => t.played > 0)
     .sort((a, b) => b.goalsAgainst - a.goalsAgainst)
     .slice(0, limit);
 }
 
-export async function getBestDefenses(limit: number = 10) {
+export async function getBestDefenses(campaignId: number, limit: number = 10) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  const allTeams = await getAllTeams();
+  const allTeams = await getAllTeams(campaignId);
   const teamsWithStats = await Promise.all(
     allTeams.map(async team => {
-      const stats = await getTeamStats(team.id);
+      const stats = await getTeamStats(campaignId, team.id);
       return { team, ...stats };
     })
   );
   
-  // Sort by goals against (ascending) - best defenses first
   return teamsWithStats
     .filter(t => t.played > 0)
     .sort((a, b) => a.goalsAgainst - b.goalsAgainst)
     .slice(0, limit);
 }
 
-export async function getRoundStats(round: number) {
+export async function getRoundStats(campaignId: number, round: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
   const roundMatches = await db.select().from(matches)
-    .where(and(eq(matches.round, round), eq(matches.played, true)));
+    .where(and(
+      eq(matches.campaignId, campaignId),
+      eq(matches.round, round), 
+      eq(matches.played, true)
+    ));
   
   const matchIds = roundMatches.map(m => m.id);
   
   if (matchIds.length === 0) return { topScorer: null, mostCarded: null };
   
-  // Get goals in this round
   const roundGoals = await db.select({
     playerId: goals.playerId,
     teamId: goals.teamId,
     goalCount: sql<number>`COUNT(*)`.as('goalCount')
   })
     .from(goals)
-    .where(inArray(goals.matchId, matchIds))
+    .where(and(eq(goals.campaignId, campaignId), inArray(goals.matchId, matchIds)))
     .groupBy(goals.playerId, goals.teamId)
     .orderBy(desc(sql`goalCount`))
     .limit(1);
   
-  // Get cards in this round
   const roundCards = await db.select({
     playerId: cards.playerId,
     teamId: cards.teamId,
     cardCount: sql<number>`COUNT(*)`.as('cardCount')
   })
     .from(cards)
-    .where(inArray(cards.matchId, matchIds))
+    .where(and(eq(cards.campaignId, campaignId), inArray(cards.matchId, matchIds)))
     .groupBy(cards.playerId, cards.teamId)
     .orderBy(desc(sql`cardCount`))
     .limit(1);
@@ -760,10 +938,10 @@ export async function getRoundStats(round: number) {
 }
 
 // ==================== ANNOUNCEMENTS ====================
-export async function createAnnouncement(announcement: InsertAnnouncement) {
+export async function createAnnouncement(campaignId: number, announcement: Omit<InsertAnnouncement, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(announcements).values(announcement);
+  const result = await db.insert(announcements).values({ ...announcement, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -779,25 +957,25 @@ export async function deleteAnnouncement(id: number) {
   await db.delete(announcements).where(eq(announcements.id, id));
 }
 
-export async function getAllAnnouncements() {
+export async function getAllAnnouncements(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(announcements).orderBy(desc(announcements.createdAt));
+  return db.select().from(announcements).where(eq(announcements.campaignId, campaignId)).orderBy(desc(announcements.createdAt));
 }
 
-export async function getActiveAnnouncements() {
+export async function getActiveAnnouncements(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(announcements)
-    .where(eq(announcements.active, true))
+    .where(and(eq(announcements.campaignId, campaignId), eq(announcements.active, true)))
     .orderBy(desc(announcements.createdAt));
 }
 
 // ==================== ADMIN EMAILS ====================
-export async function addAdminEmail(email: string) {
+export async function addAdminEmail(campaignId: number, email: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(adminEmails).values({ email });
+  const result = await db.insert(adminEmails).values({ campaignId, email });
   return { id: result[0].insertId };
 }
 
@@ -807,36 +985,35 @@ export async function removeAdminEmail(id: number) {
   await db.delete(adminEmails).where(eq(adminEmails.id, id));
 }
 
-export async function getAllAdminEmails() {
+export async function getAllAdminEmails(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(adminEmails).orderBy(asc(adminEmails.email));
+  return db.select().from(adminEmails).where(eq(adminEmails.campaignId, campaignId)).orderBy(asc(adminEmails.email));
 }
 
-export async function isAdminEmail(email: string) {
+export async function isAdminEmail(email: string, campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.select().from(adminEmails).where(eq(adminEmails.email, email)).limit(1);
+  const result = await db.select().from(adminEmails).where(
+    and(eq(adminEmails.campaignId, campaignId), eq(adminEmails.email, email))
+  ).limit(1);
   return result.length > 0;
 }
 
-
-
-
 // ==================== COMMENTS (COM APROVAÇÃO) ====================
-export async function getApprovedComments() {
+export async function getApprovedComments(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(comments)
-    .where(eq(comments.approved, true))
+    .where(and(eq(comments.campaignId, campaignId), eq(comments.approved, true)))
     .orderBy(desc(comments.createdAt));
 }
 
-export async function getPendingComments() {
+export async function getPendingComments(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(comments)
-    .where(eq(comments.approved, false))
+    .where(and(eq(comments.campaignId, campaignId), eq(comments.approved, false)))
     .orderBy(desc(comments.createdAt));
 }
 
@@ -853,7 +1030,7 @@ export async function rejectComment(id: number) {
 }
 
 // ==================== ADMIN USERS ====================
-export async function createAdminUser(data: { username: string; password: string; name?: string; isOwner?: boolean }): Promise<AdminUser | null> {
+export async function createAdminUser(campaignId: number, data: { username: string; password: string; name?: string; isOwner?: boolean }): Promise<AdminUser | null> {
   const db = await getDb();
   if (!db) return null;
 
@@ -861,6 +1038,7 @@ export async function createAdminUser(data: { username: string; password: string
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
   await db.insert(adminUsers).values({
+    campaignId,
     username: data.username,
     password: hashedPassword,
     name: data.name,
@@ -868,28 +1046,30 @@ export async function createAdminUser(data: { username: string; password: string
     active: true,
   });
 
-  // Buscar o usuário recém-criado por username
-  const [newUser] = await db.select().from(adminUsers).where(eq(adminUsers.username, data.username));
+  const [newUser] = await db.select().from(adminUsers).where(
+    and(eq(adminUsers.campaignId, campaignId), eq(adminUsers.username, data.username))
+  );
   return newUser || null;
 }
 
-export async function getAdminUserByUsername(username: string): Promise<AdminUser | null> {
+export async function getAdminUserByUsername(campaignId: number, username: string): Promise<AdminUser | null> {
   const db = await getDb();
   if (!db) return null;
 
-  const [user] = await db.select().from(adminUsers).where(eq(adminUsers.username, username));
+  const [user] = await db.select().from(adminUsers).where(
+    and(eq(adminUsers.campaignId, campaignId), eq(adminUsers.username, username))
+  );
   return user || null;
 }
 
-export async function verifyAdminPassword(username: string, password: string): Promise<AdminUser | null> {
-  const user = await getAdminUserByUsername(username);
+export async function verifyAdminPassword(campaignId: number, username: string, password: string): Promise<AdminUser | null> {
+  const user = await getAdminUserByUsername(campaignId, username);
   if (!user || !user.active) return null;
 
   const bcrypt = await import('bcrypt');
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) return null;
 
-  // Atualizar lastLogin
   const db = await getDb();
   if (db) {
     await db.update(adminUsers)
@@ -900,11 +1080,11 @@ export async function verifyAdminPassword(username: string, password: string): P
   return user;
 }
 
-export async function getAllAdminUsers(): Promise<AdminUser[]> {
+export async function getAllAdminUsers(campaignId: number): Promise<AdminUser[]> {
   const db = await getDb();
   if (!db) return [];
 
-  return await db.select().from(adminUsers).orderBy(adminUsers.createdAt);
+  return await db.select().from(adminUsers).where(eq(adminUsers.campaignId, campaignId)).orderBy(adminUsers.createdAt);
 }
 
 export async function deleteAdminUser(id: number): Promise<boolean> {
@@ -915,12 +1095,11 @@ export async function deleteAdminUser(id: number): Promise<boolean> {
   return true;
 }
 
-
 // ==================== SPONSORS ====================
-export async function createSponsor(sponsor: InsertSponsor) {
+export async function createSponsor(campaignId: number, sponsor: Omit<InsertSponsor, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(sponsors).values(sponsor);
+  const result = await db.insert(sponsors).values({ ...sponsor, campaignId });
   return { id: result[0].insertId };
 }
 
@@ -936,18 +1115,19 @@ export async function deleteSponsor(id: number) {
   await db.delete(sponsors).where(eq(sponsors.id, id));
 }
 
-export async function getAllSponsors() {
+export async function getAllSponsors(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(sponsors)
-    .where(eq(sponsors.active, true))
+    .where(and(eq(sponsors.campaignId, campaignId), eq(sponsors.active, true)))
     .orderBy(asc(sponsors.tier), asc(sponsors.name));
 }
 
-export async function getAllSponsorsAdmin() {
+export async function getAllSponsorsAdmin(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(sponsors)
+    .where(eq(sponsors.campaignId, campaignId))
     .orderBy(asc(sponsors.tier), asc(sponsors.name));
 }
 
@@ -958,38 +1138,39 @@ export async function getSponsorById(id: number) {
   return result[0];
 }
 
-
 // ==================== SUPPORT MESSAGES ====================
-export async function createSupportMessage(message: InsertSupportMessage) {
+export async function createSupportMessage(campaignId: number, message: Omit<InsertSupportMessage, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(supportMessages).values(message);
+  const result = await db.insert(supportMessages).values({ ...message, campaignId });
   return { id: result[0].insertId };
 }
 
-export async function getSupportMessagesByTeam(teamId: number) {
+export async function getSupportMessagesByTeam(campaignId: number, teamId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(supportMessages)
     .where(and(
+      eq(supportMessages.campaignId, campaignId),
       eq(supportMessages.teamId, teamId),
       eq(supportMessages.approved, true)
     ))
     .orderBy(desc(supportMessages.createdAt));
 }
 
-export async function getAllSupportMessages() {
+export async function getAllSupportMessages(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(supportMessages)
+    .where(eq(supportMessages.campaignId, campaignId))
     .orderBy(desc(supportMessages.createdAt));
 }
 
-export async function getPendingSupportMessages() {
+export async function getPendingSupportMessages(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   return db.select().from(supportMessages)
-    .where(eq(supportMessages.approved, false))
+    .where(and(eq(supportMessages.campaignId, campaignId), eq(supportMessages.approved, false)))
     .orderBy(desc(supportMessages.createdAt));
 }
 

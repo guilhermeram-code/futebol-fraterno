@@ -5,11 +5,13 @@ import { Star, ExternalLink } from "lucide-react";
 import { Header } from "@/components/Header";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { trpc } from "@/lib/trpc";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Patrocinadores() {
-  const { data: sponsors, isLoading } = trpc.sponsors.list.useQuery();
-  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage" });
-  const { data: settings } = trpc.settings.getAll.useQuery();
+  const { campaignId } = useTournament();
+  const { data: sponsors, isLoading } = trpc.sponsors.list.useQuery({ campaignId });
+  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage", campaignId });
+  const { data: settings } = trpc.settings.getAll.useQuery({ campaignId });
 
   // Separar por nível
   const tierA = sponsors?.filter(s => s.tier === "A" && s.active) || [];

@@ -5,13 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Trophy, Target } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function MataMata() {
-  const { data: round16Matches } = trpc.matches.byPhase.useQuery({ phase: "round16" });
-  const { data: quarterMatches } = trpc.matches.byPhase.useQuery({ phase: "quarters" });
-  const { data: semiMatches } = trpc.matches.byPhase.useQuery({ phase: "semis" });
-  const { data: finalMatch } = trpc.matches.byPhase.useQuery({ phase: "final" });
-  const { data: teams } = trpc.teams.list.useQuery();
+  const { campaignId } = useTournament();
+  const { data: round16Matches } = trpc.matches.byPhase.useQuery({ phase: "round16", campaignId });
+  const { data: quarterMatches } = trpc.matches.byPhase.useQuery({ phase: "quarters", campaignId });
+  const { data: semiMatches } = trpc.matches.byPhase.useQuery({ phase: "semis", campaignId });
+  const { data: finalMatch } = trpc.matches.byPhase.useQuery({ phase: "final", campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
 
   const getTeamName = (teamId: number) => {
     return teams?.find(t => t.id === teamId)?.name || "A definir";

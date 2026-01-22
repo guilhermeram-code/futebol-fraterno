@@ -11,14 +11,16 @@ import { Calendar, Clock, Trophy, MapPin, Filter } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Jogos() {
+  const { campaignId } = useTournament();
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
   const [selectedPhase, setSelectedPhase] = useState<string>("all");
   
-  const { data: allMatches, isLoading } = trpc.matches.list.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
+  const { data: allMatches, isLoading } = trpc.matches.list.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
 
   const getTeamName = (teamId: number) => {
     return teams?.find(t => t.id === teamId)?.name || "Time";

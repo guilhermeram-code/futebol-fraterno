@@ -15,46 +15,47 @@ interface TournamentContextType {
   settings: TournamentSettings;
   isLoading: boolean;
   refetch: () => void;
+  campaignId: number;
 }
 
 const defaultSettings: TournamentSettings = {
-  tournamentName: "Campeonato Fraterno 2026",
-  tournamentSubtitle: "2026 - Respeito e União",
-  tournamentOrganizer: "Organizado pela Loja José Moreira",
-  tournamentLogo: "/logo-campeonato.jpg",
-  tournamentMusic: "/musica-fundo.mp3",
+  tournamentName: "",
+  tournamentSubtitle: "",
+  tournamentOrganizer: "",
+  tournamentLogo: "",
+  tournamentMusic: "",
   tournamentBackground: "",
   heroBackground: "",
 };
 
 const TournamentContext = createContext<TournamentContextType | undefined>(undefined);
 
-export function TournamentProvider({ children }: { children: ReactNode }) {
-  const { data, isLoading, refetch } = trpc.settings.getAll.useQuery(undefined, {
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
+interface TournamentProviderProps {
+  children: ReactNode;
+  campaignId?: number;
+}
+
+export function TournamentProvider({ children, campaignId = 1 }: TournamentProviderProps) {
+  const { data, isLoading, refetch } = trpc.settings.getAll.useQuery(
+    { campaignId },
+    {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+    }
+  );
 
   // Se ainda está carregando e não tem dados, retorna valores vazios para evitar flash
-  const settings: TournamentSettings = isLoading && !data ? {
-    tournamentName: "",
-    tournamentSubtitle: "",
-    tournamentOrganizer: "",
-    tournamentLogo: "",
-    tournamentMusic: "",
-    tournamentBackground: "",
-    heroBackground: "",
-  } : {
-    tournamentName: data?.tournamentName || defaultSettings.tournamentName,
-    tournamentSubtitle: data?.tournamentSubtitle || defaultSettings.tournamentSubtitle,
-    tournamentOrganizer: data?.tournamentOrganizer || defaultSettings.tournamentOrganizer,
-    tournamentLogo: data?.tournamentLogo || defaultSettings.tournamentLogo,
-    tournamentMusic: data?.tournamentMusic || defaultSettings.tournamentMusic,
-    tournamentBackground: data?.tournamentBackground || defaultSettings.tournamentBackground,
-    heroBackground: data?.heroBackground || defaultSettings.heroBackground,
+  const settings: TournamentSettings = isLoading && !data ? defaultSettings : {
+    tournamentName: data?.tournamentName || "",
+    tournamentSubtitle: data?.tournamentSubtitle || "",
+    tournamentOrganizer: data?.tournamentOrganizer || "",
+    tournamentLogo: data?.tournamentLogo || "",
+    tournamentMusic: data?.tournamentMusic || "",
+    tournamentBackground: data?.tournamentBackground || "",
+    heroBackground: data?.heroBackground || "",
   };
 
   return (
-    <TournamentContext.Provider value={{ settings, isLoading, refetch }}>
+    <TournamentContext.Provider value={{ settings, isLoading, refetch, campaignId }}>
       {children}
     </TournamentContext.Provider>
   );

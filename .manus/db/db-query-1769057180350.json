@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO reserved_slugs (slug, reason) VALUES \n('admin', 'blocked'),\n('api', 'blocked'),\n('www', 'blocked'),\n('demo', 'reserved'),\n('app', 'blocked'),\n('login', 'blocked'),\n('logout', 'blocked'),\n('signup', 'blocked'),\n('register', 'blocked'),\n('dashboard', 'blocked'),\n('settings', 'blocked'),\n('checkout', 'blocked'),\n('payment', 'blocked'),\n('stripe', 'blocked'),\n('webhook', 'blocked'),\n('static', 'blocked'),\n('assets', 'blocked'),\n('public', 'blocked'),\n('private', 'blocked'),\n('super-admin', 'blocked')\nON DUPLICATE KEY UPDATE reason = VALUES(reason);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute INSERT INTO reserved_slugs (slug, reason) VALUES \n('admin', 'blocked'),\n('api', 'blocked'),\n('www', 'blocked'),\n('demo', 'reserved'),\n('app', 'blocked'),\n('login', 'blocked'),\n('logout', 'blocked'),\n('signup', 'blocked'),\n('register', 'blocked'),\n('dashboard', 'blocked'),\n('settings', 'blocked'),\n('checkout', 'blocked'),\n('payment', 'blocked'),\n('stripe', 'blocked'),\n('webhook', 'blocked'),\n('static', 'blocked'),\n('assets', 'blocked'),\n('public', 'blocked'),\n('private', 'blocked'),\n('super-admin', 'blocked')\nON DUPLICATE KEY UPDATE reason = VALUES(reason);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 333
+}

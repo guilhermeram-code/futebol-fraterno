@@ -40,8 +40,10 @@ import {
 import { getLoginUrl } from "@/const";
 import { ResultsRegistration } from "@/components/ResultsRegistration";
 import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Admin() {
+  const { campaignId } = useTournament();
   const { adminUser, isAuthenticated, loading, logout } = useAdminAuth();
   const [, setLocation] = useLocation();
 
@@ -171,51 +173,51 @@ export default function Admin() {
           </TabsList>
 
           <TabsContent value="teams">
-            <TeamsTab />
+            <TeamsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="players">
-            <PlayersTab />
+            <PlayersTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="groups">
-            <GroupsTab />
+            <GroupsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="matches">
-            <MatchesTab />
+            <MatchesTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="results">
-            <ResultsTab />
+            <ResultsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="photos">
-            <PhotosTab />
+            <PhotosTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="comments">
-            <CommentsTab />
+            <CommentsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="announcements">
-            <AnnouncementsTab />
+            <AnnouncementsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="admins">
-            <AdminsTab />
+            <AdminsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="sponsors">
-            <SponsorsTab />
+            <SponsorsTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="support-messages">
-            <SupportMessagesTab />
+            <SupportMessagesTab campaignId={campaignId} />
           </TabsContent>
 
           <TabsContent value="settings">
-            <SettingsTab />
+            <SettingsTab campaignId={campaignId} />
           </TabsContent>
         </Tabs>
       </main>
@@ -224,10 +226,10 @@ export default function Admin() {
 }
 
 // ==================== TEAMS TAB ====================
-function TeamsTab() {
+function TeamsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: teams, isLoading } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
+  const { data: teams, isLoading } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
   const createTeam = trpc.teams.create.useMutation({
     onSuccess: () => {
       utils.teams.list.invalidate();
@@ -592,11 +594,11 @@ function TeamSupportMessageButton({ teamId, teamName, currentMessage }: { teamId
 }
 
 // ==================== PLAYERS TAB ====================
-function PlayersTab() {
+function PlayersTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: players, isLoading } = trpc.players.list.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
+  const { data: players, isLoading } = trpc.players.list.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
   const createPlayer = trpc.players.create.useMutation({
     onSuccess: () => {
       utils.players.list.invalidate();
@@ -801,7 +803,7 @@ function PlayersTab() {
     });
     
     // Grupo "Sem Grupo" para times sem grupo
-    groupMap.set(0, { group: { id: 0, name: "Sem Grupo", createdAt: new Date() }, lodges: new Map() });
+    groupMap.set(0, { group: { id: 0, campaignId: 1, name: "Sem Grupo", createdAt: new Date() }, lodges: new Map() });
     
     // Organizar por grupo e loja
     players.forEach(player => {
@@ -1128,10 +1130,10 @@ function PlayersTab() {
 }
 
 // ==================== GROUPS TAB ====================
-function GroupsTab() {
+function GroupsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: groups, isLoading } = trpc.groups.list.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
+  const { data: groups, isLoading } = trpc.groups.list.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
   const createGroup = trpc.groups.create.useMutation({
     onSuccess: () => {
       utils.groups.list.invalidate();
@@ -1292,11 +1294,11 @@ function GroupsTab() {
 }
 
 // ==================== MATCHES TAB ====================
-function MatchesTab() {
+function MatchesTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: matches, isLoading } = trpc.matches.list.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
+  const { data: matches, isLoading } = trpc.matches.list.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
   const createMatch = trpc.matches.create.useMutation({
     onSuccess: () => {
       utils.matches.list.invalidate();
@@ -1540,7 +1542,7 @@ function MatchesTab() {
 }
 
 // ==================== RESULTS TAB ====================
-function ResultsTab() {
+function ResultsTab({ campaignId }: { campaignId: number }) {
   return <ResultsRegistration />;
 }
 
@@ -1882,9 +1884,9 @@ function ResultsTabOld() {
 }
 
 // ==================== PHOTOS TAB ====================
-function PhotosTab() {
+function PhotosTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: photos, isLoading } = trpc.photos.list.useQuery({ limit: 100 });
+  const { data: photos, isLoading } = trpc.photos.list.useQuery({ limit: 100, campaignId });
   const uploadPhoto = trpc.photos.upload.useMutation({
     onSuccess: () => {
       utils.photos.list.invalidate();
@@ -1987,9 +1989,9 @@ function PhotosTab() {
 }
 
 // ==================== COMMENTS TAB ====================
-function CommentsTab() {
+function CommentsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: allComments, isLoading } = trpc.comments.listAll.useQuery({ limit: 100 });
+  const { data: allComments, isLoading } = trpc.comments.listAll.useQuery({ limit: 100, campaignId });
   const approveComment = trpc.comments.approve.useMutation({
     onSuccess: () => {
       utils.comments.listAll.invalidate();
@@ -2114,9 +2116,9 @@ function CommentsTab() {
 
 
 // ==================== ANNOUNCEMENTS TAB ====================
-function AnnouncementsTab() {
+function AnnouncementsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: announcements, isLoading } = trpc.announcements.list.useQuery();
+  const { data: announcements, isLoading } = trpc.announcements.list.useQuery({ campaignId });
   const createAnnouncement = trpc.announcements.create.useMutation({
     onSuccess: () => {
       utils.announcements.list.invalidate();
@@ -2254,10 +2256,10 @@ function AnnouncementsTab() {
 }
 
 // ==================== ADMINS TAB ====================
-function AdminsTab() {
+function AdminsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
   const { adminUser } = useAdminAuth();
-  const { data: adminUsers, isLoading } = trpc.adminUsers.list.useQuery();
+  const { data: adminUsers, isLoading } = trpc.adminUsers.list.useQuery({ campaignId });
   
   const createAdmin = trpc.adminUsers.create.useMutation({
     onSuccess: () => {
@@ -2414,20 +2416,20 @@ function AdminsTab() {
 }
 
 // ==================== SETTINGS TAB ====================
-function SettingsTab() {
+function SettingsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: tournamentName } = trpc.settings.get.useQuery({ key: "tournamentName" });
-  const { data: tournamentSubtitle } = trpc.settings.get.useQuery({ key: "tournamentSubtitle" });
-  const { data: tournamentOrganizer } = trpc.settings.get.useQuery({ key: "tournamentOrganizer" });
-  const { data: tournamentLogo } = trpc.settings.get.useQuery({ key: "tournamentLogo" });
-  const { data: tournamentMusic } = trpc.settings.get.useQuery({ key: "tournamentMusic" });
-  const { data: tournamentBackground } = trpc.settings.get.useQuery({ key: "tournamentBackground" });
-  const { data: heroBackground } = trpc.settings.get.useQuery({ key: "heroBackground" });
+  const { data: tournamentName } = trpc.settings.get.useQuery({ key: "tournamentName", campaignId });
+  const { data: tournamentSubtitle } = trpc.settings.get.useQuery({ key: "tournamentSubtitle", campaignId });
+  const { data: tournamentOrganizer } = trpc.settings.get.useQuery({ key: "tournamentOrganizer", campaignId });
+  const { data: tournamentLogo } = trpc.settings.get.useQuery({ key: "tournamentLogo", campaignId });
+  const { data: tournamentMusic } = trpc.settings.get.useQuery({ key: "tournamentMusic", campaignId });
+  const { data: tournamentBackground } = trpc.settings.get.useQuery({ key: "tournamentBackground", campaignId });
+  const { data: heroBackground } = trpc.settings.get.useQuery({ key: "heroBackground", campaignId });
   
   // Configurações de torneio
-  const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType" });
-  const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup" });
-  const { data: knockoutSize } = trpc.settings.get.useQuery({ key: "knockoutSize" });
+  const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType", campaignId });
+  const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup", campaignId });
+  const { data: knockoutSize } = trpc.settings.get.useQuery({ key: "knockoutSize", campaignId });
 
   const setSetting = trpc.settings.set.useMutation({
     onSuccess: () => {
@@ -2854,10 +2856,10 @@ function SettingsTab() {
 
 
 // ==================== SPONSORS TAB ====================
-function SponsorsTab() {
+function SponsorsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: sponsors, isLoading } = trpc.sponsors.listAdmin.useQuery();
-  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage" });
+  const { data: sponsors, isLoading } = trpc.sponsors.listAdmin.useQuery({ campaignId });
+  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage", campaignId });
   
   const createSponsor = trpc.sponsors.create.useMutation({
     onSuccess: () => {
@@ -3220,10 +3222,10 @@ function SponsorRow({
 
 
 // ==================== SUPPORT MESSAGES TAB ====================
-function SupportMessagesTab() {
+function SupportMessagesTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
-  const { data: allMessages, isLoading } = trpc.supportMessages.all.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
+  const { data: allMessages, isLoading } = trpc.supportMessages.all.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
   
   const approveMessage = trpc.supportMessages.approve.useMutation({
     onSuccess: () => {

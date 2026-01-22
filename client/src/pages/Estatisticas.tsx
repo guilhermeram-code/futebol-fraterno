@@ -9,16 +9,18 @@ import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { Target, AlertTriangle, Shield, Flame, Search } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Estatisticas() {
+  const { campaignId } = useTournament();
   const [searchTerm, setSearchTerm] = useState("");
   
-  const { data: topScorers, isLoading: loadingScorers } = trpc.stats.topScorers.useQuery({ limit: 50 });
-  const { data: topCarded, isLoading: loadingCarded } = trpc.stats.topCarded.useQuery({ limit: 50 });
-  const { data: bestDefenses, isLoading: loadingBest } = trpc.stats.bestDefenses.useQuery({ limit: 20 });
-  const { data: worstDefenses, isLoading: loadingWorst } = trpc.stats.worstDefenses.useQuery({ limit: 20 });
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: players } = trpc.players.list.useQuery();
+  const { data: topScorers, isLoading: loadingScorers } = trpc.stats.topScorers.useQuery({ limit: 50, campaignId });
+  const { data: topCarded, isLoading: loadingCarded } = trpc.stats.topCarded.useQuery({ limit: 50, campaignId });
+  const { data: bestDefenses, isLoading: loadingBest } = trpc.stats.bestDefenses.useQuery({ limit: 20, campaignId });
+  const { data: worstDefenses, isLoading: loadingWorst } = trpc.stats.worstDefenses.useQuery({ limit: 20, campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: players } = trpc.players.list.useQuery({ campaignId });
 
   const getTeamById = (teamId: number) => teams?.find(t => t.id === teamId);
   const getTeamName = (teamId: number) => getTeamById(teamId)?.name || "Time";

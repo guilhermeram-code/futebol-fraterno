@@ -12,14 +12,16 @@ import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { Users, Shield, ChevronRight, Search, TrendingUp, Flame, LayoutGrid, List, Trophy } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Times() {
-  const { data: teams, isLoading } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
-  const { data: allMatches } = trpc.matches.list.useQuery();
-  const { data: topScorers } = trpc.stats.topScorers.useQuery({ limit: 1 });
-  const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 1 });
-  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 1 });
+  const { campaignId } = useTournament();
+  const { data: teams, isLoading } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
+  const { data: allMatches } = trpc.matches.list.useQuery({ campaignId });
+  const { data: topScorers } = trpc.stats.topScorers.useQuery({ limit: 1, campaignId });
+  const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 1, campaignId });
+  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 1, campaignId });
   
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string>("all");

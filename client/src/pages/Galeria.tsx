@@ -9,9 +9,11 @@ import { Image, X, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Galeria() {
-  const { data: photos, isLoading } = trpc.photos.list.useQuery({ limit: 100 });
+  const { campaignId } = useTournament();
+  const { data: photos, isLoading } = trpc.photos.list.useQuery({ limit: 100, campaignId });
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const openPhoto = (index: number) => {

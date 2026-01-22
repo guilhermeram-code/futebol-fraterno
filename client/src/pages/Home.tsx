@@ -27,7 +27,7 @@ import { ptBR } from "date-fns/locale";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
-  const { settings, isLoading: loadingSettings } = useTournament();
+  const { settings, isLoading: loadingSettings, campaignId } = useTournament();
   const { setMusicUrl } = useMusic();
 
   // Atualizar URL da música quando as configurações carregarem
@@ -37,14 +37,14 @@ export default function Home() {
     }
   }, [settings.tournamentMusic, setMusicUrl]);
   
-  const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery();
-  const { data: upcomingMatches, isLoading: loadingUpcoming } = trpc.matches.upcoming.useQuery({ limit: 5 });
-  const { data: recentMatches, isLoading: loadingRecent } = trpc.matches.recent.useQuery({ limit: 5 });
-  const { data: topScorers, isLoading: loadingScorers } = trpc.stats.topScorers.useQuery({ limit: 5 });
-  const { data: topCarded, isLoading: loadingCarded } = trpc.stats.topCarded.useQuery({ limit: 5 });
-  const { data: worstDefenses, isLoading: loadingDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 3 });
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: players } = trpc.players.list.useQuery();
+  const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery({ campaignId });
+  const { data: upcomingMatches, isLoading: loadingUpcoming } = trpc.matches.upcoming.useQuery({ limit: 5, campaignId });
+  const { data: recentMatches, isLoading: loadingRecent } = trpc.matches.recent.useQuery({ limit: 5, campaignId });
+  const { data: topScorers, isLoading: loadingScorers } = trpc.stats.topScorers.useQuery({ limit: 5, campaignId });
+  const { data: topCarded, isLoading: loadingCarded } = trpc.stats.topCarded.useQuery({ limit: 5, campaignId });
+  const { data: worstDefenses, isLoading: loadingDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 3, campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: players } = trpc.players.list.useQuery({ campaignId });
 
   const getTeamName = (teamId: number) => {
     return teams?.find(t => t.id === teamId)?.name || "Time";
@@ -63,7 +63,7 @@ export default function Home() {
     return groups?.find(g => g.id === groupId)?.name || "";
   };
 
-  const { data: announcements } = trpc.announcements.active.useQuery();
+  const { data: announcements } = trpc.announcements.active.useQuery({ campaignId });
 
   const formatMatchDate = (date: Date | null) => {
     if (!date) return "Data a definir";
@@ -507,7 +507,7 @@ export default function Home() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <BestDefenseSection />
+                <BestDefenseSection campaignId={campaignId} />
               </CardContent>
             </Card>
           </div>
@@ -515,12 +515,12 @@ export default function Home() {
 
         {/* Sponsors Section */}
         <section className="mt-8">
-          <SponsorsSection />
+          <SponsorsSection campaignId={campaignId} />
         </section>
 
         {/* Comments Section */}
         <section className="mt-8">
-          <CommentsSection />
+          <CommentsSection campaignId={campaignId} />
         </section>
       </main>
 
@@ -557,9 +557,9 @@ export default function Home() {
   );
 }
 
-function BestDefenseSection() {
-  const { data: bestDefenses, isLoading } = trpc.stats.bestDefenses.useQuery({ limit: 3 });
-  const { data: teams } = trpc.teams.list.useQuery();
+function BestDefenseSection({ campaignId }: { campaignId: number }) {
+  const { data: bestDefenses, isLoading } = trpc.stats.bestDefenses.useQuery({ limit: 3, campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
 
   if (isLoading) {
     return (
@@ -615,8 +615,8 @@ function BestDefenseSection() {
   );
 }
 
-function CommentsSection() {
-  const { data: comments, isLoading, refetch } = trpc.comments.list.useQuery({ limit: 10 });
+function CommentsSection({ campaignId }: { campaignId: number }) {
+  const { data: comments, isLoading, refetch } = trpc.comments.list.useQuery({ limit: 10, campaignId });
   const [showPendingMessage, setShowPendingMessage] = useState(false);
   const createComment = trpc.comments.create.useMutation({
     onSuccess: () => {
@@ -737,9 +737,9 @@ function CommentsSection() {
 }
 
 
-function SponsorsSection() {
-  const { data: sponsors, isLoading } = trpc.sponsors.list.useQuery();
-  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage" });
+function SponsorsSection({ campaignId }: { campaignId: number }) {
+  const { data: sponsors, isLoading } = trpc.sponsors.list.useQuery({ campaignId });
+  const { data: sponsorMessage } = trpc.settings.get.useQuery({ key: "sponsorMessage", campaignId });
 
   // Separar por nível
   const tierA = sponsors?.filter(s => s.tier === "A") || [];

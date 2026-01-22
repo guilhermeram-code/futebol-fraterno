@@ -9,12 +9,14 @@ import { Header } from "@/components/Header";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Jogadores() {
-  const { data: players, isLoading: playersLoading } = trpc.players.list.useQuery();
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
-  const { data: goals } = trpc.goals.list.useQuery();
+  const { campaignId } = useTournament();
+  const { data: players, isLoading: playersLoading } = trpc.players.list.useQuery({ campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
+  const { data: goals } = trpc.goals.list.useQuery({ campaignId });
   const { data: cards } = trpc.cards.byMatch.useQuery({ matchId: 0 }, { enabled: false });
 
   const [searchTerm, setSearchTerm] = useState("");

@@ -14,24 +14,26 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function TimeDetail() {
+  const { campaignId } = useTournament();
   const params = useParams<{ id: string }>();
   const teamId = parseInt(params.id || "0");
 
-  const { data: team, isLoading: loadingTeam } = trpc.teams.byId.useQuery({ id: teamId });
-  const { data: stats, isLoading: loadingStats } = trpc.teams.stats.useQuery({ id: teamId });
-  const { data: statsGroupOnly } = trpc.teams.statsGroupOnly.useQuery({ id: teamId });
-  const { data: statsKnockoutOnly } = trpc.teams.statsKnockoutOnly.useQuery({ id: teamId });
-  const { data: players, isLoading: loadingPlayers } = trpc.players.byTeam.useQuery({ teamId });
-  const { data: matches, isLoading: loadingMatches } = trpc.matches.byTeam.useQuery({ teamId });
-  const { data: allTeams } = trpc.teams.list.useQuery();
-  const { data: groups } = trpc.groups.list.useQuery();
-  const { data: topScorers } = trpc.goals.topScorers.useQuery({ limit: 100 });
-  const { data: allPlayers } = trpc.players.list.useQuery();
-  const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 100 });
-  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 100 });
-  const { data: supportMessages, refetch: refetchMessages } = trpc.supportMessages.byTeam.useQuery({ teamId });
+  const { data: team, isLoading: loadingTeam } = trpc.teams.byId.useQuery({ id: teamId, campaignId });
+  const { data: stats, isLoading: loadingStats } = trpc.teams.stats.useQuery({ id: teamId, campaignId });
+  const { data: statsGroupOnly } = trpc.teams.statsGroupOnly.useQuery({ id: teamId, campaignId });
+  const { data: statsKnockoutOnly } = trpc.teams.statsKnockoutOnly.useQuery({ id: teamId, campaignId });
+  const { data: players, isLoading: loadingPlayers } = trpc.players.byTeam.useQuery({ teamId, campaignId });
+  const { data: matches, isLoading: loadingMatches } = trpc.matches.byTeam.useQuery({ teamId, campaignId });
+  const { data: allTeams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: groups } = trpc.groups.list.useQuery({ campaignId });
+  const { data: topScorers } = trpc.goals.topScorers.useQuery({ limit: 100, campaignId });
+  const { data: allPlayers } = trpc.players.list.useQuery({ campaignId });
+  const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 100, campaignId });
+  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 100, campaignId });
+  const { data: supportMessages, refetch: refetchMessages } = trpc.supportMessages.byTeam.useQuery({ teamId, campaignId });
 
   const [showMessageForm, setShowMessageForm] = useState(false);
   const [authorName, setAuthorName] = useState("");

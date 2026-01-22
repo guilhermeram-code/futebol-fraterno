@@ -6,15 +6,17 @@ import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
 import { User, Target, AlertTriangle, Trophy, ArrowLeft, Shield } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { useTournament } from "@/contexts/TournamentContext";
 
 export default function JogadorDetail() {
+  const { campaignId } = useTournament();
   const params = useParams<{ id: string }>();
   const playerId = parseInt(params.id || "0");
 
-  const { data: player, isLoading: loadingPlayer } = trpc.players.byId.useQuery({ id: playerId });
-  const { data: teams } = trpc.teams.list.useQuery();
-  const { data: topScorers } = trpc.stats.topScorers.useQuery({ limit: 100 });
-  const { data: topCarded } = trpc.stats.topCarded.useQuery({ limit: 100 });
+  const { data: player, isLoading: loadingPlayer } = trpc.players.byId.useQuery({ id: playerId, campaignId });
+  const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  const { data: topScorers } = trpc.stats.topScorers.useQuery({ limit: 100, campaignId });
+  const { data: topCarded } = trpc.stats.topCarded.useQuery({ limit: 100, campaignId });
 
   const team = teams?.find(t => t.id === player?.teamId);
   

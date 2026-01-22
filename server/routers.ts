@@ -7,6 +7,13 @@ import { TRPCError } from "@trpc/server";
 import * as db from "./db";
 import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
+import { createCheckoutSession } from "./stripe/checkout";
+
+// Default campaign ID for backwards compatibility (futebol-fraterno)
+const DEFAULT_CAMPAIGN_ID = 1;
+
+// Helper to get campaignId from input or use default
+const getCampaignId = (input: { campaignId?: number }) => input.campaignId ?? DEFAULT_CAMPAIGN_ID;
 
 // Admin procedure - only allows admin users
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
@@ -28,22 +35,107 @@ export const appRouter = router({
     }),
   }),
 
-  // ==================== TEAMS ====================
-  teams: router({
-    list: publicProcedure.query(async () => {
-      return db.getAllTeams();
+  // ==================== CAMPAIGNS (MULTI-TENANT) ====================
+  campaigns: router({
+    bySlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return db.getCampaignBySlug(input.slug);
+      }),
+    
+    list: adminProcedure.query(async () => {
+      return db.getAllCampaigns();
     }),
     
+    active: publicProcedure.query(async () => {
+      return db.getActiveCampaigns();
+    }),
+    
+    checkSlug: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        const available = await db.isSlugAvailable(input.slug);
+        return { available };
+      }),
+  }),
+
+  // ==================== PURCHASES ====================
+  purchases: router({
+    list: adminProcedure.query(async () => {
+      return db.getAllPurchases();
+    }),
+    
+    bySlug: adminProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        return db.getPurchaseBySlug(input.slug);
+      }),
+  }),
+
+  // ==================== CHECKOUT (STRIPE) ====================
+  checkout: router({
+    createSession: publicProcedure
+      .input(z.object({
+        planId: z.string(),
+        campaignName: z.string().min(1),
+        slug: z.string().min(3).max(30),
+        email: z.string().email(),
+        phone: z.string().optional(),
+        customerName: z.string().optional(),
+        couponCode: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const origin = ctx.req.headers.origin || 'http://localhost:3000';
+        return createCheckoutSession({
+          ...input,
+          origin,
+        });
+      }),
+  }),
+
+  // ==================== COUPONS ====================
+  coupons: router({
+    validate: publicProcedure
+      .input(z.object({ code: z.string() }))
+      .query(async ({ input }) => {
+        return db.validateCoupon(input.code);
+      }),
+    
+    create: adminProcedure
+      .input(z.object({
+        code: z.string(),
+        discountPercent: z.number().min(1).max(100),
+        maxUses: z.number().optional(),
+        expiresAt: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        return db.createCoupon({
+          code: input.code,
+          discountPercent: input.discountPercent,
+          maxUses: input.maxUses,
+          expiresAt: input.expiresAt ? new Date(input.expiresAt) : undefined,
+        });
+      }),
+  }),
+
+  // ==================== TEAMS ====================
+  teams: router({
+    list: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllTeams(getCampaignId(input || {}));
+      }),
+    
     byId: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
         return db.getTeamById(input.id);
       }),
     
     byGroup: publicProcedure
-      .input(z.object({ groupId: z.number() }))
+      .input(z.object({ groupId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTeamsByGroup(input.groupId);
+        return db.getTeamsByGroup(getCampaignId(input), input.groupId);
       }),
     
     create: adminProcedure
@@ -52,9 +144,11 @@ export const appRouter = router({
         lodge: z.string().optional(),
         logoUrl: z.string().optional(),
         groupId: z.number().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createTeam(input);
+        const { campaignId, ...teamData } = input;
+        return db.createTeam(getCampaignId(input), teamData);
       }),
     
     update: adminProcedure
@@ -80,23 +174,21 @@ export const appRouter = router({
       }),
     
     stats: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTeamStats(input.id);
+        return db.getTeamStats(getCampaignId(input), input.id);
       }),
     
-    // Estatísticas apenas da fase de grupos
     statsGroupOnly: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTeamStatsGroupOnly(input.id);
+        return db.getTeamStatsGroupOnly(getCampaignId(input), input.id);
       }),
     
-    // Estatísticas apenas do mata-mata
     statsKnockoutOnly: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTeamStatsKnockoutOnly(input.id);
+        return db.getTeamStatsKnockoutOnly(getCampaignId(input), input.id);
       }),
     
     uploadLogo: adminProcedure
@@ -117,46 +209,51 @@ export const appRouter = router({
 
   // ==================== GROUPS ====================
   groups: router({
-    list: publicProcedure.query(async () => {
-      return db.getAllGroups();
-    }),
+    list: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllGroups(getCampaignId(input || {}));
+      }),
     
     create: adminProcedure
-      .input(z.object({ name: z.string().min(1) }))
+      .input(z.object({ name: z.string().min(1), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
-        return db.createGroup(input);
+        const { campaignId, ...groupData } = input;
+        return db.createGroup(getCampaignId(input), groupData);
       }),
     
     delete: adminProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
-        await db.deleteGroup(input.id);
+        await db.deleteGroup(getCampaignId(input), input.id);
         return { success: true };
       }),
     
     standings: publicProcedure
-      .input(z.object({ groupId: z.number() }))
+      .input(z.object({ groupId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getGroupStandings(input.groupId);
+        return db.getGroupStandings(getCampaignId(input), input.groupId);
       }),
   }),
 
   // ==================== PLAYERS ====================
   players: router({
-    list: publicProcedure.query(async () => {
-      return db.getAllPlayers();
-    }),
+    list: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllPlayers(getCampaignId(input || {}));
+      }),
     
     byId: publicProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
         return db.getPlayerById(input.id);
       }),
     
     byTeam: publicProcedure
-      .input(z.object({ teamId: z.number() }))
+      .input(z.object({ teamId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getPlayersByTeam(input.teamId);
+        return db.getPlayersByTeam(getCampaignId(input), input.teamId);
       }),
     
     create: adminProcedure
@@ -166,9 +263,11 @@ export const appRouter = router({
         position: z.string().optional(),
         teamId: z.number(),
         photoUrl: z.string().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createPlayer(input);
+        const { campaignId, ...playerData } = input;
+        return db.createPlayer(getCampaignId(input), playerData);
       }),
     
     update: adminProcedure
@@ -194,23 +293,25 @@ export const appRouter = router({
       }),
     
     goals: publicProcedure
-      .input(z.object({ playerId: z.number() }))
+      .input(z.object({ playerId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getGoalsByPlayer(input.playerId);
+        return db.getGoalsByPlayer(getCampaignId(input), input.playerId);
       }),
     
     cards: publicProcedure
-      .input(z.object({ playerId: z.number() }))
+      .input(z.object({ playerId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getCardsByPlayer(input.playerId);
+        return db.getCardsByPlayer(getCampaignId(input), input.playerId);
       }),
   }),
 
   // ==================== MATCHES ====================
   matches: router({
-    list: publicProcedure.query(async () => {
-      return db.getAllMatches();
-    }),
+    list: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllMatches(getCampaignId(input || {}));
+      }),
     
     byId: publicProcedure
       .input(z.object({ id: z.number() }))
@@ -219,39 +320,39 @@ export const appRouter = router({
       }),
     
     byPhase: publicProcedure
-      .input(z.object({ phase: z.string() }))
+      .input(z.object({ phase: z.string(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getMatchesByPhase(input.phase);
+        return db.getMatchesByPhase(getCampaignId(input), input.phase);
       }),
     
     byGroup: publicProcedure
-      .input(z.object({ groupId: z.number() }))
+      .input(z.object({ groupId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getMatchesByGroup(input.groupId);
+        return db.getMatchesByGroup(getCampaignId(input), input.groupId);
       }),
     
     byTeam: publicProcedure
-      .input(z.object({ teamId: z.number() }))
+      .input(z.object({ teamId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getMatchesByTeam(input.teamId);
+        return db.getMatchesByTeam(getCampaignId(input), input.teamId);
       }),
     
     upcoming: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getUpcomingMatches(input.limit || 10);
+        return db.getUpcomingMatches(getCampaignId(input), input.limit || 10);
       }),
     
     recent: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getRecentMatches(input.limit || 10);
+        return db.getRecentMatches(getCampaignId(input), input.limit || 10);
       }),
     
     headToHead: publicProcedure
-      .input(z.object({ team1Id: z.number(), team2Id: z.number() }))
+      .input(z.object({ team1Id: z.number(), team2Id: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getHeadToHead(input.team1Id, input.team2Id);
+        return db.getHeadToHead(getCampaignId(input), input.team1Id, input.team2Id);
       }),
     
     create: adminProcedure
@@ -264,20 +365,18 @@ export const appRouter = router({
         matchDate: z.string().optional(),
         location: z.string().optional(),
         bracketSide: z.enum(['left', 'right']).optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        // O datetime-local envia no formato "2026-01-27T10:00" (horário local do usuário)
-        // Precisamos interpretar como horário de Brasília (GMT-3) e salvar como UTC
         let matchDateUTC: Date | undefined;
         if (input.matchDate) {
-          // Adiciona o offset de Brasília (-03:00) para interpretar corretamente
           matchDateUTC = new Date(input.matchDate + ':00-03:00');
         }
-        const matchData = {
-          ...input,
+        const { campaignId, ...matchData } = input;
+        return db.createMatch(getCampaignId(input), {
+          ...matchData,
           matchDate: matchDateUTC,
-        };
-        return db.createMatch(matchData);
+        });
       }),
     
     update: adminProcedure
@@ -299,8 +398,6 @@ export const appRouter = router({
       }))
       .mutation(async ({ input }) => {
         const { id, matchDate, ...data } = input;
-        // O datetime-local envia no formato "2026-01-27T10:00" (horário local do usuário)
-        // Precisamos interpretar como horário de Brasília (GMT-3) e salvar como UTC
         let matchDateUTC: Date | undefined;
         if (matchDate) {
           matchDateUTC = new Date(matchDate + ':00-03:00');
@@ -314,9 +411,9 @@ export const appRouter = router({
       }),
     
     delete: adminProcedure
-      .input(z.object({ id: z.number() }))
+      .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
-        await db.deleteMatch(input.id);
+        await db.deleteMatch(getCampaignId(input), input.id);
         return { success: true };
       }),
     
@@ -345,20 +442,21 @@ export const appRouter = router({
   // ==================== GOALS ====================
   goals: router({
     list: publicProcedure
-      .query(async () => {
-        return db.getAllGoals();
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllGoals(getCampaignId(input || {}));
       }),
     
     byMatch: publicProcedure
-      .input(z.object({ matchId: z.number() }))
+      .input(z.object({ matchId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getGoalsByMatch(input.matchId);
+        return db.getGoalsByMatch(getCampaignId(input), input.matchId);
       }),
     
     topScorers: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTopScorers(input.limit || 10);
+        return db.getTopScorers(getCampaignId(input), input.limit || 10);
       }),
     
     create: adminProcedure
@@ -367,9 +465,11 @@ export const appRouter = router({
         playerId: z.number(),
         teamId: z.number(),
         minute: z.number().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createGoal(input);
+        const { campaignId, ...goalData } = input;
+        return db.createGoal(getCampaignId(input), goalData);
       }),
     
     delete: adminProcedure
@@ -383,15 +483,15 @@ export const appRouter = router({
   // ==================== CARDS ====================
   cards: router({
     byMatch: publicProcedure
-      .input(z.object({ matchId: z.number() }))
+      .input(z.object({ matchId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getCardsByMatch(input.matchId);
+        return db.getCardsByMatch(getCampaignId(input), input.matchId);
       }),
     
     topCarded: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTopCardedPlayers(input.limit || 10);
+        return db.getTopCardedPlayers(getCampaignId(input), input.limit || 10);
       }),
     
     create: adminProcedure
@@ -401,9 +501,11 @@ export const appRouter = router({
         teamId: z.number(),
         cardType: z.enum(['yellow', 'red']),
         minute: z.number().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createCard(input);
+        const { campaignId, ...cardData } = input;
+        return db.createCard(getCampaignId(input), cardData);
       }),
     
     delete: adminProcedure
@@ -416,36 +518,34 @@ export const appRouter = router({
 
   // ==================== COMMENTS ====================
   comments: router({
-    // Lista pública - apenas comentários aprovados
     list: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getApprovedComments();
+        return db.getApprovedComments(getCampaignId(input));
       }),
     
-    // Lista admin - comentários pendentes de aprovação
     pending: adminProcedure
-      .query(async () => {
-        return db.getPendingComments();
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getPendingComments(getCampaignId(input || {}));
       }),
     
-    // Lista admin - todos os comentários (aprovados e pendentes)
     listAll: adminProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getAllComments(input.limit || 100);
+        return db.getAllComments(getCampaignId(input), input.limit || 100);
       }),
     
     byMatch: publicProcedure
-      .input(z.object({ matchId: z.number() }))
+      .input(z.object({ matchId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getCommentsByMatch(input.matchId);
+        return db.getCommentsByMatch(getCampaignId(input), input.matchId);
       }),
     
     byTeam: publicProcedure
-      .input(z.object({ teamId: z.number() }))
+      .input(z.object({ teamId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getCommentsByTeam(input.teamId);
+        return db.getCommentsByTeam(getCampaignId(input), input.teamId);
       }),
     
     create: publicProcedure
@@ -455,10 +555,11 @@ export const appRouter = router({
         content: z.string().min(1),
         matchId: z.number().optional(),
         teamId: z.number().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        // Comentário criado com approved: false por padrão
-        return db.createComment(input);
+        const { campaignId, ...commentData } = input;
+        return db.createComment(getCampaignId(input), commentData);
       }),
     
     approve: adminProcedure
@@ -486,15 +587,15 @@ export const appRouter = router({
   // ==================== PHOTOS ====================
   photos: router({
     list: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getAllPhotos(input.limit || 100);
+        return db.getAllPhotos(getCampaignId(input), input.limit || 100);
       }),
     
     byMatch: publicProcedure
-      .input(z.object({ matchId: z.number() }))
+      .input(z.object({ matchId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getPhotosByMatch(input.matchId);
+        return db.getPhotosByMatch(getCampaignId(input), input.matchId);
       }),
     
     upload: adminProcedure
@@ -503,17 +604,19 @@ export const appRouter = router({
         mimeType: z.string(),
         caption: z.string().optional(),
         matchId: z.number().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'jpg';
         const fileKey = `gallery/${nanoid()}.${ext}`;
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        return db.createPhoto({
+        const { campaignId, base64, mimeType, ...photoData } = input;
+        return db.createPhoto(getCampaignId(input), {
           url,
           fileKey,
-          caption: input.caption,
-          matchId: input.matchId,
+          caption: photoData.caption,
+          matchId: photoData.matchId,
         });
       }),
     
@@ -545,22 +648,28 @@ export const appRouter = router({
 
   // ==================== ANNOUNCEMENTS ====================
   announcements: router({
-    list: publicProcedure.query(async () => {
-      return db.getAllAnnouncements();
-    }),
+    list: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllAnnouncements(getCampaignId(input || {}));
+      }),
     
-    active: publicProcedure.query(async () => {
-      return db.getActiveAnnouncements();
-    }),
+    active: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getActiveAnnouncements(getCampaignId(input || {}));
+      }),
     
     create: adminProcedure
       .input(z.object({
         title: z.string().min(1),
         content: z.string().min(1),
         active: z.boolean().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createAnnouncement(input);
+        const { campaignId, ...announcementData } = input;
+        return db.createAnnouncement(getCampaignId(input), announcementData);
       }),
     
     update: adminProcedure
@@ -586,14 +695,16 @@ export const appRouter = router({
 
   // ==================== ADMIN EMAILS ====================
   adminEmails: router({
-    list: adminProcedure.query(async () => {
-      return db.getAllAdminEmails();
-    }),
+    list: adminProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllAdminEmails(getCampaignId(input || {}));
+      }),
     
     add: adminProcedure
-      .input(z.object({ email: z.string().email() }))
+      .input(z.object({ email: z.string().email(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
-        return db.addAdminEmail(input.email);
+        return db.addAdminEmail(getCampaignId(input), input.email);
       }),
     
     remove: adminProcedure
@@ -604,9 +715,9 @@ export const appRouter = router({
       }),
     
     check: publicProcedure
-      .input(z.object({ email: z.string().email() }))
+      .input(z.object({ email: z.string().email(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        const isAdmin = await db.isAdminEmail(input.email);
+        const isAdmin = await db.isAdminEmail(input.email, getCampaignId(input));
         return { isAdmin };
       }),
   }),
@@ -614,23 +725,25 @@ export const appRouter = router({
   // ==================== TOURNAMENT SETTINGS ====================
   settings: router({
     getAll: publicProcedure
-      .query(async () => {
-        return db.getAllSettings();
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllSettings(getCampaignId(input || {}));
       }),
     
     get: publicProcedure
-      .input(z.object({ key: z.string() }))
+      .input(z.object({ key: z.string(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getSetting(input.key);
+        return db.getSetting(getCampaignId(input), input.key);
       }),
     
     set: adminProcedure
       .input(z.object({
         key: z.string(),
         value: z.string(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        await db.setSetting(input.key, input.value);
+        await db.setSetting(getCampaignId(input), input.key, input.value);
         return { success: true };
       }),
     
@@ -638,13 +751,14 @@ export const appRouter = router({
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'png';
         const fileKey = `tournament/logo-${nanoid()}.${ext}`;
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        await db.setSetting('tournamentLogo', url);
+        await db.setSetting(getCampaignId(input), 'tournamentLogo', url);
         return { url };
       }),
     
@@ -652,13 +766,14 @@ export const appRouter = router({
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'mp3';
         const fileKey = `tournament/music-${nanoid()}.${ext}`;
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        await db.setSetting('tournamentMusic', url);
+        await db.setSetting(getCampaignId(input), 'tournamentMusic', url);
         return { url };
       }),
     
@@ -666,13 +781,14 @@ export const appRouter = router({
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'jpg';
         const fileKey = `tournament/background-${nanoid()}.${ext}`;
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        await db.setSetting('tournamentBackground', url);
+        await db.setSetting(getCampaignId(input), 'tournamentBackground', url);
         return { url };
       }),
     
@@ -680,13 +796,14 @@ export const appRouter = router({
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         const buffer = Buffer.from(input.base64, 'base64');
         const ext = input.mimeType.split('/')[1] || 'jpg';
         const fileKey = `tournament/hero-bg-${nanoid()}.${ext}`;
         const { url } = await storagePut(fileKey, buffer, input.mimeType);
-        await db.setSetting('heroBackground', url);
+        await db.setSetting(getCampaignId(input), 'heroBackground', url);
         return { url };
       }),
   }),
@@ -694,41 +811,42 @@ export const appRouter = router({
   // ==================== STATISTICS ====================
   stats: router({
     topScorers: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTopScorers(input.limit || 10);
+        return db.getTopScorers(getCampaignId(input), input.limit || 10);
       }),
     
     topCarded: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getTopCardedPlayers(input.limit || 10);
+        return db.getTopCardedPlayers(getCampaignId(input), input.limit || 10);
       }),
     
     worstDefenses: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getWorstDefenses(input.limit || 10);
+        return db.getWorstDefenses(getCampaignId(input), input.limit || 10);
       }),
     
     bestDefenses: publicProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getBestDefenses(input.limit || 10);
+        return db.getBestDefenses(getCampaignId(input), input.limit || 10);
       }),
     
     roundStats: publicProcedure
-      .input(z.object({ round: z.number() }))
+      .input(z.object({ round: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getRoundStats(input.round);
+        return db.getRoundStats(getCampaignId(input), input.round);
       }),
   }),
 
   // ==================== ADMIN USERS (LOGIN SIMPLIFICADO) ====================
   adminUsers: router({
     list: adminProcedure
-      .query(async () => {
-        return db.getAllAdminUsers();
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllAdminUsers(getCampaignId(input || {}));
       }),
     
     create: adminProcedure
@@ -737,17 +855,16 @@ export const appRouter = router({
         password: z.string().min(4),
         name: z.string().optional(),
         isOwner: z.boolean().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createAdminUser({
+        return db.createAdminUser(getCampaignId(input), {
           username: input.username,
           password: input.password,
           name: input.name,
           isOwner: input.isOwner,
         });
       }),
-    
-
     
     delete: adminProcedure
       .input(z.object({ id: z.number() }))
@@ -756,31 +873,29 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    // Login simplificado (público)
     login: publicProcedure
       .input(z.object({
         username: z.string(),
         password: z.string(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        const adminUser = await db.verifyAdminPassword(input.username, input.password);
+        const adminUser = await db.verifyAdminPassword(getCampaignId(input), input.username, input.password);
         
         if (!adminUser) {
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Área restrita, você não tem acesso' });
         }
         
-        // Criar sessão (usar JWT simples)
         const jwt = await import('jsonwebtoken');
         const token = jwt.default.sign(
-          { adminUserId: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner },
+          { adminUserId: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner, campaignId: adminUser.campaignId },
           process.env.JWT_SECRET || 'secret',
           { expiresIn: '7d' }
         );
         
-        // Retornar token para o frontend armazenar
         return { 
           success: true,
-          token, // Frontend vai armazenar no localStorage
+          token,
           user: { 
             id: adminUser.id, 
             username: adminUser.username, 
@@ -790,10 +905,9 @@ export const appRouter = router({
         };
       }),
     
-    // Verificar sessão admin
     me: publicProcedure
-      .query(async ({ ctx }) => {
-        // Ler token do header Authorization
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ ctx, input }) => {
         const authHeader = ctx.req.headers.authorization;
         const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
         if (!token) return null;
@@ -801,7 +915,7 @@ export const appRouter = router({
         try {
           const jwt = await import('jsonwebtoken');
           const decoded = jwt.default.verify(token, process.env.JWT_SECRET || 'secret') as any;
-          const adminUser = await db.getAdminUserByUsername(decoded.username);
+          const adminUser = await db.getAdminUserByUsername(getCampaignId(input || {}), decoded.username);
           if (!adminUser || !adminUser.active) return null;
           return { id: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner };
         } catch {
@@ -809,7 +923,6 @@ export const appRouter = router({
         }
       }),
     
-    // Logout admin (frontend limpa o localStorage)
     logout: publicProcedure
       .mutation(async () => {
         return { success: true };
@@ -819,18 +932,22 @@ export const appRouter = router({
   // ==================== SUPPORT MESSAGES ====================
   supportMessages: router({
     byTeam: publicProcedure
-      .input(z.object({ teamId: z.number() }))
+      .input(z.object({ teamId: z.number(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
-        return db.getSupportMessagesByTeam(input.teamId);
+        return db.getSupportMessagesByTeam(getCampaignId(input), input.teamId);
       }),
     
-    pending: adminProcedure.query(async () => {
-      return db.getPendingSupportMessages();
-    }),
+    pending: adminProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getPendingSupportMessages(getCampaignId(input || {}));
+      }),
     
-    all: adminProcedure.query(async () => {
-      return db.getAllSupportMessages();
-    }),
+    all: adminProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllSupportMessages(getCampaignId(input || {}));
+      }),
     
     create: publicProcedure
       .input(z.object({
@@ -838,9 +955,11 @@ export const appRouter = router({
         authorName: z.string().min(1),
         authorLodge: z.string().optional(),
         message: z.string().min(1).max(500),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createSupportMessage(input);
+        const { campaignId, ...messageData } = input;
+        return db.createSupportMessage(getCampaignId(input), messageData);
       }),
     
     approve: adminProcedure
@@ -860,13 +979,17 @@ export const appRouter = router({
 
   // ==================== SPONSORS ====================
   sponsors: router({
-    list: publicProcedure.query(async () => {
-      return db.getAllSponsors();
-    }),
+    list: publicProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllSponsors(getCampaignId(input || {}));
+      }),
     
-    listAdmin: adminProcedure.query(async () => {
-      return db.getAllSponsorsAdmin();
-    }),
+    listAdmin: adminProcedure
+      .input(z.object({ campaignId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllSponsorsAdmin(getCampaignId(input || {}));
+      }),
     
     create: adminProcedure
       .input(z.object({
@@ -877,9 +1000,11 @@ export const appRouter = router({
         link: z.string().optional(),
         description: z.string().optional(),
         active: z.boolean().optional(),
+        campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
-        return db.createSponsor(input);
+        const { campaignId, ...sponsorData } = input;
+        return db.createSponsor(getCampaignId(input), sponsorData);
       }),
     
     update: adminProcedure

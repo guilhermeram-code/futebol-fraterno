@@ -212,3 +212,52 @@
 - [x] Eliminar flash de dados hardcoded antigos ao recarregar página
 - [x] Implementar loading skeleton enquanto dados do banco carregam
 - [x] Remover valores padrão hardcoded (Campeonato Fraterno, Loja José Moreira)
+
+
+## PELADA PRO - Transformação Multi-tenant SaaS (21/01/2026)
+
+### FASE 1: Estrutura Base do Banco
+- [x] Criar tabela purchases (compras/assinaturas)
+- [x] Criar tabela reservedSlugs (URLs reservadas)
+- [x] Criar tabela campaigns (campeonatos)
+- [x] Criar tabela coupons (cupons de desconto)
+- [x] Adicionar campaignId em todas as tabelas existentes
+- [x] Rodar migrations (pnpm db:push)
+- [x] Adaptar db.ts com campaignId em todas funções
+- [x] Adaptar routers.ts com campaignId em todos procedures
+
+### FASE 2: Landing Page de Vendas
+- [x] Hero section com título e CTAs
+- [x] Seção de funcionalidades (6 cards)
+- [x] Seção de preços (4 planos)
+- [x] Seção "Como Funciona"
+- [x] Footer
+
+### FASE 3: Checkout + Stripe
+- [x] Modal de checkout com campos
+- [x] Validação de slug em tempo real
+- [x] Integração Stripe Checkout
+- [x] Webhook para confirmar pagamento
+- [x] Criar campeonato após pagamento
+
+### FASE 4: Multi-tenant
+- [x] Hook useCampaign() para pegar slug da URL
+- [x] Atualizar todas queries para filtrar por campaignId
+- [x] Sistema de roteamento (/, /{slug}, /{slug}/admin)
+- [x] Verificação de propriedade no admin
+
+### FASE 5: Expiração + Emails
+- [x] Calcular expiresAt baseado no plano
+- [x] Sistema de desativação automática
+- [x] Email de boas-vindas (notificação ao owner)
+- [x] Email de aviso 7 dias antes
+- [x] Serviço de verificação de expiração
+
+### FASE 6: Demo + Testes
+- [x] Criar campeonato demo (futebol-fraterno)
+- [x] Testar fluxo completo (landing → checkout → Stripe)
+- [x] Testar acesso via slug (/futebol-fraterno)
+
+### FASE 7: Publicar
+- [ ] Configurar Stripe produção
+- [ ] Conectar peladapro.com.br
