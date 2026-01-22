@@ -625,3 +625,13 @@
 - Testes automatizados: 77/77 passando (100%)
 - Erros TypeScript: 0
 - Checklist de testes manuais criado: TESTES_MANUAIS.md
+
+
+## 🐛 BUG REPORTADO - Publicação não atualiza (22/01/2026)
+
+- [x] Problema: Correções aplicadas no sandbox não aparecem no site publicado (peladapro.com.br)
+- [x] Causa: Site publicado usa checkpoint antigo (89b46556), correções estão no novo checkpoint (8e139e79)
+- [x] Solução: Reiniciar servidor + usuário republicar pelo botão "Publicar"
+- [x] Teste: VERIFICADO - Site publicado TEM O BUG! Campeonato /tenda mostra "Grupos (0)" mas toast "Grupo criado!" aparece
+- [ ] URGENTE: Botão "Publicar" não está funcionando - checkpoint 8e139e79 não publica
+- [ ] Solução: Forçar nova publicação ou aplicar correções novamente

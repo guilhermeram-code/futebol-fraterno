@@ -275,3 +275,4 @@ export function Header() {
     </header>
   );
 }
+// Correções do Claude #3 aplicadas - Thu Jan 22 17:24:18 EST 2026
