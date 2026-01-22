@@ -172,8 +172,8 @@ function MainRouter() {
   // Verificar se é uma rota legada (sem slug)
   const isLegacyRoute = reservedRoutes.includes(potentialSlug);
   
-  // Se for landing page, mostrar página de vendas
-  if (location === '/landing') {
+  // Se for landing page ou raiz, mostrar página de vendas
+  if (location === '/landing' || isLandingPage) {
     return <LandingPage />;
   }
   
@@ -182,9 +182,9 @@ function MainRouter() {
     return <CheckoutSuccess />;
   }
   
-  // Se for rota legada ou raiz, usar router legado (futebol-fraterno)
+  // Se for rota legada (sem slug), usar router legado (futebol-fraterno)
   // Isso mantém compatibilidade com o site existente
-  if (isLandingPage || isLegacyRoute) {
+  if (isLegacyRoute) {
     return <LegacyRouter />;
   }
   

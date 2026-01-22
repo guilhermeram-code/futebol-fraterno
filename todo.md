@@ -347,3 +347,9 @@
 - [ ] Implementar envio de email automático após compra
 - [ ] Atualizar página /admin para usar nova autenticação
 - [ ] Adicionar opção "Alterar Senha" no painel admin
+
+
+## REDIRECIONAMENTO AUTOMÁTICO - 22/01/2026
+
+- [x] Criar redirecionamento da raiz (/) para /landing (página de vendas do Pelada Pro)
+- [x] Garantir que peladapro.com.br sempre mostre a landing page
