@@ -45,7 +45,11 @@ import { useTournament } from "@/contexts/TournamentContext";
 export default function Admin() {
   const { campaignId } = useTournament();
   const { adminUser, isAuthenticated, loading, logout } = useAdminAuth();
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
+  
+  // Extrair slug da URL atual (formato: /{slug}/admin)
+  const pathParts = location.split('/').filter(Boolean);
+  const slug = pathParts[0] || 'futebol-fraterno';
 
   if (loading) {
     return (
@@ -68,7 +72,7 @@ export default function Admin() {
             <p className="text-muted-foreground mb-4">
               Você precisa fazer login para acessar o painel administrativo.
             </p>
-            <Button onClick={() => setLocation("/admin/login")}>
+            <Button onClick={() => setLocation(`/${slug}/admin/login`)}>
               Fazer Login
             </Button>
           </CardContent>
@@ -86,7 +90,7 @@ export default function Admin() {
         <div className="container py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link href="/">
+              <Link href={`/${slug}`}>
                 <Button variant="ghost" size="icon">
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
@@ -2517,7 +2521,8 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
       if (base64) {
         uploadLogo.mutate({
           base64,
-          mimeType: file.type
+          mimeType: file.type,
+          campaignId
         });
       }
     };
@@ -2534,7 +2539,8 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
       if (base64) {
         uploadMusic.mutate({
           base64,
-          mimeType: file.type
+          mimeType: file.type,
+          campaignId
         });
       }
     };
@@ -2551,7 +2557,8 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
       if (base64) {
         uploadBackground.mutate({
           base64,
-          mimeType: file.type
+          mimeType: file.type,
+          campaignId
         });
       }
     };
@@ -2568,7 +2575,8 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
       if (base64) {
         uploadHeroBackground.mutate({
           base64,
-          mimeType: file.type
+          mimeType: file.type,
+          campaignId
         });
       }
     };
@@ -2594,7 +2602,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               placeholder="Ex: Futebol Fraterno"
             />
             <Button 
-              onClick={() => setSetting.mutate({ key: "tournamentName", value: name })}
+              onClick={() => setSetting.mutate({ key: "tournamentName", value: name, campaignId })}
               disabled={setSetting.isPending || !name}
               className="mt-2"
               size="sm"
@@ -2612,7 +2620,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               placeholder="Ex: 2026 - Respeito e União"
             />
             <Button 
-              onClick={() => setSetting.mutate({ key: "tournamentSubtitle", value: subtitle })}
+              onClick={() => setSetting.mutate({ key: "tournamentSubtitle", value: subtitle, campaignId })}
               disabled={setSetting.isPending || !subtitle}
               className="mt-2"
               size="sm"
@@ -2630,7 +2638,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               placeholder="Ex: Organizado pela Loja José Moreira"
             />
             <Button 
-              onClick={() => setSetting.mutate({ key: "tournamentOrganizer", value: organizer })}
+              onClick={() => setSetting.mutate({ key: "tournamentOrganizer", value: organizer, campaignId })}
               disabled={setSetting.isPending || !organizer}
               className="mt-2"
               size="sm"
@@ -2755,7 +2763,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               </SelectContent>
             </Select>
             <Button 
-              onClick={() => setSetting.mutate({ key: "tournamentType", value: selectedTournamentType })}
+              onClick={() => setSetting.mutate({ key: "tournamentType", value: selectedTournamentType, campaignId })}
               disabled={setSetting.isPending}
               className="mt-2"
               size="sm"
@@ -2783,7 +2791,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
                 </SelectContent>
               </Select>
               <Button 
-                onClick={() => setSetting.mutate({ key: "teamsQualifyPerGroup", value: selectedTeamsQualify })}
+                onClick={() => setSetting.mutate({ key: "teamsQualifyPerGroup", value: selectedTeamsQualify, campaignId })}
                 disabled={setSetting.isPending}
                 className="mt-2"
                 size="sm"
@@ -2812,7 +2820,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
                 </SelectContent>
               </Select>
               <Button 
-                onClick={() => setSetting.mutate({ key: "knockoutSize", value: selectedKnockoutSize })}
+                onClick={() => setSetting.mutate({ key: "knockoutSize", value: selectedKnockoutSize, campaignId })}
                 disabled={setSetting.isPending}
                 className="mt-2"
                 size="sm"
@@ -2986,7 +2994,7 @@ function SponsorsTab({ campaignId }: { campaignId: number }) {
               placeholder="Ex: Agradecemos aos nossos patrocinadores pelo apoio!"
             />
             <Button 
-              onClick={() => setSetting.mutate({ key: "sponsorMessage", value: message })}
+              onClick={() => setSetting.mutate({ key: "sponsorMessage", value: message, campaignId })}
               disabled={setSetting.isPending}
               className="mt-2"
               size="sm"

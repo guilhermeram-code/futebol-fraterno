@@ -131,6 +131,7 @@ function CampaignRouter({ slug }: { slug: string }) {
 }
 
 // Rotas legadas (para manter compatibilidade com futebol-fraterno)
+// NOTA: /admin foi removido - agora cada campeonato tem seu admin em /{slug}/admin
 function LegacyRouter() {
   return (
     <CampaignLoader slug="futebol-fraterno">
@@ -146,8 +147,6 @@ function LegacyRouter() {
         <Route path="/mata-mata" component={MataMata} />
         <Route path="/galeria" component={Galeria} />
         <Route path="/patrocinadores" component={Patrocinadores} />
-        <Route path="/admin/login" component={AdminLogin} />
-        <Route path="/admin" component={Admin} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
@@ -164,9 +163,10 @@ function MainRouter() {
   const potentialSlug = pathParts[0];
   
   // Lista de rotas que NÃO são slugs de campeonato
+  // NOTA: 'admin' foi removido - agora cada campeonato tem seu admin em /{slug}/admin
   const reservedRoutes = [
     'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
-    'mata-mata', 'galeria', 'patrocinadores', 'admin', '404', 'landing', 'checkout', 'login', 'change-password', 'admin-dashboard'
+    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'change-password', 'admin-dashboard'
   ];
   
   // Verificar se é a landing page (raiz)

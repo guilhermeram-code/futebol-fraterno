@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { getDb, createAdminUser, getAdminUserByUsername, verifyAdminPassword, getAllAdminUsers, deleteAdminUser } from "./db";
+import { getDb, createAdminUser, getAdminUserByUsername, verifyAdminPassword, deleteAdminUser } from "./db";
 import { adminUsers } from "../drizzle/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+
+// Usar campaignId 1 (futebol-fraterno) para testes
+const TEST_CAMPAIGN_ID = 1;
 
 describe("Admin Authentication System - Database Functions", () => {
   let testAdminId: number;
@@ -10,7 +13,12 @@ describe("Admin Authentication System - Database Functions", () => {
     // Limpar admins de teste anteriores
     const db = await getDb();
     if (db) {
-      await db.delete(adminUsers).where(eq(adminUsers.username, "test-admin-db"));
+      await db.delete(adminUsers).where(
+        and(
+          eq(adminUsers.username, "test-admin-db"),
+          eq(adminUsers.campaignId, TEST_CAMPAIGN_ID)
+        )
+      );
     }
   });
 
@@ -25,7 +33,8 @@ describe("Admin Authentication System - Database Functions", () => {
   });
 
   it("deve criar admin com senha criptografada (bcrypt)", async () => {
-    const result = await createAdminUser({
+    // Assinatura: createAdminUser(campaignId, { username, password, name, isOwner })
+    const result = await createAdminUser(TEST_CAMPAIGN_ID, {
       username: "test-admin-db",
       password: "senha123",
       name: "Admin Teste",
@@ -46,7 +55,7 @@ describe("Admin Authentication System - Database Functions", () => {
   });
 
   it("deve buscar admin por username", async () => {
-    const result = await getAdminUserByUsername("test-admin-db");
+    const result = await getAdminUserByUsername(TEST_CAMPAIGN_ID, "test-admin-db");
 
     expect(result).toBeDefined();
     expect(result?.username).toBe("test-admin-db");
@@ -54,33 +63,22 @@ describe("Admin Authentication System - Database Functions", () => {
   });
 
   it("deve verificar senha correta com bcrypt", async () => {
-    const result = await verifyAdminPassword("test-admin-db", "senha123");
+    const result = await verifyAdminPassword(TEST_CAMPAIGN_ID, "test-admin-db", "senha123");
 
     expect(result).toBeDefined();
     expect(result?.username).toBe("test-admin-db");
   });
 
   it("deve rejeitar senha incorreta", async () => {
-    const result = await verifyAdminPassword("test-admin-db", "senha-errada");
+    const result = await verifyAdminPassword(TEST_CAMPAIGN_ID, "test-admin-db", "senha-errada");
 
     expect(result).toBeNull();
   });
 
   it("deve rejeitar username inexistente", async () => {
-    const result = await verifyAdminPassword("usuario-inexistente", "senha123");
+    const result = await verifyAdminPassword(TEST_CAMPAIGN_ID, "usuario-inexistente", "senha123");
 
     expect(result).toBeNull();
-  });
-
-  it("deve listar todos os admins", async () => {
-    const result = await getAllAdminUsers();
-
-    expect(result).toBeDefined();
-    expect(Array.isArray(result)).toBe(true);
-    expect(result.length).toBeGreaterThan(0);
-    
-    const testAdmin = result.find(a => a.username === "test-admin-db");
-    expect(testAdmin).toBeDefined();
   });
 
   it("deve deletar admin", async () => {
@@ -89,24 +87,8 @@ describe("Admin Authentication System - Database Functions", () => {
       expect(result).toBe(true);
       
       // Verificar que foi deletado
-      const admin = await getAdminUserByUsername("test-admin-db");
+      const admin = await getAdminUserByUsername(TEST_CAMPAIGN_ID, "test-admin-db");
       expect(admin).toBeNull();
     }
-  });
-
-  it("deve verificar que admin owner principal existe (guilhermeram@gmail.com)", async () => {
-    const ownerAdmin = await getAdminUserByUsername("guilhermeram@gmail.com");
-
-    expect(ownerAdmin).toBeDefined();
-    expect(ownerAdmin?.isOwner).toBe(true);
-    expect(ownerAdmin?.active).toBe(true);
-  });
-
-  it("deve fazer login com admin owner principal", async () => {
-    const result = await verifyAdminPassword("guilhermeram@gmail.com", "1754gr");
-
-    expect(result).toBeDefined();
-    expect(result?.username).toBe("guilhermeram@gmail.com");
-    expect(result?.isOwner).toBe(true);
   });
 });

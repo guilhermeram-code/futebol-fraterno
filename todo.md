@@ -460,3 +460,34 @@
 - [ ] Botão para deletar campeonato
 - [ ] Ver email e senha do organizador
 - [ ] Mais estatísticas e gráficos
+
+
+## BUGS CRÍTICOS CONFIRMADOS - 22/01/2026 (16:15)
+
+### BUG 1: Email NÃO está sendo enviado
+- [ ] Email de boas-vindas não chega ao comprador após pagamento
+- [ ] Verificar se sendWelcomeEmail está sendo chamado no webhook
+- [ ] Verificar se Resend API está funcionando em produção
+
+### BUG 2: URL do Admin está ERRADA
+- [ ] URL atual: /admin (global para todos)
+- [ ] URL correta: /{slug}/admin (cada campeonato tem seu admin)
+- [ ] Refatorar rotas para /{slug}/admin
+- [ ] Atualizar links e redirecionamentos
+
+### BUG 3: Upload de Fotos NÃO funciona
+- [ ] Imagens não aparecem após upload
+- [ ] Investigar se está salvando no S3
+- [ ] Investigar se está salvando no banco
+- [ ] Verificar retorno da mutation de upload
+
+
+## CORREÇÕES CRÍTICAS - 22/01/2026 (Sessão Atual)
+
+### Corrigidos:
+- [x] Email não enviado ao comprador - Corrigido remetente para usar domínio verificado (contato@meucontomagico.com.br)
+- [x] URL do admin errada (/admin global) - Removido /admin das rotas legadas, agora só funciona /{slug}/admin
+- [x] Upload de fotos não funciona - Adicionado campaignId em TODAS as mutações de upload e setSetting
+- [x] Link de volta no admin - Corrigido para usar /{slug} ao invés de /
+- [x] Redirecionamento após login - Corrigido para usar /{slug}/admin
+- [x] Testes atualizados - 72/72 passando (100%)

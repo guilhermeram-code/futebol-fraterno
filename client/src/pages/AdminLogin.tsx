@@ -10,16 +10,21 @@ import { toast } from "sonner";
 import { Link } from "wouter";
 
 export default function AdminLogin() {
-  const [, setLocation] = useLocation();
+  const [location, setLocation] = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  
+  // Extrair slug da URL atual (formato: /{slug}/admin/login)
+  const pathParts = location.split('/').filter(Boolean);
+  const slug = pathParts[0] || 'futebol-fraterno';
 
   const loginMutation = trpc.adminUsers.login.useMutation({
     onSuccess: (data) => {
       // Armazenar token no localStorage
       localStorage.setItem("admin_token", data.token);
       toast.success("Login realizado com sucesso");
-      setLocation("/admin");
+      // Redirecionar para o admin do campeonato específico
+      setLocation(`/${slug}/admin`);
     },
     onError: (error: any) => {
       toast.error(error.message || "Área restrita, você não tem acesso");
@@ -38,7 +43,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <Link href="/">
+        <Link href={`/${slug}`}>
           <Button variant="ghost" className="mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Voltar para Home

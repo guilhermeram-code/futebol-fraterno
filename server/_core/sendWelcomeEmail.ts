@@ -168,7 +168,7 @@ export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<bo
     console.log("[Email] Enviando email de boas-vindas para:", input.email);
     
     const { data, error } = await resend.emails.send({
-      from: "PeladaPro <onboarding@resend.dev>", // Usando email de teste do Resend
+      from: "PeladaPro <contato@meucontomagico.com.br>", // Usando domínio verificado do usuário
       to: [input.email],
       subject: `🎉 Seu campeonato ${input.campaignName} foi criado!`,
       html: emailHtml,
