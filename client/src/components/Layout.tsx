@@ -12,7 +12,7 @@ export function Layout({ children, showAudioPlayer = true }: LayoutProps) {
 
   const backgroundStyle = settings.tournamentBackground 
     ? {
-        backgroundImage: `url(${settings.tournamentBackground})`,
+        backgroundImage: `url(${settings.tournamentBackground}?v=${Date.now()})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',

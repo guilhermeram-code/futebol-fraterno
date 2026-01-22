@@ -79,7 +79,7 @@ export default function Home() {
       <section 
         className="py-12 relative"
         style={settings.heroBackground ? {
-          backgroundImage: `url(${settings.heroBackground})`,
+          backgroundImage: `url(${settings.heroBackground}?v=${Date.now()})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         } : undefined}

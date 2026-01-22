@@ -10,4 +10,5 @@ export const ENV = {
   mercadoPagoAccessToken: process.env.MERCADOPAGO_ACCESS_TOKEN ?? "",
   mercadoPagoPublicKey: process.env.MERCADOPAGO_PUBLIC_KEY ?? "",
   mercadoPagoWebhookSecret: process.env.MERCADOPAGO_WEBHOOK_SECRET ?? "",
+  resendApiKey: process.env.RESEND_API_KEY ?? "",
 };

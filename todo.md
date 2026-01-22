@@ -437,3 +437,26 @@
 
 - [x] Adicionar validação de assinatura secreta no webhook do Mercado Pago
 - [x] Configurar MERCADOPAGO_WEBHOOK_SECRET nas variáveis de ambiente
+
+
+## CORREÇÕES CRÍTICAS - 22/01/2026 (Tarde)
+
+### Críticos (Fase 1)
+- [ ] Email para comprador não enviado após pagamento aprovado
+- [ ] Upload de fotos não aparece na página do campeonato
+
+### Médios (Fase 2)
+- [ ] Jogadores de outro campeonato aparecendo misturados
+- [ ] Link do escudo vai para peladapro.com.br em vez de /{slug}
+- [ ] Música tocando no site de vendas (não deveria)
+- [ ] Preço R$16,66/mês incorreto na landing page
+- [ ] Imagens do lightbox abrindo muito pequenas
+- [ ] Nome da aba do navegador "Futebol Fraterno 2026" incorreto
+- [ ] Adicionar confirmação de email no formulário de compra
+- [ ] Adicionar email de contato no footer (contato@meucontomagico.com.br)
+
+### Melhorias Painel Admin (Fase 3)
+- [ ] Mostrar tempo para expirar cada campeonato
+- [ ] Botão para deletar campeonato
+- [ ] Ver email e senha do organizador
+- [ ] Mais estatísticas e gráficos

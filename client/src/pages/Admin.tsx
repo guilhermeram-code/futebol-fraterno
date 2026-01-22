@@ -2687,7 +2687,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
             </p>
             {heroBackground && (
               <img 
-                src={heroBackground} 
+                src={`${heroBackground}?v=${Date.now()}`} 
                 alt="Hero atual" 
                 className="h-32 w-full object-cover rounded-lg mb-2"
               />
@@ -2711,7 +2711,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
             </p>
             {tournamentBackground && (
               <img 
-                src={tournamentBackground} 
+                src={`${tournamentBackground}?v=${Date.now()}`} 
                 alt="Fundo atual" 
                 className="h-32 w-full object-cover rounded-lg mb-2"
               />

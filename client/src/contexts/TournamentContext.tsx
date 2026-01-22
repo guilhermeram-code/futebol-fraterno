@@ -39,7 +39,7 @@ export function TournamentProvider({ children, campaignId = 1 }: TournamentProvi
   const { data, isLoading, refetch } = trpc.settings.getAll.useQuery(
     { campaignId },
     {
-      staleTime: 1000 * 60 * 5, // 5 minutes
+      staleTime: 1000 * 30, // 30 seconds - mais responsivo para atualizações
     }
   );
 
