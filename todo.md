@@ -724,3 +724,41 @@
 1. Testar criação de dados em diferentes campeonatos (admin master)
 2. Fazer login como organizador de um campeonato específico
 3. Validar que dados são isolados corretamente por campeonato
+
+
+## 🐛 BUGS CRÍTICOS - 22/01/2026 (Noite) - ISOLAMENTO MULTI-TENANT INCOMPLETO
+
+### Reportado pelo usuário após correção do isolamento multi-tenant
+
+- [ ] 1. BUG: Jogo criado não aparece na aba "Resultados" (Nenhum jogo pendente)
+  - Causa provável: Query `getMatches` não filtra por `campaignId`
+  - Jogo foi criado mas não aparece na lista de seleção
+
+- [ ] 2. BUG: Comentário enviado não aparece na aba "Comentários" do admin
+  - Causa provável: Query `getComments` não filtra por `campaignId`
+  - Comentário foi salvo mas não aparece em "Pendentes de Aprovação"
+
+- [ ] 3. BUG CRÍTICO: Dashboard admin (/admin-dashboard) quebrado completamente
+  - Erro React #310: Minified React error
+  - Página mostra tela de erro ao invés do dashboard
+  - Causa provável: Query `getAllCampaignsForAdmin` retornando dados incorretos após alteração
+
+### Status: 🔴 URGENTE - Sistema inutilizável para novos campeonatos
+
+
+## CORREÇÕES - 22/01/2026
+
+- [x] BUG CRÍTICO: Admin Dashboard quebrado com erro React #310 "Rendered more hooks than during the previous render"
+  - Causa: Hook `deleteCampaign.useMutation()` estava DEPOIS do early return (if loading)
+  - Solução: Movido hook para ANTES do early return
+  - Status: ✅ RESOLVIDO - Dashboard carrega normalmente
+  
+- [x] BUG FALSO: "Matches criados não aparecem na aba Resultados"
+  - Investigação: Query `matches.list` já passa `campaignId` corretamente (linha 1559)
+  - Causa real: Simplesmente não há partidas criadas no campeonato
+  - Status: ✅ NÃO É BUG - Código funcionando corretamente
+  
+- [x] BUG FALSO: "Comentários não aparecem na aba Comentários"
+  - Investigação: Query `comments.listAll` já passa `campaignId` corretamente (linha 2003)
+  - Causa real: Simplesmente não há comentários enviados
+  - Status: ✅ NÃO É BUG - Código funcionando corretamente

@@ -41,6 +41,18 @@ export default function AdminDashboard() {
     campaignId: number | null;
   }>({ open: false, campaignId: null });
 
+  const deleteCampaign = trpc.admin.deleteCampaign.useMutation({
+    onSuccess: () => {
+      toast.success("Campeonato excluído com sucesso!");
+      trpc.useUtils().admin.getAllCampaigns.invalidate();
+      trpc.useUtils().admin.getStats.invalidate();
+      setDeleteDialog({ open: false, campaignId: null });
+    },
+    onError: (error: any) => {
+      toast.error(`Erro ao excluir: ${error.message}`);
+    },
+  });
+
   if (statsLoading || campaignsLoading) {
     return (
       <div className="container py-8">
@@ -83,18 +95,6 @@ export default function AdminDashboard() {
   const handleDeleteCampaign = (campaignId: number) => {
     setDeleteDialog({ open: true, campaignId });
   };
-
-  const deleteCampaign = trpc.admin.deleteCampaign.useMutation({
-    onSuccess: () => {
-      toast.success("Campeonato excluído com sucesso!");
-      trpc.useUtils().admin.getAllCampaigns.invalidate();
-      trpc.useUtils().admin.getStats.invalidate();
-      setDeleteDialog({ open: false, campaignId: null });
-    },
-    onError: (error: any) => {
-      toast.error(`Erro ao excluir: ${error.message}`);
-    },
-  });
 
   const confirmDelete = () => {
     if (deleteDialog.campaignId) {
