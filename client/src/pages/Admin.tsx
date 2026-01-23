@@ -37,7 +37,7 @@ import {
   Star,
   Heart
 } from "lucide-react";
-import { getLoginUrl } from "@/const";
+
 import { ResultsRegistration } from "@/components/ResultsRegistration";
 import { useSlug } from "@/hooks/useSlug";
 import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";

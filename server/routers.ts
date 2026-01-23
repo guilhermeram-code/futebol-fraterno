@@ -101,6 +101,9 @@ export const appRouter = router({
         const userCampaigns = await getCampaignsByEmail(input.email);
         const campaignSlug = userCampaigns.length > 0 ? userCampaigns[0].slug : null;
 
+        // Verificar se é o owner (dono do PeladaPro)
+        const isOwner = user.email === process.env.OWNER_EMAIL || user.email === 'guilhermeram@gmail.com';
+        
         // Criar sessão de login (retornar dados do usuário para o contexto)
         return {
           success: true,
@@ -111,6 +114,7 @@ export const appRouter = router({
             role: 'admin', // Usuário que faz login via /login é admin
           },
           campaignSlug,
+          isOwner,
         };
       }),
     

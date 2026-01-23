@@ -73,12 +73,12 @@ export function Header() {
                 </Button>
               </Link>
             ) : (
-              <a href={getLoginUrl()}>
+              <Link href={`/${slug}/admin/login`}>
                 <Button variant="default" className="bg-primary text-primary-foreground gap-2">
                   <LogIn className="h-4 w-4" />
                   Entrar
                 </Button>
-              </a>
+              </Link>
             )}
           </nav>
 
@@ -134,7 +134,7 @@ export function Header() {
                   </Button>
                 </Link>
               ) : (
-                <a href={getLoginUrl()}>
+                <Link href={`/${slug}/admin/login`}>
                   <Button 
                     variant="default" 
                     className="w-full bg-primary text-primary-foreground gap-3"
@@ -143,7 +143,7 @@ export function Header() {
                     <LogIn className="h-5 w-5" />
                     Entrar
                   </Button>
-                </a>
+                </Link>
               )}
             </div>
           </nav>

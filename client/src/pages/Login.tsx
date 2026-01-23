@@ -17,10 +17,17 @@ export default function Login() {
       toast.success("✅ Login realizado!", {
         description: `Bem-vindo, ${data.user.name}!`,
       });
-      // Redirecionar para o campeonato do usuário
-      if (data.campaignSlug) {
-        setLocation(`/${data.campaignSlug}`);
-      } else {
+      
+      // Se é owner, redirecionar para dashboard geral
+      if (data.isOwner) {
+        setLocation("/admin-dashboard");
+      }
+      // Se tem campeonato, redirecionar para admin do campeonato
+      else if (data.campaignSlug) {
+        setLocation(`/${data.campaignSlug}/admin`);
+      }
+      // Senão, redirecionar para home
+      else {
         setLocation("/");
       }
     },

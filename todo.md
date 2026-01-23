@@ -899,3 +899,9 @@
 - [x] Bug #9: Remover lupinha de busca do painel admin
 
 - [x] Bug #10: MÚSICA TOCANDO AUTOMATICAMENTE - Sistema completo de áudio precisa ser removido (MusicContext, AudioPlayer, autoplay)
+
+- [ ] Bug #11: EMAIL NÃO CHEGA APÓS COMPRA - Investigar: 1) Código 2) Webhook MP 3) Gmail SMTP 4) Senha não gerada
+
+- [x] Bug #11: Owner login (/admin) redireciona para /teste em vez de ficar em /admin (dashboard geral)
+- [x] Bug #12: Organizador login (/slug/admin) redireciona para / em vez de ficar em /slug/admin
+- [x] Bug #13: Remover TODOS os sistemas OAuth (Gmail/GitHub login) - usar apenas login simples com email/senha
