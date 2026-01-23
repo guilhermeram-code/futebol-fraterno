@@ -6,7 +6,7 @@ interface SendWelcomeEmailInput {
   name: string;
   campaignName: string;
   campaignSlug: string;
-  temporaryPassword: string;
+  temporaryPassword: string | null; // null se usuário já existe
   expiresAt: Date;
 }
 
@@ -130,8 +130,12 @@ export async function sendWelcomeEmail(input: SendWelcomeEmailInput): Promise<bo
         <p><strong>🔐 Suas credenciais de acesso ao Painel Admin:</strong></p>
         <p><strong>URL do Admin:</strong> <a href="${adminUrl}">${adminUrl}</a></p>
         <p><strong>Email (login):</strong> ${input.email}</p>
+        ${input.temporaryPassword ? `
         <p><strong>Senha temporária:</strong> <code style="background: #fff; padding: 4px 8px; border-radius: 4px; font-size: 16px;">${input.temporaryPassword}</code></p>
         <p class="warning">⚠️ IMPORTANTE: Por segurança, altere sua senha assim que fizer o primeiro acesso.</p>
+        ` : `
+        <p class="warning">⚠️ Use suas credenciais existentes para acessar o painel admin.</p>
+        `}
       </div>
       
       <div class="info-box">

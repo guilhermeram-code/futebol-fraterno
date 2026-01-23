@@ -218,22 +218,20 @@ export async function handlePaymentApproved(paymentData: any) {
       console.log(`[MercadoPago] Senha salva no purchase ${purchaseId}`);
     }
 
-    // Enviar email de boas-vindas
-    if (temporaryPassword) {
-      try {
-        await sendWelcomeEmail({
-          email,
-          name: campaignName,
-          campaignName,
-          campaignSlug,
-          temporaryPassword,
-          expiresAt,
-        });
-        console.log(`[MercadoPago] Email de boas-vindas enviado para ${email}`);
-      } catch (error: any) {
-        console.error(`[MercadoPago] Erro ao enviar email:`, error.message);
-        // Não falha se email não for enviado
-      }
+    // Enviar email de boas-vindas (sempre, mesmo se usuário já existe)
+    try {
+      await sendWelcomeEmail({
+        email,
+        name: campaignName,
+        campaignName,
+        campaignSlug,
+        temporaryPassword: temporaryPassword || null, // null se usuário já existe
+        expiresAt,
+      });
+      console.log(`[MercadoPago] Email de boas-vindas enviado para ${email}`);
+    } catch (error: any) {
+      console.error(`[MercadoPago] Erro ao enviar email:`, error.message);
+      // Não falha se email não for enviado
     }
 
     // Notificar owner
