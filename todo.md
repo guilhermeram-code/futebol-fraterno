@@ -917,4 +917,7 @@
 
 ## Correções Dialog de Imagem (23/01/2026)
 - [x] Bug #14: Console error - DialogContent requires DialogTitle (acessibilidade)
-- [x] Bug #15: Foto expandida ainda muito pequena - aumentar para quase tela cheia (98vw x 98vh)
+- [ ] Bug #15: Foto expandida ainda muito pequena - imagem não preenche o modal (object-contain deixa espaço branco)
+
+## Alteração de Preço (23/01/2026)
+- [x] Alterar plano de teste de R$ 1,00 para R$ 7,00 (Mercado Pago n\u00e3o aceita valores muito baixos)

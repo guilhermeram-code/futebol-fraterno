@@ -29,7 +29,7 @@ import {
 
 // Planos disponíveis (com 30% de desconto)
 const PLANS = [
-  { id: "test", name: "Teste", duration: "1 mês", price: 1.00, originalPrice: 1.00, pricePerMonth: 1.00, isTest: true },
+  { id: "test", name: "Teste", duration: "1 m\u00eas", price: 7.00, originalPrice: 7.00, pricePerMonth: 7.00, isTest: true },
   { id: "basic", name: "Iniciante", duration: "2 meses", price: 90.30, originalPrice: 129, pricePerMonth: 45.15 },
   { id: "popular", name: "Popular", duration: "3 meses", price: 125.30, originalPrice: 179, pricePerMonth: 41.77 },
   { id: "extended", name: "Semestral", duration: "6 meses", price: 209.30, originalPrice: 299, pricePerMonth: 34.88, popular: true },
@@ -526,7 +526,7 @@ export default function LandingPage() {
 
       {/* Image Preview Modal */}
       <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-        <DialogContent className="w-[98vw] h-[98vh] p-0 overflow-hidden border-none">
+        <DialogContent className="max-w-[98vw] max-h-[98vh] p-0 overflow-hidden border-none bg-black/95">
           <DialogHeader className="sr-only">
             <DialogTitle>Visualização de Imagem</DialogTitle>
           </DialogHeader>
@@ -534,7 +534,7 @@ export default function LandingPage() {
             <img 
               src={previewImage} 
               alt="Preview" 
-              className="w-full h-full object-contain"
+              className="w-auto h-auto max-w-full max-h-[98vh] object-contain mx-auto"
             />
           )}
         </DialogContent>

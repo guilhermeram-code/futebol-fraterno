@@ -6,9 +6,9 @@ export const PLANS = {
   TEST: {
     id: "test",
     name: "Teste",
-    description: "Acesso ao sistema por 1 mês",
-    price: 1,
-    originalPrice: 1,
+    description: "Acesso ao sistema por 1 m\u00eas",
+    price: 7,
+    originalPrice: 7,
     months: 1,
   },
   BASIC: {
