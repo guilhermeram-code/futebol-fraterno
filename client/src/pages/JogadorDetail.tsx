@@ -50,7 +50,7 @@ export default function JogadorDetail() {
             <CardContent className="py-12 text-center">
               <User className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <p className="text-muted-foreground">Jogador não encontrado</p>
-              <Link href="/estatisticas">
+              <Link href={`/${slug}/estatisticas`}>
                 <span className="text-primary hover:underline mt-4 inline-block">
                   Voltar para Estatísticas
                 </span>
@@ -68,7 +68,7 @@ export default function JogadorDetail() {
 
       <main className="container py-8">
         {/* Back Button */}
-        <Link href="/estatisticas">
+        <Link href={`/${slug}/estatisticas`}>
           <span className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary mb-6 cursor-pointer">
             <ArrowLeft className="h-4 w-4" />
             Voltar para Estatísticas

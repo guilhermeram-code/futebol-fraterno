@@ -3,6 +3,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Header } from "@/components/Header";
 import { trpc } from "@/lib/trpc";
 import { useTournament } from "@/contexts/TournamentContext";
+import { useSlug } from "@/hooks/useSlug";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +27,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default function Home() {
+  const slug = useSlug();
   const { user, isAuthenticated } = useAuth();
   const { settings, isLoading: loadingSettings, campaignId } = useTournament();
   
@@ -103,13 +105,13 @@ export default function Home() {
             </>
           )}
           <div className="flex justify-center gap-4 flex-wrap">
-            <Link href="/classificacao">
+            <Link href={`/${slug}/classificacao`}>
               <Button size="lg" variant="secondary" className="gap-2">
                 <Trophy className="h-5 w-5" />
                 Ver Classificação
               </Button>
             </Link>
-            <Link href="/mata-mata">
+            <Link href={`/${slug}/mata-mata`}>
               <Button size="lg" variant="outline" className="gap-2 bg-white/10 border-white text-white hover:bg-white/20">
                 <Target className="h-5 w-5" />
                 Chaves Mata-Mata
@@ -154,7 +156,7 @@ export default function Home() {
                   <Clock className="h-5 w-5" />
                   Próximos Jogos
                 </CardTitle>
-                <Link href="/jogos">
+                <Link href={`/${slug}/jogos`}>
                   <Button variant="ghost" size="sm" className="gap-1">
                     Ver todos <ChevronRight className="h-4 w-4" />
                   </Button>
@@ -215,7 +217,7 @@ export default function Home() {
                   <Trophy className="h-5 w-5" />
                   Últimos Resultados
                 </CardTitle>
-                <Link href="/jogos">
+                <Link href={`/${slug}/jogos`}>
                   <Button variant="ghost" size="sm" className="gap-1">
                     Ver todos <ChevronRight className="h-4 w-4" />
                   </Button>
@@ -288,7 +290,7 @@ export default function Home() {
                 ) : groups && groups.length > 0 ? (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {groups.map(group => (
-                      <Link key={group.id} href={`/classificacao?grupo=${group.id}`}>
+                      <Link key={group.id} href={`/${slug}/classificacao?grupo=${group.id}`}>
                         <div className="p-4 bg-muted rounded-lg text-center hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer">
                           <span className="font-bold text-lg">{group.name}</span>
                         </div>
@@ -362,7 +364,7 @@ export default function Home() {
                     Nenhum gol marcado
                   </p>
                 )}
-                <Link href="/estatisticas">
+                <Link href={`/${slug}/estatisticas`}>
                   <Button variant="ghost" className="w-full mt-4 gap-1">
                     Ver ranking completo <ChevronRight className="h-4 w-4" />
                   </Button>
