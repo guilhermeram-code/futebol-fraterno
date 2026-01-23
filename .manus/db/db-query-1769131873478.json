@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, slug, name, organizerEmail FROM campaigns WHERE slug = 'magico';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, slug, name, organizerEmail FROM campaigns WHERE slug = 'magico';",
+  "rows": [
+    {
+      "id": "150010",
+      "slug": "magico",
+      "name": "magico",
+      "organizerEmail": "gui_ramos_@hotmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tslug\tname\torganizerEmail\n150010\tmagico\tmagico\tgui_ramos_@hotmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 61
+}
