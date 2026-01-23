@@ -4,7 +4,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Trophy, Target } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function MataMata() {
@@ -264,7 +263,6 @@ export default function MataMata() {
         )}
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

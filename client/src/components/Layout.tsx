@@ -1,13 +1,11 @@
 import { ReactNode } from "react";
 import { useTournament } from "@/contexts/TournamentContext";
-import { AudioPlayer } from "./AudioPlayer";
 
 interface LayoutProps {
   children: ReactNode;
-  showAudioPlayer?: boolean;
 }
 
-export function Layout({ children, showAudioPlayer = true }: LayoutProps) {
+export function Layout({ children }: LayoutProps) {
   const { settings } = useTournament();
 
   const backgroundStyle = settings.tournamentBackground 
@@ -28,7 +26,6 @@ export function Layout({ children, showAudioPlayer = true }: LayoutProps) {
         <div className="fixed inset-0 bg-background/80 backdrop-blur-[2px] -z-10" />
       )}
       {children}
-      {showAudioPlayer && <AudioPlayer />}
     </div>
   );
 }

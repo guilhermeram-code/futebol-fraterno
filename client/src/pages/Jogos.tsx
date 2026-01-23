@@ -9,7 +9,6 @@ import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { useCampaign } from "@/App";
 import { Calendar, Clock, Trophy, MapPin, Filter } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useTournament } from "@/contexts/TournamentContext";
@@ -361,7 +360,6 @@ export default function Jogos() {
         </Tabs>
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

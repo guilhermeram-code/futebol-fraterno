@@ -6,7 +6,6 @@ interface TournamentSettings {
   tournamentSubtitle: string;
   tournamentOrganizer: string;
   tournamentLogo: string;
-  tournamentMusic: string;
   tournamentBackground: string;
   heroBackground: string;
 }
@@ -23,7 +22,6 @@ const defaultSettings: TournamentSettings = {
   tournamentSubtitle: "",
   tournamentOrganizer: "",
   tournamentLogo: "",
-  tournamentMusic: "",
   tournamentBackground: "",
   heroBackground: "",
 };
@@ -49,7 +47,6 @@ export function TournamentProvider({ children, campaignId = 1 }: TournamentProvi
     tournamentSubtitle: data?.tournamentSubtitle || "",
     tournamentOrganizer: data?.tournamentOrganizer || "",
     tournamentLogo: data?.tournamentLogo || "",
-    tournamentMusic: data?.tournamentMusic || "",
     tournamentBackground: data?.tournamentBackground || "",
     heroBackground: data?.heroBackground || "",
   };

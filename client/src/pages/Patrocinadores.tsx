@@ -3,7 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Star, ExternalLink } from "lucide-react";
 import { Header } from "@/components/Header";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { trpc } from "@/lib/trpc";
 import { useTournament } from "@/contexts/TournamentContext";
 
@@ -207,7 +206,6 @@ export default function Patrocinadores() {
         </Card>
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

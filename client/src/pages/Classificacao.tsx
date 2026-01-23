@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Link, useSearch } from "wouter";
 import { Trophy, Users, EyeOff } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 import { useCampaign } from "@/App";
 
@@ -44,7 +43,6 @@ export default function Classificacao() {
             </CardContent>
           </Card>
         </main>
-        <AudioPlayer />
       </div>
     );
   }
@@ -83,7 +81,6 @@ export default function Classificacao() {
         )}
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

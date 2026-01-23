@@ -10,7 +10,6 @@ import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
 import { useCampaign } from "@/App";
 import { Users, Shield, Trophy, Target, Calendar, Award, ShieldCheck, ShieldX, MessageCircle, Send, Heart } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useMemo, useState } from "react";
@@ -737,7 +736,6 @@ export default function TimeDetail() {
         </div>
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

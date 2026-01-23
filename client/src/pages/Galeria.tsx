@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Header } from "@/components/Header";
 import { Image, X, ChevronLeft, ChevronRight, Download } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { useTournament } from "@/contexts/TournamentContext";
@@ -183,7 +182,6 @@ export default function Galeria() {
         </Dialog>
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

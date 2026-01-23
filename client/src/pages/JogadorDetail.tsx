@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Link, useParams } from "wouter";
 import { User, Target, AlertTriangle, Trophy, ArrowLeft, Shield } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 import { useCampaign } from "@/App";
 
@@ -256,7 +255,6 @@ export default function JogadorDetail() {
         </Card>
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

@@ -897,3 +897,5 @@
 - [x] Bug #7: Comentários vão para Futebol Fraterno (não salva no campeonato correto)
 - [x] Bug #8: Apoio da torcida vai para Futebol Fraterno
 - [x] Bug #9: Remover lupinha de busca do painel admin
+
+- [x] Bug #10: MÚSICA TOCANDO AUTOMATICAMENTE - Sistema completo de áudio precisa ser removido (MusicContext, AudioPlayer, autoplay)

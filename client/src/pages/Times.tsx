@@ -12,7 +12,6 @@ import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { useCampaign } from "@/App";
 import { Users, Shield, ChevronRight, Search, TrendingUp, Flame, LayoutGrid, List, Trophy } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Times() {
@@ -290,7 +289,6 @@ export default function Times() {
         ) : null}
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

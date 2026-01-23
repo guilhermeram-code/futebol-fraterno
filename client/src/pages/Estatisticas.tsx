@@ -9,7 +9,6 @@ import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { useCampaign } from "@/App";
 import { Target, AlertTriangle, Shield, Flame, Search } from "lucide-react";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Estatisticas() {
@@ -340,7 +339,6 @@ export default function Estatisticas() {
         </Tabs>
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }

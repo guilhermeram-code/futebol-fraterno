@@ -6,7 +6,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Users, Search, User, Trophy, Target, AlertTriangle } from "lucide-react";
 import { Header } from "@/components/Header";
-import { AudioPlayer } from "@/components/AudioPlayer";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { useTournament } from "@/contexts/TournamentContext";
@@ -290,7 +289,6 @@ export default function Jogadores() {
         )}
       </main>
 
-      <AudioPlayer />
     </div>
   );
 }
