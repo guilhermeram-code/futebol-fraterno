@@ -526,7 +526,10 @@ export default function LandingPage() {
 
       {/* Image Preview Modal */}
       <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden">
+        <DialogContent className="w-[98vw] h-[98vh] p-0 overflow-hidden border-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Visualização de Imagem</DialogTitle>
+          </DialogHeader>
           {previewImage && (
             <img 
               src={previewImage} 

@@ -914,3 +914,7 @@
 - [x] #4: Botão "Criar Meu Campeonato" deve rolar para seção de planos
 - [x] #5: Outros botões devem rolar para seção de planos
 - [x] #6: Mudar badge "Mais Popular" para plano SEMESTRAL
+
+## Correções Dialog de Imagem (23/01/2026)
+- [x] Bug #14: Console error - DialogContent requires DialogTitle (acessibilidade)
+- [x] Bug #15: Foto expandida ainda muito pequena - aumentar para quase tela cheia (98vw x 98vh)
