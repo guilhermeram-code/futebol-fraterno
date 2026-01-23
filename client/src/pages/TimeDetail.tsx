@@ -66,6 +66,7 @@ export default function TimeDetail() {
     setSubmitting(true);
     try {
       await createMessage.mutateAsync({
+        campaignId,
         teamId,
         authorName: authorName.trim(),
         authorLodge: authorLodge.trim() || undefined,

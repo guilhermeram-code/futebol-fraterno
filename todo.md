@@ -879,3 +879,21 @@
 ### 🔧 Infraestrutura
 - [x] Criar hook useSlug() para slug dinâmico
 - [ ] Fazer backup antes das correções
+
+
+## 🐛 BUGS REAIS REPORTADOS - Testes em Produção (23/01/2026)
+
+### Críticos
+- [x] Bug #1: Admin sem proteção - peladapro.com.br/admin acessa sem login
+- [x] Bug #2: Deletar campeonato dá erro React #321
+- [ ] Bug #3: Senha master não funciona (testado e não entra)
+
+### Música
+- [x] Bug #4: Música toca ao clicar em qualquer coisa na landing page
+- [x] Bug #5: Campeonatos novos já têm música (mesmo sem inserir)
+
+### UX/Funcionalidades
+- [x] Bug #6: Campo posição é texto livre (deveria ser SELECT: Goleiro/Defensor/Meio-campo/Atacante)
+- [x] Bug #7: Comentários vão para Futebol Fraterno (não salva no campeonato correto)
+- [x] Bug #8: Apoio da torcida vai para Futebol Fraterno
+- [x] Bug #9: Remover lupinha de busca do painel admin

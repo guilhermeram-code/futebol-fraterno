@@ -502,12 +502,17 @@ function AddPlayerToTeamButton({ teamId, teamName, campaignId }: { teamId: numbe
             </div>
             <div>
               <Label htmlFor="playerPosition">Posição</Label>
-              <Input
-                id="playerPosition"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-                placeholder="Ex: Atacante"
-              />
+              <Select value={position} onValueChange={setPosition}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione a posição" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Goleiro">Goleiro</SelectItem>
+                  <SelectItem value="Defensor">Defensor</SelectItem>
+                  <SelectItem value="Meio-campo">Meio-campo</SelectItem>
+                  <SelectItem value="Atacante">Atacante</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <Button type="submit" className="w-full" disabled={createPlayer.isPending}>

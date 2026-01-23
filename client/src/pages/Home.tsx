@@ -630,6 +630,7 @@ function CommentsSection({ campaignId }: { campaignId: number }) {
     e.preventDefault();
     if (!name.trim() || !content.trim()) return;
     createComment.mutate({
+      campaignId,
       authorName: name,
       authorLodge: lodge || undefined,
       content

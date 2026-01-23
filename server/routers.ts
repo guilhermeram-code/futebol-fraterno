@@ -101,14 +101,14 @@ export const appRouter = router({
         const userCampaigns = await getCampaignsByEmail(input.email);
         const campaignSlug = userCampaigns.length > 0 ? userCampaigns[0].slug : null;
 
-        // TODO: Criar sessão de login (cookie)
-        // Por enquanto, apenas retorna sucesso
+        // Criar sessão de login (retornar dados do usuário para o contexto)
         return {
           success: true,
           user: {
             id: user.id,
             name: user.name,
             email: user.email,
+            role: 'admin', // Usuário que faz login via /login é admin
           },
           campaignSlug,
         };

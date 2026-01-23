@@ -24,10 +24,21 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
 
 export default function AdminDashboard() {
+  const { user, isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+
+  // Redirecionar para login se não estiver autenticado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/login");
+    }
+  }, [isAuthenticated, setLocation]);
   const { data: stats, isLoading: statsLoading } = trpc.admin.getStats.useQuery();
   const { data: campaigns, isLoading: campaignsLoading } = trpc.admin.getAllCampaigns.useQuery();
   
@@ -41,12 +52,17 @@ export default function AdminDashboard() {
     campaignId: number | null;
   }>({ open: false, campaignId: null });
 
+  const utils = trpc.useUtils();
+  
   const deleteCampaign = trpc.admin.deleteCampaign.useMutation({
     onSuccess: () => {
-      toast.success("Campeonato excluído com sucesso!");
-      trpc.useUtils().admin.getAllCampaigns.invalidate();
-      trpc.useUtils().admin.getStats.invalidate();
       setDeleteDialog({ open: false, campaignId: null });
+      toast.success("Campeonato excluído com sucesso!");
+      // Usar setTimeout para evitar erro React #321
+      setTimeout(() => {
+        utils.admin.getAllCampaigns.invalidate();
+        utils.admin.getStats.invalidate();
+      }, 0);
     },
     onError: (error: any) => {
       toast.error(`Erro ao excluir: ${error.message}`);
