@@ -905,3 +905,12 @@
 - [x] Bug #11: Owner login (/admin) redireciona para /teste em vez de ficar em /admin (dashboard geral)
 - [x] Bug #12: Organizador login (/slug/admin) redireciona para / em vez de ficar em /slug/admin
 - [x] Bug #13: Remover TODOS os sistemas OAuth (Gmail/GitHub login) - usar apenas login simples com email/senha
+
+## Melhorias Landing Page (www.peladapro.com.br)
+
+- [x] #1: Ampliar foto ao clicar para quase tela cheia
+- [x] #2: Substituir "Suporte via WhatsApp" por "Suporte via e-mail" em todos os planos
+- [x] #3: Botão "Começar Agora" deve rolar para seção de planos (não abrir checkout)
+- [x] #4: Botão "Criar Meu Campeonato" deve rolar para seção de planos
+- [x] #5: Outros botões devem rolar para seção de planos
+- [x] #6: Mudar badge "Mais Popular" para plano SEMESTRAL

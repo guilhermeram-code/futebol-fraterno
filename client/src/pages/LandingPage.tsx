@@ -31,8 +31,8 @@ import {
 const PLANS = [
   { id: "test", name: "Teste", duration: "1 mês", price: 1.00, originalPrice: 1.00, pricePerMonth: 1.00, isTest: true },
   { id: "basic", name: "Iniciante", duration: "2 meses", price: 90.30, originalPrice: 129, pricePerMonth: 45.15 },
-  { id: "popular", name: "Popular", duration: "3 meses", price: 125.30, originalPrice: 179, pricePerMonth: 41.77, popular: true },
-  { id: "extended", name: "Semestral", duration: "6 meses", price: 209.30, originalPrice: 299, pricePerMonth: 34.88 },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 125.30, originalPrice: 179, pricePerMonth: 41.77 },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 209.30, originalPrice: 299, pricePerMonth: 34.88, popular: true },
   { id: "annual", name: "Anual", duration: "12 meses", price: 349.30, originalPrice: 499, pricePerMonth: 29.11, bestValue: true },
 ];
 
@@ -104,7 +104,7 @@ const BENEFITS = [
   "Galeria de fotos integrada",
   "Comentários da torcida",
   "Painel admin completo",
-  "Suporte via WhatsApp"
+  "Suporte via e-mail"
 ];
 
 export default function LandingPage() {
@@ -205,7 +205,7 @@ export default function LandingPage() {
             <a href="#how-it-works" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Como Funciona</a>
           </nav>
           <Button 
-            onClick={() => openCheckout(PLANS[1])} 
+            onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} 
             className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-200"
           >
             Começar Agora
@@ -247,7 +247,7 @@ export default function LandingPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button 
                   size="lg" 
-                  onClick={() => openCheckout(PLANS[1])}
+                  onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8 shadow-lg shadow-emerald-200"
                 >
                   Criar Meu Campeonato
@@ -423,7 +423,7 @@ export default function LandingPage() {
                     </li>
                     <li className="flex items-center gap-2 text-gray-700 text-sm">
                       <Check className="w-4 h-4 text-emerald-500" />
-                      Suporte via WhatsApp
+                      Suporte via e-mail
                     </li>
                   </ul>
                 </CardContent>
@@ -490,7 +490,7 @@ export default function LandingPage() {
             </p>
             <Button 
               size="lg" 
-              onClick={() => openCheckout(PLANS[1])}
+              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-white text-emerald-700 hover:bg-emerald-50 text-lg px-10 shadow-lg"
             >
               Criar Meu Campeonato Agora
@@ -526,12 +526,12 @@ export default function LandingPage() {
 
       {/* Image Preview Modal */}
       <Dialog open={!!previewImage} onOpenChange={() => setPreviewImage(null)}>
-        <DialogContent className="max-w-7xl max-h-[90vh] p-0 overflow-hidden">
+        <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 overflow-hidden">
           {previewImage && (
             <img 
               src={previewImage} 
               alt="Preview" 
-              className="w-full h-auto object-contain max-h-[85vh]"
+              className="w-full h-full object-contain"
             />
           )}
         </DialogContent>
