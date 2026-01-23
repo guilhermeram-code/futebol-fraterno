@@ -844,3 +844,38 @@
   - Credenciais Gmail configuradas via GMAIL_APP_PASSWORD
   - Teste manual: ✅ Email enviado com sucesso
   - Status: ✅ RESOLVIDO
+
+
+## 🐛 CORREÇÃO COMPLETA - 16 BUGS CRÍTICOS (22/01/2026)
+
+### 🔐 Autenticação (CRÍTICO)
+- [ ] Bug #1: Admin sem proteção - qualquer pessoa acessa /admin
+- [ ] Bug #2: Senha master Peyb+029 não funciona
+
+### ⚙️ Configuração
+- [ ] Bug #3: Textos "loja maçônica" devem ser genéricos
+- [ ] Bug #4: Música ativa por padrão (site raiz + novos campeonatos)
+- [ ] Bug #5: Campo "loja maçônica" deve virar "Subtítulo"
+
+### 👥 UX Jogadores
+- [ ] Bug #6: Falta campo posição no form de jogador
+- [ ] Bug #7: Layout nome jogador precisa melhorar
+
+### 🔗 URLs Hardcoded (MAIS CRÍTICO)
+- [ ] Bug #8: Grupos redirecionam para futebol-fraterno (em andamento)
+- [ ] Bug #9: Comentários vão para campeonato errado (em andamento)
+- [ ] Bug #10: "Ver todos" em jogos vai para futebol-fraterno (em andamento)
+- [ ] Bug #11: Ranking artilheiros vai para futebol-fraterno (em andamento)
+- [ ] Bug #12: Voltar de jogador vai para futebol-fraterno (em andamento)
+- [ ] Bug #13: Mensagens torcida vão para futebol-fraterno (em andamento)
+- [ ] Bug #14: Busca não é clicável (em andamento)
+- [ ] Bug #15: Mata-mata/classificação vão para futebol-fraterno (em andamento)
+- [ ] Bug #16: Música toca no site raiz (em andamento)
+
+### Progresso:
+- [x] Admin.tsx - useSlug() implementado
+- [x] AdminLogin.tsx - useSlug() implementado
+
+### 🔧 Infraestrutura
+- [x] Criar hook useSlug() para slug dinâmico
+- [ ] Fazer backup antes das correções

@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { ResultsRegistration } from "@/components/ResultsRegistration";
+import { useSlug } from "@/hooks/useSlug";
 import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
 import { useTournament } from "@/contexts/TournamentContext";
 
@@ -48,8 +49,7 @@ export default function Admin() {
   const [location, setLocation] = useLocation();
   
   // Extrair slug da URL atual (formato: /{slug}/admin)
-  const pathParts = location.split('/').filter(Boolean);
-  const slug = pathParts[0] || 'futebol-fraterno';
+  const slug = useSlug();
 
   if (loading) {
     return (
@@ -305,7 +305,7 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
                 />
               </div>
               <div>
-                <Label htmlFor="lodge">Loja Maçônica</Label>
+                <Label htmlFor="lodge">Subtítulo (opcional)</Label>
                 <Input 
                   id="lodge" 
                   value={lodge} 
@@ -2640,7 +2640,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
             <Input 
               value={organizer}
               onChange={(e) => setOrganizer(e.target.value)}
-              placeholder="Ex: Organizado pela Loja José Moreira"
+               placeholder="Ex: Organizado pelo Time Campeão"
             />
             <Button 
               onClick={() => setSetting.mutate({ key: "tournamentOrganizer", value: organizer, campaignId })}

@@ -656,7 +656,7 @@ function CommentsSection({ campaignId }: { campaignId: number }) {
             />
             <input
               type="text"
-              placeholder="Sua loja (opcional)"
+              placeholder="Seu time (opcional)"
               value={lodge}
               onChange={(e) => setLodge(e.target.value)}
               className="w-full px-4 py-2 rounded-lg border border-input bg-background focus:outline-none focus:ring-2 focus:ring-primary"

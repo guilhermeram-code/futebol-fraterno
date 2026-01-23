@@ -555,7 +555,7 @@ export default function TimeDetail() {
                         required
                       />
                       <Input
-                        placeholder="Sua loja (opcional)"
+                        placeholder="Seu time (opcional)"
                         value={authorLodge}
                         onChange={(e) => setAuthorLodge(e.target.value)}
                       />

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Shield, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
+import { useSlug } from "@/hooks/useSlug";
 
 export default function AdminLogin() {
   const [location, setLocation] = useLocation();
@@ -15,8 +16,7 @@ export default function AdminLogin() {
   const [password, setPassword] = useState("");
   
   // Extrair slug da URL atual (formato: /{slug}/admin/login)
-  const pathParts = location.split('/').filter(Boolean);
-  const slug = pathParts[0] || 'futebol-fraterno';
+  const slug = useSlug();
 
   const loginMutation = trpc.adminUsers.login.useMutation({
     onSuccess: (data) => {
