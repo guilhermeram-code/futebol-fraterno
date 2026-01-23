@@ -919,5 +919,11 @@
 - [x] Bug #14: Console error - DialogContent requires DialogTitle (acessibilidade)
 - [ ] Bug #15: Foto expandida ainda muito pequena - imagem não preenche o modal (object-contain deixa espaço branco)
 
-## Alteração de Preço (23/01/2026)
-- [x] Alterar plano de teste de R$ 1,00 para R$ 7,00 (Mercado Pago n\u00e3o aceita valores muito baixos)
+## A## Alteração de Preço (23/01/2026)
+- [x] Alterar plano de teste de R$ 1,00 para R$ 7,00 (Mercado Pago não aceita valores muito baixos)
+
+## Correção de Webhooks Mercado Pago (23/01/2026)
+- [x] Verificar credenciais de produção atuais (PUBLIC_KEY e ACCESS_TOKEN)
+- [x] Adicionar MERCADOPAGO_WEBHOOK_SECRET (assinatura secreta do painel)
+- [x] Testar webhook manualmente para validar correção (6/6 testes passando)
+- [ ] Validar que emails de boas-vindas chegam após compra (aguardando compra real)
