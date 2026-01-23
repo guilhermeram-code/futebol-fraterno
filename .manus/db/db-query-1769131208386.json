@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, email, name, openId FROM users WHERE email = 'gui_ramos_@hotmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, email, name, openId FROM users WHERE email = 'gui_ramos_@hotmail.com';",
+  "rows": [
+    {
+      "id": "991194",
+      "email": "gui_ramos_@hotmail.com",
+      "name": "nuno",
+      "openId": "organizer_WXfsp31Ua-mQnxC4"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\topenId\n991194\tgui_ramos_@hotmail.com\tnuno\torganizer_WXfsp31Ua-mQnxC4\n",
+  "stderr": "",
+  "execution_time_ms": 87
+}
