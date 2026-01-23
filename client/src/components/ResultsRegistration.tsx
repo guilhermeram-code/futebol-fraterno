@@ -194,7 +194,8 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
           await createGoal.mutateAsync({
             matchId: selectedMatch,
             playerId: parseInt(goal.playerId),
-            teamId: goal.teamId
+            teamId: goal.teamId,
+            campaignId
           });
         }
       }
@@ -205,7 +206,8 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
           matchId: selectedMatch,
           playerId: parseInt(card.playerId),
           teamId: card.teamId,
-          cardType: card.cardType
+          cardType: card.cardType,
+          campaignId
         });
       }
       

@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  'campaign' as type, \n  c.id, \n  c.name, \n  c.slug \nFROM campaigns c \nWHERE c.slug = 'besta'\nUNION ALL\nSELECT \n  'team' as type,\n  t.id,\n  t.name,\n  CAST(t.campaignId AS CHAR) as slug\nFROM teams t\nWHERE t.name IN ('Palmeiras', 'Santos');\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  'campaign' as type, \n  c.id, \n  c.name, \n  c.slug \nFROM campaigns c \nWHERE c.slug = 'besta'\nUNION ALL\nSELECT \n  'team' as type,\n  t.id,\n  t.name,\n  CAST(t.campaignId AS CHAR) as slug\nFROM teams t\nWHERE t.name IN ('Palmeiras', 'Santos');\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1271 (HY000) at line 2: Illegal mix of collations for operation 'UNION'"
+  ]
+}

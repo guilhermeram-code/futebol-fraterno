@@ -1,0 +1,22 @@
+{
+  "query": "SELECT c.id, c.name, c.slug, COUNT(g.id) as total_goals\nFROM campaigns c\nLEFT JOIN teams t ON t.campaignId = c.id\nLEFT JOIN players p ON p.teamId = t.id\nLEFT JOIN goals g ON g.playerId = p.id\nGROUP BY c.id, c.name, c.slug\nHAVING total_goals > 0\nORDER BY total_goals DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT c.id, c.name, c.slug, COUNT(g.id) as total_goals\nFROM campaigns c\nLEFT JOIN teams t ON t.campaignId = c.id\nLEFT JOIN players p ON p.teamId = t.id\nLEFT JOIN goals g ON g.playerId = p.id\nGROUP BY c.id, c.name, c.slug\nHAVING total_goals > 0\nORDER BY total_goals DESC;",
+  "rows": [
+    {
+      "id": "150002",
+      "name": "besta",
+      "slug": "besta",
+      "total_goals": "2"
+    },
+    {
+      "id": "120003",
+      "name": "Teste",
+      "slug": "testando",
+      "total_goals": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\ttotal_goals\n150002\tbesta\tbesta\t2\n120003\tTeste\ttestando\t1\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

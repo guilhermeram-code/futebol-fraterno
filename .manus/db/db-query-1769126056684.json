@@ -1,0 +1,37 @@
+{
+  "query": "SELECT g.id, g.playerId, g.matchId, p.name as playerName, t.name as teamName, c.name as campaignName, c.slug\nFROM goals g\nJOIN players p ON g.playerId = p.id\nJOIN teams t ON p.teamId = t.id\nJOIN campaigns c ON t.campaignId = c.id\nORDER BY g.id DESC\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT g.id, g.playerId, g.matchId, p.name as playerName, t.name as teamName, c.name as campaignName, c.slug\nFROM goals g\nJOIN players p ON g.playerId = p.id\nJOIN teams t ON p.teamId = t.id\nJOIN campaigns c ON t.campaignId = c.id\nORDER BY g.id DESC\nLIMIT 10;",
+  "rows": [
+    {
+      "id": "120003",
+      "playerId": "150015",
+      "matchId": "180008",
+      "playerName": "Paulo",
+      "teamName": "Santos",
+      "campaignName": "besta",
+      "slug": "besta"
+    },
+    {
+      "id": "120002",
+      "playerId": "150016",
+      "matchId": "180008",
+      "playerName": "Marco",
+      "teamName": "Palmeiras",
+      "campaignName": "besta",
+      "slug": "besta"
+    },
+    {
+      "id": "120001",
+      "playerId": "150013",
+      "matchId": "180007",
+      "playerName": "Angelo",
+      "teamName": "1",
+      "campaignName": "Teste",
+      "slug": "testando"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tplayerId\tmatchId\tplayerName\tteamName\tcampaignName\tslug\n120003\t150015\t180008\tPaulo\tSantos\tbesta\tbesta\n120002\t150016\t180008\tMarco\tPalmeiras\tbesta\tbesta\n120001\t150013\t180007\tAngelo\t1\tTeste\ttestando\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}

@@ -1,0 +1,22 @@
+{
+  "query": "SELECT t.id, t.name, c.name as campaignName, c.slug\nFROM teams t\nJOIN campaigns c ON t.campaignId = c.id\nWHERE t.name LIKE '%Palmeiras%' OR t.name LIKE '%Santos%'\nORDER BY t.id DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT t.id, t.name, c.name as campaignName, c.slug\nFROM teams t\nJOIN campaigns c ON t.campaignId = c.id\nWHERE t.name LIKE '%Palmeiras%' OR t.name LIKE '%Santos%'\nORDER BY t.id DESC;",
+  "rows": [
+    {
+      "id": "150016",
+      "name": "Palmeiras",
+      "campaignName": "besta",
+      "slug": "besta"
+    },
+    {
+      "id": "150015",
+      "name": "Santos",
+      "campaignName": "besta",
+      "slug": "besta"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tcampaignName\tslug\n150016\tPalmeiras\tbesta\tbesta\n150015\tSantos\tbesta\tbesta\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}

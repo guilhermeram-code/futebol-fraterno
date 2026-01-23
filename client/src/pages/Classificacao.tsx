@@ -8,6 +8,7 @@ import { Link, useSearch } from "wouter";
 import { Trophy, Users, EyeOff } from "lucide-react";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { useTournament } from "@/contexts/TournamentContext";
+import { useCampaign } from "@/App";
 
 export default function Classificacao() {
   const { slug } = useCampaign();
@@ -88,6 +89,7 @@ export default function Classificacao() {
 }
 
 function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { groupId: number; groupName: string; qualifyCount: number; campaignId: number }) {
+  const { slug } = useCampaign();
   const { data: standings, isLoading } = trpc.groups.standings.useQuery({ groupId, campaignId });
 
   if (isLoading) {

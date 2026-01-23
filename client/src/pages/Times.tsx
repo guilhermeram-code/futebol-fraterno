@@ -307,6 +307,8 @@ function TeamCard({
   specialMessages: { emoji: string; text: string; color: string }[];
   getGroupName: (groupId: number | null) => string | null | undefined;
 }) {
+  const { slug } = useCampaign();
+  
   const getSequenciaEmoji = (result: 'W' | 'D' | 'L') => {
     switch (result) {
       case 'W': return '🟢';

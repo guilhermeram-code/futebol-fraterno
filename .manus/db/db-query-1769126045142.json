@@ -1,0 +1,9 @@
+{
+  "query": "SELECT g.id, g.playerId, g.matchId, p.name as playerName, t.name as teamName, c.name as campaignName\nFROM goals g\nJOIN players p ON g.playerId = p.id\nJOIN teams t ON p.teamId = t.id\nJOIN campaigns c ON t.campaignId = c.id\nWHERE c.slug = 'tufao'\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT g.id, g.playerId, g.matchId, p.name as playerName, t.name as teamName, c.name as campaignName\nFROM goals g\nJOIN players p ON g.playerId = p.id\nJOIN teams t ON p.teamId = t.id\nJOIN campaigns c ON t.campaignId = c.id\nWHERE c.slug = 'tufao'\nLIMIT 10;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 133
+}

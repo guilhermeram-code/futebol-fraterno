@@ -1,0 +1,20 @@
+{
+  "query": "\nSELECT \n  'goals' as source,\n  g.campaignId,\n  COUNT(*) as count\nFROM goals g\nGROUP BY g.campaignId\nUNION ALL\nSELECT \n  'campaign besta' as source,\n  c.id as campaignId,\n  1 as count\nFROM campaigns c\nWHERE c.slug = 'besta';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  'goals' as source,\n  g.campaignId,\n  COUNT(*) as count\nFROM goals g\nGROUP BY g.campaignId\nUNION ALL\nSELECT \n  'campaign besta' as source,\n  c.id as campaignId,\n  1 as count\nFROM campaigns c\nWHERE c.slug = 'besta';\n",
+  "rows": [
+    {
+      "source": "goals",
+      "campaignId": "1",
+      "count": "3"
+    },
+    {
+      "source": "campaign besta",
+      "campaignId": "150002",
+      "count": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "source\tcampaignId\tcount\ngoals\t1\t3\ncampaign besta\t150002\t1\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

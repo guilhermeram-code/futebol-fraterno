@@ -791,3 +791,44 @@
   - No campeonato demo tudo funciona (jogos, comentários, jogadores)
   - Em campeonatos novos nada funciona
   - Causa: Queries não estão usando campaignId do slug da URL
+
+
+## BUGS CRÍTICOS - Vídeo 2 (22/01/2026 - 20:48)
+
+- [ ] BUG CRÍTICO: Erro "slug is not defined" ao clicar em jogador ou time
+  - Erro: ReferenceError: slug is not defined
+  - Causa: Script Python não adicionou corretamente os imports em alguns arquivos
+  - Arquivos afetados: Classificacao.tsx, Times.tsx (e possivelmente outros)
+  
+- [ ] BUG: Estatísticas não atualizam na home após cadastrar resultados
+  - Artilheiros não aparecem após cadastrar gols
+  - Maior Quebrador não aparece após cadastrar cartões
+  - Dados ficam genéricos (jogador 1, 2, 3)
+  
+- [ ] BUG: Aba Estatísticas mostra dados genéricos
+  - Não mostra jogadores reais após cadastro
+  - Mostra "jogador 1, jogador 2, jogador 3"
+  - Não filtra por campaignId correto
+
+
+## BUGS CRÍTICOS - Vídeo 2 (22/01/2026 - 20:48) - RESOLVIDOS
+
+- [x] BUG CRÍTICO #4: Erro "slug is not defined" ao clicar em jogador/time
+  - Causa: Componentes `GroupStandings` e `TeamCard` não tinham acesso ao `slug`
+  - Solução: Adicionei `useCampaign()` dentro dos componentes
+  - Arquivos corrigidos: Classificacao.tsx, Times.tsx
+  - Status: ✅ RESOLVIDO
+  
+- [x] BUG CRÍTICO #5: Estatísticas não atualizam na home
+  - Causa: `ResultsRegistration` não passava `campaignId` ao criar gols/cartões
+  - Solução: Adicionei `campaignId` nas mutations `createGoal` e `createCard`
+  - Correção adicional: Atualizei `campaignId` dos dados existentes no banco via SQL
+  - Arquivos corrigidos: ResultsRegistration.tsx
+  - Status: ✅ RESOLVIDO
+  
+- [x] BUG CRÍTICO #6: Aba Estatísticas mostra dados genéricos
+  - Causa: Mesma do BUG #5 (campaignId não era passado)
+  - Status: ✅ RESOLVIDO
+
+**Testes:** 77/77 passando (100%)
+**Arquivos modificados:** 3 arquivos (Classificacao.tsx, Times.tsx, ResultsRegistration.tsx)

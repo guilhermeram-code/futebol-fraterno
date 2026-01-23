@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  g.playerId,\n  g.teamId,\n  COUNT(*) as goalCount,\n  p.name as player_name,\n  t.name as team_name\nFROM goals g\nJOIN players p ON g.playerId = p.id\nJOIN teams t ON g.teamId = t.id\nJOIN campaigns c ON g.campaignId = c.id\nWHERE c.slug = 'besta'\nGROUP BY g.playerId, g.teamId\nORDER BY goalCount DESC\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  g.playerId,\n  g.teamId,\n  COUNT(*) as goalCount,\n  p.name as player_name,\n  t.name as team_name\nFROM goals g\nJOIN players p ON g.playerId = p.id\nJOIN teams t ON g.teamId = t.id\nJOIN campaigns c ON g.campaignId = c.id\nWHERE c.slug = 'besta'\nGROUP BY g.playerId, g.teamId\nORDER BY goalCount DESC\nLIMIT 10;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1055 (42000) at line 2: Expression #4 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'EvJULGQoHRNqTu98ru5T2m.p.name' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by"
+  ]
+}

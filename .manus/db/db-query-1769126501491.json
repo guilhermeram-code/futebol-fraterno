@@ -1,0 +1,43 @@
+{
+  "query": "\nSELECT g.*, c.slug as campaign_slug, c.id as campaign_id\nFROM goals g\nLEFT JOIN campaigns c ON g.campaignId = c.id\nORDER BY g.id DESC\nLIMIT 10;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT g.*, c.slug as campaign_slug, c.id as campaign_id\nFROM goals g\nLEFT JOIN campaigns c ON g.campaignId = c.id\nORDER BY g.id DESC\nLIMIT 10;\n",
+  "rows": [
+    {
+      "id": "120003",
+      "matchId": "180008",
+      "playerId": "150015",
+      "teamId": "150015",
+      "minute": "NULL",
+      "createdAt": "2026-01-22 23:47:56",
+      "campaignId": "1",
+      "campaign_slug": "futebol-fraterno",
+      "campaign_id": "1"
+    },
+    {
+      "id": "120002",
+      "matchId": "180008",
+      "playerId": "150016",
+      "teamId": "150016",
+      "minute": "NULL",
+      "createdAt": "2026-01-22 23:47:56",
+      "campaignId": "1",
+      "campaign_slug": "futebol-fraterno",
+      "campaign_id": "1"
+    },
+    {
+      "id": "120001",
+      "matchId": "180007",
+      "playerId": "150013",
+      "teamId": "150013",
+      "minute": "NULL",
+      "createdAt": "2026-01-22 23:43:54",
+      "campaignId": "1",
+      "campaign_slug": "futebol-fraterno",
+      "campaign_id": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tmatchId\tplayerId\tteamId\tminute\tcreatedAt\tcampaignId\tcampaign_slug\tcampaign_id\n120003\t180008\t150015\t150015\tNULL\t2026-01-22 23:47:56\t1\tfutebol-fraterno\t1\n120002\t180008\t150016\t150016\tNULL\t2026-01-22 23:47:56\t1\tfutebol-fraterno\t1\n120001\t180007\t150013\t150013\tNULL\t2026-01-22 23:43:54\t1\tfutebol-fraterno\t1\n",
+  "stderr": "",
+  "execution_time_ms": 58
+}
