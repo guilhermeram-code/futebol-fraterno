@@ -832,3 +832,15 @@
 
 **Testes:** 77/77 passando (100%)
 **Arquivos modificados:** 3 arquivos (Classificacao.tsx, Times.tsx, ResultsRegistration.tsx)
+
+
+## BUG CRÍTICO - Email de Boas-Vindas (22/01/2026 - 21:24) - RESOLVIDO
+
+- [x] Email de boas-vindas com credenciais NÃO está sendo enviado ao cliente após compra
+  - Causa: Função sendWelcomeEmail apenas logava no console, não enviava email real
+  - Solução: Implementado envio real via Nodemailer + Gmail SMTP
+  - Email remetente: contato@meucontomagico.com.br
+  - Template HTML profissional com informações do campeonato
+  - Credenciais Gmail configuradas via GMAIL_APP_PASSWORD
+  - Teste manual: ✅ Email enviado com sucesso
+  - Status: ✅ RESOLVIDO

@@ -1,4 +1,6 @@
 import { notifyOwner } from "../_core/notification";
+import nodemailer from "nodemailer";
+import { ENV } from "../_core/env";
 
 // Email templates for Pelada Pro
 
@@ -51,9 +53,99 @@ export async function sendWelcomeEmail(data: {
     `.trim()
   });
 
-  console.log(`[Email] Welcome email would be sent to ${data.email} for campaign ${data.campaignName}`);
-  
-  return true;
+  // Send email via Gmail
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'contato@meucontomagico.com.br',
+      pass: ENV.gmailAppPassword
+    }
+  });
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .header h1 { margin: 0; font-size: 28px; }
+    .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+    .info-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #10b981; }
+    .info-box h3 { margin-top: 0; color: #10b981; }
+    .button { display: inline-block; background: #10b981; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 10px 0; }
+    .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
+    .credentials { background: #fef3c7; padding: 15px; border-radius: 6px; margin: 15px 0; border: 2px dashed #f59e0b; }
+    .credentials strong { color: #d97706; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 Bem-vindo ao PeladaPro!</h1>
+      <p>Seu campeonato está pronto!</p>
+    </div>
+    <div class="content">
+      <p>Olá! 👋</p>
+      <p>Parabéns pela compra do <strong>${planNames[data.plan] || data.plan}</strong>! Seu site de campeonato já está no ar e pronto para uso.</p>
+      
+      <div class="info-box">
+        <h3>📋 Informações do Seu Campeonato</h3>
+        <p><strong>Nome:</strong> ${data.campaignName}</p>
+        <p><strong>URL do Site:</strong> <a href="${campaignUrl}">${campaignUrl}</a></p>
+        <p><strong>Painel Admin:</strong> <a href="${adminUrl}">${adminUrl}</a></p>
+        <p><strong>Validade:</strong> Até ${formattedExpiry}</p>
+      </div>
+
+      <div class="credentials">
+        <h3 style="margin-top: 0;">🔐 Credenciais de Acesso</h3>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Senha Temporária:</strong> (usuário já existia)</p>
+        <p style="font-size: 12px; color: #d97706; margin-top: 10px;">⚠️ Use suas credenciais existentes para acessar o painel admin.</p>
+      </div>
+
+      <div style="text-align: center; margin: 30px 0;">
+        <a href="${adminUrl}" class="button">Acessar Painel Admin</a>
+      </div>
+
+      <div class="info-box">
+        <h3>🚀 Próximos Passos</h3>
+        <ol>
+          <li>Acesse o painel admin usando o link acima</li>
+          <li>Configure seu campeonato (logo, nome, cores)</li>
+          <li>Cadastre times e jogadores</li>
+          <li>Crie os jogos e registre resultados</li>
+          <li>Compartilhe o link do site com os participantes!</li>
+        </ol>
+      </div>
+
+      <p>Qualquer dúvida, estamos à disposição!</p>
+      <p>Bom campeonato! ⚽</p>
+    </div>
+    <div class="footer">
+      <p>© 2026 PeladaPro - Organize Seu Campeonato de Futebol</p>
+      <p>Este é um email automático, não responda.</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"PeladaPro" <contato@meucontomagico.com.br>',
+      to: data.email,
+      subject: `🎉 Seu Campeonato "${data.campaignName}" Está Pronto!`,
+      html: htmlContent
+    });
+    console.log(`[Email] Welcome email sent successfully to ${data.email}`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send welcome email to ${data.email}:`, error);
+    return false;
+  }
 }
 
 // Expiration warning email (7 days before)
