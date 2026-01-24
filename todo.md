@@ -1287,3 +1287,16 @@ const [username, setUsername] = useState("");
 - URL agora inclui slug do campeonato: `/:slug/admin/change-password`
 - Sistema consegue identificar qual campeonato e admin user
 - Fluxo de alteração de senha 100% funcional
+
+
+## Desativar Troca Obrigatória de Senha para Login Master (24/01/2026) ✅ CONCLUÍDO
+
+- [x] Localizar admin user guilhermeram@gmail.com no banco de dados (campeonato futebol-fraterno)
+- [x] Atualizar campo needsPasswordChange para false
+- [x] Login master agora funciona sem forçar troca de senha
+
+**SOLUÇÃO:**
+- Admin user ID: 240001
+- Username: guilhermeram@gmail.com
+- CampaignId: 300001 (futebol-fraterno)
+- Atualizado needsPasswordChange de true para false via SQL direto

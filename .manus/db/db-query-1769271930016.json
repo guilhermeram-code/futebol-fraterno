@@ -1,0 +1,17 @@
+{
+  "query": "SELECT \n  (SELECT COUNT(*) FROM campaigns) as total_campaigns,\n  (SELECT COUNT(*) FROM teams) as total_teams,\n  (SELECT COUNT(*) FROM players) as total_players,\n  (SELECT COUNT(*) FROM matches) as total_matches,\n  (SELECT COUNT(*) FROM admin_users) as total_admin_users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT \n  (SELECT COUNT(*) FROM campaigns) as total_campaigns,\n  (SELECT COUNT(*) FROM teams) as total_teams,\n  (SELECT COUNT(*) FROM players) as total_players,\n  (SELECT COUNT(*) FROM matches) as total_matches,\n  (SELECT COUNT(*) FROM admin_users) as total_admin_users;",
+  "rows": [
+    {
+      "total_campaigns": "14",
+      "total_teams": "46",
+      "total_players": "179",
+      "total_matches": "46",
+      "total_admin_users": "7"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_campaigns\ttotal_teams\ttotal_players\ttotal_matches\ttotal_admin_users\n14\t46\t179\t46\t7\n",
+  "stderr": "",
+  "execution_time_ms": 351
+}
