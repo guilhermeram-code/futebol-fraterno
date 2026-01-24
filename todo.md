@@ -1004,3 +1004,11 @@
 - [x] Preço riscado (originalPrice) - REMOVIDO (confundia usuário)
 - [x] Cálculo "equivale a R$ XX/mês" estava CORRETO (195/2=97,50, 268/3=89,33, etc)
 - [x] Problema era VISUAL: badges e preços riscados davam impressão de desconto já aplicado
+
+
+## AJUSTES LANDING PAGE - Cupom e Planos (24/01/2026)
+- [x] Remover plano "Teste" (R$ 7,00) completamente da landing page
+- [x] Destacar cupom LANCAMENTO40 no banner vermelho piscando (2 linhas, código em destaque branco)
+- [x] Adicionar código do cupom bem visível: "USE O CUPOM: LANCAMENTO40" (fonte grande, fundo branco, texto vermelho)
+- [x] Manter preços CHEIOS nos cards (R$ 195, R$ 268, R$ 448, R$ 749)
+- [x] Cliente aplica cupom no checkout para receber 40% OFF

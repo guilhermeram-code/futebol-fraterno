@@ -29,10 +29,9 @@ import {
 
 // Planos disponíveis (preços CHEIOS - use cupom LANCAMENTO40 para 40% OFF)
 const PLANS = [
-  { id: "test", name: "Teste", duration: "1 mês", price: 7.00, originalPrice: 7.00, pricePerMonth: 7.00, isTest: true },
   { id: "basic", name: "Iniciante", duration: "2 meses", price: 195.00, originalPrice: 195.00, pricePerMonth: 97.50, pricePerMonthWithDiscount: 58.50 },
-  { id: "popular", name: "Popular", duration: "3 meses", price: 268.00, originalPrice: 268.00, pricePerMonth: 89.33, pricePerMonthWithDiscount: 53.60 },
-  { id: "extended", name: "Semestral", duration: "6 meses", price: 448.00, originalPrice: 448.00, pricePerMonth: 74.67, pricePerMonthWithDiscount: 44.80, popular: true },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 268.00, originalPrice: 268.00, pricePerMonth: 89.33, pricePerMonthWithDiscount: 53.60, popular: true },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 448.00, originalPrice: 448.00, pricePerMonth: 74.67, pricePerMonthWithDiscount: 44.80 },
   { id: "annual", name: "Anual", duration: "12 meses", price: 749.00, originalPrice: 749.00, pricePerMonth: 62.42, pricePerMonthWithDiscount: 37.45, bestValue: true },
 ];
 
@@ -362,10 +361,16 @@ export default function LandingPage() {
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
               Preços acessíveis para campeonatos de todos os tamanhos. Sem taxas escondidas.
             </p>
-            <div className="mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg animate-pulse">
-              <Sparkles className="w-5 h-5" />
-              🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 40% OFF
-              <Sparkles className="w-5 h-5" />
+            <div className="mt-6 inline-flex flex-col items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-2xl animate-pulse">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-6 h-6" />
+                <span className="text-lg">🎉 100 PRIMEIROS CLIENTES - 40% OFF 🎉</span>
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-lg">
+                <span className="text-sm">USE O CUPOM:</span>
+                <span className="text-2xl font-black tracking-wider bg-white text-red-600 px-4 py-1 rounded-lg shadow-lg">LANCAMENTO40</span>
+              </div>
             </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
@@ -373,20 +378,13 @@ export default function LandingPage() {
               <Card 
                 key={plan.id} 
                 className={`relative overflow-hidden transition-all duration-300 hover:shadow-xl ${
-                  plan.isTest
-                    ? "border-2 border-blue-500 shadow-lg shadow-blue-100"
-                    : plan.popular 
+                  plan.popular 
                     ? "border-2 border-emerald-500 shadow-lg shadow-emerald-100 scale-105" 
                     : plan.bestValue 
                     ? "border-2 border-amber-500 shadow-lg shadow-amber-100"
                     : "border-gray-200 hover:border-emerald-300"
                 }`}
               >
-                {plan.isTest && (
-                  <div className="absolute top-0 left-0 right-0 bg-blue-500 text-white text-center text-sm py-1 font-medium">
-                    Plano Teste
-                  </div>
-                )}
                 {plan.popular && (
                   <div className="absolute top-0 left-0 right-0 bg-emerald-500 text-white text-center text-sm py-1 font-medium">
                     Mais Popular
@@ -397,7 +395,7 @@ export default function LandingPage() {
                     Melhor Custo-Benefício
                   </div>
                 )}
-                <CardHeader className={plan.isTest || plan.popular || plan.bestValue ? "pt-10" : ""}>
+                <CardHeader className={plan.popular || plan.bestValue ? "pt-10" : ""}>
                   <CardTitle className="text-gray-900">{plan.name}</CardTitle>
                   <CardDescription className="text-gray-500">{plan.duration}</CardDescription>
                 </CardHeader>
