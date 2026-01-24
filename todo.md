@@ -1079,3 +1079,13 @@
 - [x] Implementar força de troca de senha no primeiro login (redirect automático no Admin.tsx)
 - [x] Testar fluxo completo: esqueci senha → receber email → login → forçar troca (API testada com sucesso)
 - [x] Validar com credenciais do campeonato teste (needsPasswordChange=1 confirmado no banco)
+
+## BUG CRÍTICO - LOGIN NÃO FUNCIONA NO BROWSER (24/01/2026)
+- [x] Investigar causa raiz do bug no AdminLogin.tsx (API funciona, frontend não)
+  * Causa: AdminLogin não estava passando campaignId para a mutation
+- [x] Corrigir bug que impede botão "Entrar" de disparar mutation
+  * Solução: Adicionado useCampaign() e passando campaignId na mutation
+- [x] Testar login no browser com credenciais teste@peladapro.com / teste123
+  * Botão agora responde e envia requisição corretamente
+- [x] Validar que redirecionamento funciona após login bem-sucedido
+  * Correção validada, precisa publicar para ambiente de produção

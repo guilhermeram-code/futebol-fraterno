@@ -9,6 +9,7 @@ import { Shield, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { useSlug } from "@/hooks/useSlug";
+import { useCampaign } from "@/App";
 
 export default function AdminLogin() {
   const [location, setLocation] = useLocation();
@@ -17,6 +18,7 @@ export default function AdminLogin() {
   
   // Extrair slug da URL atual (formato: /{slug}/admin/login)
   const slug = useSlug();
+  const { campaignId } = useCampaign();
 
   const loginMutation = trpc.adminUsers.login.useMutation({
     onSuccess: (data) => {
@@ -37,7 +39,7 @@ export default function AdminLogin() {
       toast.error("Preencha todos os campos");
       return;
     }
-    loginMutation.mutate({ username, password });
+    loginMutation.mutate({ username, password, campaignId });
   };
 
   return (
