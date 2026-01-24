@@ -1179,3 +1179,47 @@
 **ARQUIVOS MODIFICADOS:**
 - server/routers.ts (linha 1175-1176): usar bcrypt para senha temporária
 - server/forgot-password.test.ts (novo): testes automatizados
+
+
+## BUG - Não Consegue Alterar Senha Após Login com Senha Temporária (24/01/2026 - 10:02) ✅ RESOLVIDO
+
+- [x] Investigar por que retorna "Senha atual incorreta" ao tentar alterar senha
+- [x] Verificar algoritmo de hash usado na validação
+- [x] Corrigir changePassword para usar bcrypt ao invés de SHA-256
+- [x] Testar fluxo completo: login → alterar senha → login com nova senha
+
+**PROBLEMA IDENTIFICADO:**
+O erro não era "Usuário não autenticado", mas sim "Senha atual incorreta". A função `changePassword` usava `verifyPassword()` (SHA-256) para validar a senha atual, mas as senhas temporárias estavam com hash bcrypt no banco.
+
+**CAUSA RAIZ:**
+- Recuperação de senha: gera hash bcrypt
+- Login: valida com bcrypt ✅
+- Alteração de senha: validava com SHA-256 ❌
+
+**SOLUÇÃO APLICADA:**
+Modificado `adminUsers.changePassword` (linha 1139-1147) para usar bcrypt:
+```typescript
+// ANTES (ERRADO):
+const isValid = await verifyPassword(input.currentPassword, adminUser.password); // SHA-256
+
+// DEPOIS (CORRETO):
+const bcrypt = await import('bcrypt');
+const isValid = await bcrypt.compare(input.currentPassword, adminUser.password); // bcrypt
+```
+
+Também atualizado o hash da nova senha para usar bcrypt:
+```typescript
+// ANTES (ERRADO):
+const newPasswordHash = await hashPassword(input.newPassword); // SHA-256
+
+// DEPOIS (CORRETO):
+const newPasswordHash = await bcrypt.hash(input.newPassword, 10); // bcrypt
+```
+
+**TESTE REALIZADO:**
+- Login com senha temporária TEMP2024@abc: ✅ success
+- Alterar senha de TEMP2024@abc para minhaNovaSenha123: ✅ success
+- Login com nova senha: ✅ success
+
+**ARQUIVOS MODIFICADOS:**
+- server/routers.ts (linha 1139-1152): usar bcrypt em changePassword

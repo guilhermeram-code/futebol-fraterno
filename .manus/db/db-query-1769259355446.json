@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE admin_users \nSET password = '$2b$10$Aw7GIE6x4di0NKUlgYNikuqNB7QSLfsFBq8Ao2mcvGkgvpFmODpwi',\n    needsPasswordChange = 1\nWHERE username = 'guilherme.ramos@constrixengenharia.com.br' \nAND campaignId = 300012;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute UPDATE admin_users \nSET password = '$2b$10$Aw7GIE6x4di0NKUlgYNikuqNB7QSLfsFBq8Ao2mcvGkgvpFmODpwi',\n    needsPasswordChange = 1\nWHERE username = 'guilherme.ramos@constrixengenharia.com.br' \nAND campaignId = 300012;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 72
+}

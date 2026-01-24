@@ -1136,14 +1136,15 @@ export const appRouter = router({
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Usuário não encontrado' });
         }
 
-        // Verificar senha atual
-        const isValid = await verifyPassword(input.currentPassword, adminUser.password);
+        // Verificar senha atual usando bcrypt (compatível com senhas temporárias)
+        const bcrypt = await import('bcrypt');
+        const isValid = await bcrypt.compare(input.currentPassword, adminUser.password);
         if (!isValid) {
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha atual incorreta' });
         }
 
-        // Atualizar senha e remover flag de troca obrigatória
-        const newPasswordHash = await hashPassword(input.newPassword);
+        // Atualizar senha e remover flag de troca obrigatória (usar bcrypt)
+        const newPasswordHash = await bcrypt.hash(input.newPassword, 10);
         await db.updateAdminUserPassword(adminUser.id, newPasswordHash);
         await db.clearNeedsPasswordChange(adminUser.id);
 

@@ -1,0 +1,24 @@
+{
+  "query": "SELECT id, username, password, needsPasswordChange, lastLogin \nFROM admin_users \nWHERE username = 'guilherme.ramos@constrixengenharia.com.br' AND campaignId = 300012;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, username, password, needsPasswordChange, lastLogin \nFROM admin_users \nWHERE username = 'guilherme.ramos@constrixengenharia.com.br' AND campaignId = 300012;",
+  "rows": [
+    {
+      "id": "240007",
+      "username": "guilherme.ramos@constrixengenharia.com.br",
+      "password": "$2b$10$tctJkxR76TIaxwAafXvHEewmA/LHPU6ry/bnucNiEUJdj/TMDJ7bi",
+      "needsPasswordChange": "1",
+      "lastLogin": "2026-01-24 12:40:23"
+    },
+    {
+      "id": "270002",
+      "username": "guilherme.ramos@constrixengenharia.com.br",
+      "password": "$2b$10$p5bFb5AwFhcRrgDHYMQdN.UzlXvFTqXpg4WcD9kf91/lNoI1Eunku",
+      "needsPasswordChange": "0",
+      "lastLogin": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tusername\tpassword\tneedsPasswordChange\tlastLogin\n240007\tguilherme.ramos@constrixengenharia.com.br\t$2b$10$tctJkxR76TIaxwAafXvHEewmA/LHPU6ry/bnucNiEUJdj/TMDJ7bi\t1\t2026-01-24 12:40:23\n270002\tguilherme.ramos@constrixengenharia.com.br\t$2b$10$p5bFb5AwFhcRrgDHYMQdN.UzlXvFTqXpg4WcD9kf91/lNoI1Eunku\t0\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}
