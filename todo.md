@@ -1223,3 +1223,67 @@ const newPasswordHash = await bcrypt.hash(input.newPassword, 10); // bcrypt
 
 **ARQUIVOS MODIFICADOS:**
 - server/routers.ts (linha 1139-1152): usar bcrypt em changePassword
+
+
+## BUG - URL de Alteração de Senha Não Inclui Campeonato (24/01/2026 - 12:11) ✅ RESOLVIDO
+
+- [x] Investigar rotas atuais de alteração de senha
+- [x] Identificar onde `/change-password` está definida
+- [x] Modificar rota para `/:campaignSlug/admin/change-password`
+- [x] Atualizar componente ChangePassword para usar campaignId do contexto
+- [x] Atualizar links/redirecionamentos para nova URL
+- [x] Testar fluxo completo: login → alterar senha → sucesso
+
+**PROBLEMA IDENTIFICADO:**
+URL antiga: `https://peladapro.com.br/change-password` (genérica, sem campeonato)
+URL correta: `https://peladapro.com.br/teste-guilherme/admin/change-password`
+
+**CAUSA RAIZ:**
+Sistema não sabia qual `campaignId` usar porque a URL não incluía o slug do campeonato. Por isso retornava "Usuário não autenticado" - não conseguia identificar qual admin user buscar.
+
+**SOLUÇÃO APLICADA:**
+
+1. **App.tsx (linha 129)**: Adicionada rota `/:slug/admin/change-password` no CampaignRouter
+```typescript
+<Route path={`/${slug}/admin/change-password`} component={ChangePassword} />
+```
+
+2. **App.tsx (linha 197)**: Removida rota genérica `/change-password` do MainRouter
+
+3. **App.tsx (linha 172)**: Removido `change-password` da lista de rotas reservadas
+
+4. **Admin.tsx (linhas 89, 156)**: Atualizados links para incluir slug:
+```typescript
+// ANTES:
+setLocation(`/change-password`)
+
+// DEPOIS:
+setLocation(`/${slug}/admin/change-password`)
+```
+
+5. **ChangePassword.tsx**: Refatorado para usar contexto de campanha:
+```typescript
+// ANTES: usava useAdminAuth() que dependia de autenticação
+const { adminUser } = useAdminAuth();
+
+// DEPOIS: usa contexto de campanha da URL
+const slug = useSlug();
+const { campaignId } = useCampaign();
+const [username, setUsername] = useState("");
+```
+
+6. Adicionado campo "Email/Username" no formulário de alteração de senha
+
+**TESTE REALIZADO:**
+- Alterar senha de FINAL2024@xyz para minhaSenhaFinal123: ✅ success
+- Login com nova senha: ✅ success
+
+**ARQUIVOS MODIFICADOS:**
+- client/src/App.tsx: rotas atualizadas
+- client/src/pages/Admin.tsx: links atualizados
+- client/src/pages/ChangePassword.tsx: refatorado para usar contexto
+
+**IMPACTO:**
+- URL agora inclui slug do campeonato: `/:slug/admin/change-password`
+- Sistema consegue identificar qual campeonato e admin user
+- Fluxo de alteração de senha 100% funcional

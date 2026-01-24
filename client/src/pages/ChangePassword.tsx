@@ -6,10 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
-import { useAdminAuth } from "@/hooks/useAdminAuth";
+import { useCampaign } from "@/App";
+import { useSlug } from "@/hooks/useSlug";
 
 export default function ChangePassword() {
-  const { adminUser, isAuthenticated } = useAdminAuth();
+  const slug = useSlug();
+  const { campaignId } = useCampaign();
+  const [username, setUsername] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,7 +23,7 @@ export default function ChangePassword() {
       toast.success("✅ Senha alterada!", {
         description: "Sua senha foi alterada com sucesso!",
       });
-      setLocation(`/${adminUser?.campaignSlug}/admin`);
+      setLocation(`/${slug}/admin`);
     },
     onError: (error) => {
       toast.error("❌ Erro ao alterar senha", {
@@ -53,15 +56,15 @@ export default function ChangePassword() {
       return;
     }
 
-    if (!adminUser?.username) {
+    if (!username) {
       toast.error("❌ Erro", {
-        description: "Usuário não autenticado",
+        description: "Digite seu email/username",
       });
       return;
     }
 
     changePasswordMutation.mutate({ 
-      username: adminUser.username,
+      username,
       currentPassword, 
       newPassword 
     });
@@ -81,6 +84,17 @@ export default function ChangePassword() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="username">Email/Username</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="seu@email.com"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="currentPassword">Senha Atual</Label>
               <Input
@@ -124,7 +138,7 @@ export default function ChangePassword() {
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">
-            <a href="/login" className="text-green-600 hover:underline">
+            <a href={`/${slug}/admin/login`} className="text-green-600 hover:underline">
               Voltar para login
             </a>
           </div>

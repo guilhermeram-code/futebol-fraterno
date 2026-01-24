@@ -126,6 +126,7 @@ function CampaignRouter({ slug }: { slug: string }) {
         <Route path={`/${slug}/patrocinadores`} component={Patrocinadores} />
         <Route path={`/${slug}/admin/login`} component={AdminLogin} />
         <Route path={`/${slug}/admin/forgot-password`} component={ForgotPassword} />
+        <Route path={`/${slug}/admin/change-password`} component={ChangePassword} />
         <Route path={`/${slug}/admin`} component={Admin} />
         <Route component={NotFound} />
       </Switch>
@@ -168,7 +169,7 @@ function MainRouter() {
   // Lista de rotas que NÃO são slugs de campeonato
   const reservedRoutes = [
     'admin', 'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
-    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'change-password', 'admin-dashboard', 'admin-users'
+    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'admin-dashboard', 'admin-users'
   ];
   
   // Verificar se é a landing page (raiz) - PRIORIDADE MÁXIMA
@@ -193,10 +194,6 @@ function MainRouter() {
     return <Login />;
   }
   
-  // Página de alteração de senha
-  if (location === '/change-password') {
-    return <ChangePassword />;
-  }
   
   // Painel admin do dono do PeladaPro
   if (location === '/admin-dashboard') {

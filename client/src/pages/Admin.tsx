@@ -86,7 +86,7 @@ export default function Admin() {
               Por segurança, você precisa alterar sua senha temporária antes de acessar o painel administrativo.
             </p>
             <Button 
-              onClick={() => setLocation(`/change-password`)} 
+              onClick={() => setLocation(`/${slug}/admin/change-password`)} 
               className="w-full"
             >
               Alterar Senha Agora
@@ -153,7 +153,7 @@ export default function Admin() {
               <Button 
                 variant="ghost" 
                 size="sm"
-                onClick={() => window.location.href = '/change-password'}
+                onClick={() => setLocation(`/${slug}/admin/change-password`)}
                 className="text-muted-foreground hover:text-foreground"
               >
                 <KeyRound className="h-4 w-4 mr-2" />
