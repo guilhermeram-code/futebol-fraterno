@@ -1152,3 +1152,30 @@
 - Criado admin user para campaign 300012 (teste-guilherme)
 - Senha atualizada com hash bcrypt correto: $2b$10$p5bFb5AwFhcRrgDHYMQdN.UzlXvFTqXpg4WcD9kf91/lNoI1Eunku
 - Login testado e funcionando via API ✅
+
+
+## BUG - Recuperação de Senha Não Funciona (24/01/2026 - 09:42) ✅ RESOLVIDO
+
+- [x] Investigar código de geração de senha temporária
+- [x] Verificar como senha temporária é armazenada no banco
+- [x] Testar validação de senha temporária no login
+- [x] Identificar por que senha temporária "EF9A70DF@ae9d" não funciona
+- [x] Corrigir hash/validação da senha temporária
+- [x] Testar fluxo completo: solicitar recuperação → receber email → fazer login com senha temporária
+
+**PROBLEMA IDENTIFICADO:**
+- Sistema usava dois métodos diferentes de hash:
+  * Admin users: bcrypt (usado no login)
+  * Recuperação de senha: SHA-256 (função hashPassword em _core/password.ts)
+- Quando solicitava recuperação, senha temporária era salva com hash SHA-256
+- No login, sistema tentava validar com bcrypt.compare() → FALHA!
+
+**SOLUÇÃO APLICADA:**
+- Modificado `adminUsers.forgotPassword` para usar bcrypt ao invés de SHA-256
+- Adicionado import de bcrypt e uso de `bcrypt.hash(tempPassword, 10)`
+- Criado teste automatizado completo (forgot-password.test.ts)
+- Todos os testes passando ✅
+
+**ARQUIVOS MODIFICADOS:**
+- server/routers.ts (linha 1175-1176): usar bcrypt para senha temporária
+- server/forgot-password.test.ts (novo): testes automatizados

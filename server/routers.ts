@@ -1171,7 +1171,9 @@ export const appRouter = router({
         const tempPassword = crypto.randomBytes(4).toString('hex').toUpperCase() + '@' + crypto.randomBytes(2).toString('hex');
         
         // Atualizar senha e marcar para forçar troca
-        const tempPasswordHash = await hashPassword(tempPassword);
+        // IMPORTANTE: Usar bcrypt ao invés de SHA-256 para compatibilidade com verifyAdminPassword
+        const bcrypt = await import('bcrypt');
+        const tempPasswordHash = await bcrypt.hash(tempPassword, 10);
         await db.updateAdminUserPassword(adminUser.id, tempPasswordHash);
         await db.setNeedsPasswordChange(adminUser.id);
 
