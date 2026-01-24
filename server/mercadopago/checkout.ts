@@ -69,8 +69,8 @@ export async function createCheckoutSession(input: CreateCheckoutInput) {
       finalPrice = plan.price - discount;
     }
     // Cupom de teste para desenvolvimento
-    else if (couponCode === "TEST99") {
-      discount = plan.price * 0.99;
+    else if (couponCode === "TEST90") {
+      discount = plan.price * 0.90;
       finalPrice = plan.price - discount;
     }
   }

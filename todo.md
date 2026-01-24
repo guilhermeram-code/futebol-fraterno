@@ -1353,3 +1353,11 @@ const [username, setUsername] = useState("");
 - ✅ needsPasswordChange: false
 - ✅ isOwner: true
 - ✅ adminUserId: -1 (ID especial para master)
+
+
+## 🐛 BUG CUPOM TEST90 - 24/01/2026
+
+- [x] Investigar por que cupom TEST90 (90% desconto) não aplica no Mercado Pago
+- [x] Comparar implementação com LANCAMENTO40 (que funciona corretamente)
+- [x] Corrigir aplicação do desconto no checkout do Mercado Pago (estava TEST99 ao invés de TEST90)
+- [x] Testar cupom TEST90 end-to-end (frontend → backend → Mercado Pago)

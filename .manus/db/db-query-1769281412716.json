@@ -1,0 +1,30 @@
+{
+  "query": "SELECT id, code, discountPercent, maxUses, usedCount, active, expiresAt, createdAt FROM coupons WHERE code IN ('TEST90', 'LANCAMENTO40');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, code, discountPercent, maxUses, usedCount, active, expiresAt, createdAt FROM coupons WHERE code IN ('TEST90', 'LANCAMENTO40');",
+  "rows": [
+    {
+      "id": "2",
+      "code": "TEST90",
+      "discountPercent": "90",
+      "maxUses": "999",
+      "usedCount": "0",
+      "active": "1",
+      "expiresAt": "2027-12-31 23:59:59",
+      "createdAt": "2026-01-24 03:09:48"
+    },
+    {
+      "id": "1",
+      "code": "LANCAMENTO40",
+      "discountPercent": "40",
+      "maxUses": "100",
+      "usedCount": "0",
+      "active": "1",
+      "expiresAt": "2026-12-31 23:59:59",
+      "createdAt": "2026-01-24 03:06:14"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tdiscountPercent\tmaxUses\tusedCount\tactive\texpiresAt\tcreatedAt\n2\tTEST90\t90\t999\t0\t1\t2027-12-31 23:59:59\t2026-01-24 03:09:48\n1\tLANCAMENTO40\t40\t100\t0\t1\t2026-12-31 23:59:59\t2026-01-24 03:06:14\n",
+  "stderr": "",
+  "execution_time_ms": 349
+}
