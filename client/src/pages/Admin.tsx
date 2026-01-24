@@ -35,7 +35,8 @@ import {
   Check,
   LogOut,
   Star,
-  Heart
+  Heart,
+  KeyRound
 } from "lucide-react";
 
 import { ResultsRegistration } from "@/components/ResultsRegistration";
@@ -115,6 +116,15 @@ export default function Admin() {
               <Badge variant="outline" className="text-gold border-gold">
                 Admin: {adminUser?.name || adminUser?.username}
               </Badge>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={() => window.location.href = '/change-password'}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <KeyRound className="h-4 w-4 mr-2" />
+                Alterar Senha
+              </Button>
               <Button 
                 variant="ghost" 
                 size="sm"

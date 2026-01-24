@@ -1102,10 +1102,50 @@ export const appRouter = router({
           const decoded = jwt.default.verify(token, process.env.JWT_SECRET || 'secret') as any;
           const adminUser = await db.getAdminUserByUsername(getCampaignId(input || {}), decoded.username);
           if (!adminUser || !adminUser.active) return null;
-          return { id: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner };
+          
+          // Buscar campaignSlug para retornar junto
+          const campaign = await db.getCampaignById(adminUser.campaignId);
+          
+          return { 
+            id: adminUser.id, 
+            username: adminUser.username, 
+            name: adminUser.name, 
+            isOwner: adminUser.isOwner,
+            campaignId: adminUser.campaignId,
+            campaignSlug: campaign?.slug || null
+          };
         } catch {
           return null;
         }
+      }),
+
+    changePassword: publicProcedure
+      .input(z.object({
+        username: z.string(),
+        currentPassword: z.string(),
+        newPassword: z.string().min(6),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+
+        // Buscar admin_user por username (qualquer campaignId)
+        const adminUser = await db.getAdminUserByUsernameGlobal(input.username);
+        if (!adminUser) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Usuário não encontrado' });
+        }
+
+        // Verificar senha atual
+        const isValid = await verifyPassword(input.currentPassword, adminUser.password);
+        if (!isValid) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha atual incorreta' });
+        }
+
+        // Atualizar senha
+        const newPasswordHash = await hashPassword(input.newPassword);
+        await db.updateAdminUserPassword(adminUser.id, newPasswordHash);
+
+        return { success: true };
       }),
     
     logout: publicProcedure

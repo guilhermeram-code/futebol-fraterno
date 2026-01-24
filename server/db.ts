@@ -1152,6 +1152,21 @@ export async function deleteAdminUser(id: number): Promise<boolean> {
   return true;
 }
 
+export async function getAdminUserByUsernameGlobal(username: string): Promise<AdminUser | null> {
+  const db = await getDb();
+  if (!db) return null;
+
+  const [user] = await db.select().from(adminUsers).where(eq(adminUsers.username, username)).limit(1);
+  return user || null;
+}
+
+export async function updateAdminUserPassword(id: number, newPasswordHash: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(adminUsers).set({ password: newPasswordHash }).where(eq(adminUsers.id, id));
+}
+
 // ==================== SPONSORS ====================
 export async function createSponsor(campaignId: number, sponsor: Omit<InsertSponsor, 'campaignId'>) {
   const db = await getDb();

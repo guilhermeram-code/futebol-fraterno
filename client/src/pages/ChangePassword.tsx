@@ -6,19 +6,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 
 export default function ChangePassword() {
+  const { adminUser, isAuthenticated } = useAdminAuth();
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [, setLocation] = useLocation();
 
-  const changePasswordMutation = trpc.auth.changePassword.useMutation({
+  const changePasswordMutation = trpc.adminUsers.changePassword.useMutation({
     onSuccess: () => {
       toast.success("✅ Senha alterada!", {
         description: "Sua senha foi alterada com sucesso!",
       });
-      setLocation("/");
+      setLocation(`/${adminUser?.campaignSlug}/admin`);
     },
     onError: (error) => {
       toast.error("❌ Erro ao alterar senha", {
@@ -51,7 +53,18 @@ export default function ChangePassword() {
       return;
     }
 
-    changePasswordMutation.mutate({ currentPassword, newPassword });
+    if (!adminUser?.username) {
+      toast.error("❌ Erro", {
+        description: "Usuário não autenticado",
+      });
+      return;
+    }
+
+    changePasswordMutation.mutate({ 
+      username: adminUser.username,
+      currentPassword, 
+      newPassword 
+    });
   };
 
   return (

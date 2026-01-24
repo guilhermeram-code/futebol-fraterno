@@ -1052,3 +1052,19 @@
 - [x] Adicionar botão "Gestão de Usuários" no AdminDashboard
 - [x] Tabela mostra: nome, email, telefone, campeonato, plano, valor, status, datas
 - [x] Botão deletar com confirmação (deleta purchase + campanha associada)
+
+## CORREÇÕES E NOVAS FUNCIONALIDADES (24/01/2026)
+- [x] Capturar screenshot correto do Painel Administrativo (card de funcionalidade)
+- [x] Atualizar landing page com screenshot correto (admin.webp 206KB)
+- [x] Criar campeonato de teste com credenciais para validação
+  * URL: https://peladapro.com.br/teste-senha
+  * Admin: https://peladapro.com.br/teste-senha/admin
+  * Email: teste@peladapro.com
+  * Senha: teste123
+- [x] Implementar alteração de senha para usuário logado
+  * Procedure adminUsers.changePassword criado
+  * Funções getAdminUserByUsernameGlobal e updateAdminUserPassword adicionadas
+  * Página ChangePassword.tsx atualizada
+  * Botão "Alterar Senha" adicionado no header do Admin
+- [ ] Implementar recuperação de senha via email ("Esqueci minha senha")
+- [ ] Testar fluxo completo de login/alteração/recuperação
