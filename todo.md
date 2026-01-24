@@ -1416,3 +1416,10 @@ const [username, setUsername] = useState("");
 - [x] Email de boas-vindas envia senha (linha 133-135 sendWelcomeEmail.ts)
 - [x] Próximos clientes terão acesso imediato ao painel admin
 
+
+## 🚨 BUGS REPORTADOS - Sessão e Logout (24/01/2026)
+
+- [x] BUG: Botão "Voltar para Home" desloga usuário (deveria manter logado)
+- [x] BUG: Ao criar time/grupo, pede login novamente (sessão expira)
+- [x] BUG: Redirect de login vai para /login ao invés de /{slug}/admin/login
+

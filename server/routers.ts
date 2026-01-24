@@ -21,12 +21,46 @@ const DEFAULT_CAMPAIGN_ID = 1;
 // Helper to get campaignId from input or use default
 const getCampaignId = (input: { campaignId?: number }) => input.campaignId ?? DEFAULT_CAMPAIGN_ID;
 
-// Admin procedure - only allows admin users
+// Admin procedure - only allows admin users (tabela users)
 const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
   if (ctx.user.role !== 'admin') {
     throw new TRPCError({ code: 'FORBIDDEN', message: 'Acesso negado. Apenas administradores.' });
   }
   return next({ ctx });
+});
+
+// Campaign Admin procedure - verifica token de admin_users (JWT)
+const campaignAdminProcedure = publicProcedure.use(async ({ ctx, next }) => {
+  const authHeader = ctx.req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
+  
+  if (!token) {
+    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Token não fornecido. Faça login novamente.' });
+  }
+  
+  try {
+    const jwt = await import('jsonwebtoken');
+    const decoded = jwt.default.verify(token, process.env.JWT_SECRET || 'secret') as any;
+    
+    // Token válido - permitir acesso
+    return next({ 
+      ctx: { 
+        ...ctx, 
+        adminUser: {
+          id: decoded.adminUserId,
+          username: decoded.username,
+          name: decoded.name,
+          isOwner: decoded.isOwner,
+          campaignId: decoded.campaignId
+        }
+      } 
+    });
+  } catch (error: any) {
+    throw new TRPCError({ 
+      code: 'UNAUTHORIZED', 
+      message: 'Token inválido ou expirado. Faça login novamente.' 
+    });
+  }
 });
 
 export const appRouter = router({
@@ -421,7 +455,7 @@ export const appRouter = router({
         return db.getTeamsByGroup(getCampaignId(input), input.groupId);
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         name: z.string().min(1),
         lodge: z.string().optional(),
@@ -434,7 +468,7 @@ export const appRouter = router({
         return db.createTeam(getCampaignId(input), teamData);
       }),
     
-    update: adminProcedure
+    update: campaignAdminProcedure
       .input(z.object({
         id: z.number(),
         name: z.string().min(1).optional(),
@@ -449,7 +483,7 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteTeam(input.id);
@@ -474,7 +508,7 @@ export const appRouter = router({
         return db.getTeamStatsKnockoutOnly(getCampaignId(input), input.id);
       }),
     
-    uploadLogo: adminProcedure
+    uploadLogo: campaignAdminProcedure
       .input(z.object({
         teamId: z.number(),
         base64: z.string(),
@@ -498,14 +532,14 @@ export const appRouter = router({
         return db.getAllGroups(getCampaignId(input || {}));
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({ name: z.string().min(1), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
         const { campaignId, ...groupData } = input;
         return db.createGroup(getCampaignId(input), groupData);
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
         await db.deleteGroup(getCampaignId(input), input.id);
@@ -539,7 +573,7 @@ export const appRouter = router({
         return db.getPlayersByTeam(getCampaignId(input), input.teamId);
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         name: z.string().min(1),
         number: z.number().optional(),
@@ -553,7 +587,7 @@ export const appRouter = router({
         return db.createPlayer(getCampaignId(input), playerData);
       }),
     
-    update: adminProcedure
+    update: campaignAdminProcedure
       .input(z.object({
         id: z.number(),
         name: z.string().min(1).optional(),
@@ -568,7 +602,7 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deletePlayer(input.id);
@@ -638,7 +672,7 @@ export const appRouter = router({
         return db.getHeadToHead(getCampaignId(input), input.team1Id, input.team2Id);
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         homeTeamId: z.number(),
         awayTeamId: z.number(),
@@ -662,7 +696,7 @@ export const appRouter = router({
         });
       }),
     
-    update: adminProcedure
+    update: campaignAdminProcedure
       .input(z.object({
         id: z.number(),
         homeTeamId: z.number().optional(),
@@ -693,14 +727,14 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
         await db.deleteMatch(getCampaignId(input), input.id);
         return { success: true };
       }),
     
-    registerResult: adminProcedure
+    registerResult: campaignAdminProcedure
       .input(z.object({
         matchId: z.number(),
         homeScore: z.number(),
@@ -742,7 +776,7 @@ export const appRouter = router({
         return db.getTopScorers(getCampaignId(input), input.limit || 10);
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         matchId: z.number(),
         playerId: z.number(),
@@ -755,7 +789,7 @@ export const appRouter = router({
         return db.createGoal(getCampaignId(input), goalData);
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteGoal(input.id);
@@ -777,7 +811,7 @@ export const appRouter = router({
         return db.getTopCardedPlayers(getCampaignId(input), input.limit || 10);
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         matchId: z.number(),
         playerId: z.number(),
@@ -791,7 +825,7 @@ export const appRouter = router({
         return db.createCard(getCampaignId(input), cardData);
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteCard(input.id);
@@ -807,13 +841,13 @@ export const appRouter = router({
         return db.getApprovedComments(getCampaignId(input));
       }),
     
-    pending: adminProcedure
+    pending: campaignAdminProcedure
       .input(z.object({ campaignId: z.number().optional() }).optional())
       .query(async ({ input }) => {
         return db.getPendingComments(getCampaignId(input || {}));
       }),
     
-    listAll: adminProcedure
+    listAll: campaignAdminProcedure
       .input(z.object({ limit: z.number().optional(), campaignId: z.number().optional() }))
       .query(async ({ input }) => {
         return db.getAllComments(getCampaignId(input), input.limit || 100);
@@ -845,21 +879,21 @@ export const appRouter = router({
         return db.createComment(getCampaignId(input), commentData);
       }),
     
-    approve: adminProcedure
+    approve: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.approveComment(input.id);
         return { success: true };
       }),
     
-    reject: adminProcedure
+    reject: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.rejectComment(input.id);
         return { success: true };
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteComment(input.id);
@@ -881,7 +915,7 @@ export const appRouter = router({
         return db.getPhotosByMatch(getCampaignId(input), input.matchId);
       }),
     
-    upload: adminProcedure
+    upload: campaignAdminProcedure
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
@@ -903,7 +937,7 @@ export const appRouter = router({
         });
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deletePhoto(input.id);
@@ -913,7 +947,7 @@ export const appRouter = router({
 
   // ==================== UPLOAD GENÉRICO ====================
   upload: router({
-    image: adminProcedure
+    image: campaignAdminProcedure
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
@@ -943,7 +977,7 @@ export const appRouter = router({
         return db.getActiveAnnouncements(getCampaignId(input || {}));
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         title: z.string().min(1),
         content: z.string().min(1),
@@ -955,7 +989,7 @@ export const appRouter = router({
         return db.createAnnouncement(getCampaignId(input), announcementData);
       }),
     
-    update: adminProcedure
+    update: campaignAdminProcedure
       .input(z.object({
         id: z.number(),
         title: z.string().min(1).optional(),
@@ -968,7 +1002,7 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteAnnouncement(input.id);
@@ -978,19 +1012,19 @@ export const appRouter = router({
 
   // ==================== ADMIN EMAILS ====================
   adminEmails: router({
-    list: adminProcedure
+    list: campaignAdminProcedure
       .input(z.object({ campaignId: z.number().optional() }).optional())
       .query(async ({ input }) => {
         return db.getAllAdminEmails(getCampaignId(input || {}));
       }),
     
-    add: adminProcedure
+    add: campaignAdminProcedure
       .input(z.object({ email: z.string().email(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
         return db.addAdminEmail(getCampaignId(input), input.email);
       }),
     
-    remove: adminProcedure
+    remove: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.removeAdminEmail(input.id);
@@ -1019,7 +1053,7 @@ export const appRouter = router({
         return db.getSetting(getCampaignId(input), input.key);
       }),
     
-    set: adminProcedure
+    set: campaignAdminProcedure
       .input(z.object({
         key: z.string(),
         value: z.string(),
@@ -1030,7 +1064,7 @@ export const appRouter = router({
         return { success: true };
       }),
     
-    uploadLogo: adminProcedure
+    uploadLogo: campaignAdminProcedure
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
@@ -1050,7 +1084,7 @@ export const appRouter = router({
         return { url };
       }),
     
-    uploadMusic: adminProcedure
+    uploadMusic: campaignAdminProcedure
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
@@ -1065,7 +1099,7 @@ export const appRouter = router({
         return { url };
       }),
     
-    uploadBackground: adminProcedure
+    uploadBackground: campaignAdminProcedure
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
@@ -1085,7 +1119,7 @@ export const appRouter = router({
         return { url };
       }),
     
-    uploadHeroBackground: adminProcedure
+    uploadHeroBackground: campaignAdminProcedure
       .input(z.object({
         base64: z.string(),
         mimeType: z.string(),
@@ -1136,13 +1170,13 @@ export const appRouter = router({
 
   // ==================== ADMIN USERS (LOGIN SIMPLIFICADO) ====================
   adminUsers: router({
-    list: adminProcedure
+    list: campaignAdminProcedure
       .input(z.object({ campaignId: z.number().optional() }).optional())
       .query(async ({ input }) => {
         return db.getAllAdminUsers(getCampaignId(input || {}));
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         username: z.string(),
         password: z.string().min(4),
@@ -1159,7 +1193,7 @@ export const appRouter = router({
         });
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteAdminUser(input.id);
@@ -1226,7 +1260,7 @@ export const appRouter = router({
             needsPasswordChange: adminUser.needsPasswordChange || false
           },
           process.env.JWT_SECRET || 'secret',
-          { expiresIn: '7d' }
+          { expiresIn: '30d' }
         );
         
         return { 
@@ -1378,13 +1412,13 @@ export const appRouter = router({
         return db.getSupportMessagesByTeam(getCampaignId(input), input.teamId);
       }),
     
-    pending: adminProcedure
+    pending: campaignAdminProcedure
       .input(z.object({ campaignId: z.number().optional() }).optional())
       .query(async ({ input }) => {
         return db.getPendingSupportMessages(getCampaignId(input || {}));
       }),
     
-    all: adminProcedure
+    all: campaignAdminProcedure
       .input(z.object({ campaignId: z.number().optional() }).optional())
       .query(async ({ input }) => {
         return db.getAllSupportMessages(getCampaignId(input || {}));
@@ -1403,14 +1437,14 @@ export const appRouter = router({
         return db.createSupportMessage(getCampaignId(input), messageData);
       }),
     
-    approve: adminProcedure
+    approve: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.approveSupportMessage(input.id);
         return { success: true };
       }),
     
-    delete: adminProcedure
+    delete: campaignAdminProcedure
       .input(z.object({ id: z.number() }))
       .mutation(async ({ input }) => {
         await db.deleteSupportMessage(input.id);
@@ -1426,13 +1460,13 @@ export const appRouter = router({
         return db.getAllSponsors(getCampaignId(input || {}));
       }),
     
-    listAdmin: adminProcedure
+    listAdmin: campaignAdminProcedure
       .input(z.object({ campaignId: z.number().optional() }).optional())
       .query(async ({ input }) => {
         return db.getAllSponsorsAdmin(getCampaignId(input || {}));
       }),
     
-    create: adminProcedure
+    create: campaignAdminProcedure
       .input(z.object({
         name: z.string().min(1),
         tier: z.enum(['A', 'B', 'C']),
@@ -1448,7 +1482,7 @@ export const appRouter = router({
         return db.createSponsor(getCampaignId(input), sponsorData);
       }),
     
-    update: adminProcedure
+    update: campaignAdminProcedure
       .input(z.object({
         id: z.number(),
         name: z.string().min(1).optional(),
