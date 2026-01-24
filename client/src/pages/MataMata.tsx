@@ -5,20 +5,22 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Trophy, Target } from "lucide-react";
 import { useTournament } from "@/contexts/TournamentContext";
-import { useCampaign } from "@/App";
 
 export default function MataMata() {
   const { campaignId } = useTournament();
-  const { campaign } = useCampaign();
   const { data: round16Matches } = trpc.matches.byPhase.useQuery({ phase: "round16", campaignId });
   const { data: quarterMatches } = trpc.matches.byPhase.useQuery({ phase: "quarters", campaignId });
   const { data: semiMatches } = trpc.matches.byPhase.useQuery({ phase: "semis", campaignId });
   const { data: finalMatch } = trpc.matches.byPhase.useQuery({ phase: "final", campaignId });
   const { data: teams } = trpc.teams.list.useQuery({ campaignId });
   
+  // Buscar configurações de settings (mesma fonte que Admin-Configurações)
+  const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup", campaignId });
+  const { data: knockoutSizeSetting } = trpc.settings.get.useQuery({ key: "knockoutSize", campaignId });
+  
   // Calcular texto dinâmico baseado nas configurações
-  const teamsPerGroup = campaign?.teamsPerGroupAdvancing || 2;
-  const knockoutSize = campaign?.knockoutSize || 4;
+  const teamsPerGroup = parseInt(teamsQualifyPerGroup || "2");
+  const knockoutSize = parseInt(knockoutSizeSetting || "4");
   
   // Determinar fase inicial do mata-mata baseado no knockoutSize
   const getKnockoutPhase = () => {

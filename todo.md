@@ -948,3 +948,9 @@
 ## BUGS REPORTADOS - Correção Adicional (24/01/2026)
 - [x] BUG #1 REVISÃO: Classificação - Verde agora sobrepõe zebra com !important (todas as linhas classificadas ficam verdes)
 - [x] BUG #7 REVISÃO: Mata-mata - Lógica correta implementada (busca teamsPerGroupAdvancing e knockoutSize do campaign)
+
+
+## BUG #7 - CORREÇÃO REAL (24/01/2026)
+- [x] MataMata.tsx agora busca de settings.get (teamsQualifyPerGroup e knockoutSize)
+- [x] Mesma fonte que Admin-Configurações usa para salvar
+- [x] Texto dinâmico agora funciona corretamente: "Os 4 primeiros de cada grupo se classificam para as oitavas de final"
