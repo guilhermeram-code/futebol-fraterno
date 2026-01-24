@@ -943,3 +943,8 @@
 - [x] BUG #4: CRÍTICO - Modal adicionar jogador em Admin-Times agora permanece aberto após salvar (removido setOpen(false))
 - [x] BUG #6: CRÍTICO - Logout agora desloga de verdade (limpa localStorage e força reload da página)
 - [x] BUG #7: Mata-mata - Texto dinâmico baseado em teamsPerGroupAdvancing e knockoutSize do campaign
+
+
+## BUGS REPORTADOS - Correção Adicional (24/01/2026)
+- [x] BUG #1 REVISÃO: Classificação - Verde agora sobrepõe zebra com !important (todas as linhas classificadas ficam verdes)
+- [x] BUG #7 REVISÃO: Mata-mata - Lógica correta implementada (busca teamsPerGroupAdvancing e knockoutSize do campaign)
