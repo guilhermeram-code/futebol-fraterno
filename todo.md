@@ -1098,3 +1098,15 @@
   * Solução: Movido meQuery para ANTES do if (loading) return
 - [ ] Testar renderização do painel admin após login (aguardando publicação)
 - [ ] Validar que todas as abas do painel funcionam corretamente (aguardando publicação)
+
+## BUG - TOKEN NÃO PERSISTE APÓS LOGIN (24/01/2026)
+- [x] Investigar por que token JWT não está sendo armazenado após login bem-sucedido
+  * Causa: useAdminAuth() não estava passando campaignId para adminUsers.me query
+  * Backend precisa do campaignId para buscar o admin correto no banco
+- [x] Verificar se AdminLogin está salvando token corretamente no localStorage/cookie
+  * Token está sendo salvo corretamente (linha 26 do AdminLogin.tsx)
+- [x] Verificar se useAdminAuth está lendo token corretamente
+  * Token está sendo lido e enviado no header Authorization (main.tsx linha 48-51)
+- [x] Corrigir armazenamento/leitura de token
+  * Solução: Adicionado useCampaign() no useAdminAuth e passando { campaignId } para me query
+- [ ] Testar fluxo: login → redirect → painel carrega autenticado (aguardando publicação)

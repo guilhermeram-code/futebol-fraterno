@@ -2,15 +2,19 @@ import { trpc } from "@/lib/trpc";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { useSlug } from "./useSlug";
+import { useCampaign } from "@/App";
 
 export function useAdminAuth() {
   const [, setLocation] = useLocation();
   const slug = useSlug();
+  const { campaignId } = useCampaign();
   
   // Verificar se há token no localStorage
   const hasToken = !!localStorage.getItem("admin_token");
   
-  const { data: adminUser, isLoading, refetch } = trpc.adminUsers.me.useQuery(undefined, {
+  const { data: adminUser, isLoading, refetch } = trpc.adminUsers.me.useQuery(
+    { campaignId },
+    {
     retry: false,
     refetchOnWindowFocus: false,
     enabled: hasToken, // Só fazer query se houver token
