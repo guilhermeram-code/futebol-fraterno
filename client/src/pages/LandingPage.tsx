@@ -364,7 +364,7 @@ export default function LandingPage() {
             </p>
             <div className="mt-6 inline-flex items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-3 rounded-full font-semibold shadow-lg animate-pulse">
               <Sparkles className="w-5 h-5" />
-              🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 30% OFF
+              🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 40% OFF
               <Sparkles className="w-5 h-5" />
             </div>
           </div>
@@ -403,10 +403,6 @@ export default function LandingPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="mb-4">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-lg text-gray-400 line-through">R$ {plan.originalPrice.toFixed(2).replace(".", ",")}</span>
-                      <Badge className="bg-red-500 text-white text-xs">-30%</Badge>
-                    </div>
                     <span className="text-4xl font-bold text-emerald-600">R$ {plan.price.toFixed(2).replace(".", ",")}</span>
                   </div>
                   <p className="text-sm text-gray-500 mb-6">

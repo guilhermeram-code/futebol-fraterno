@@ -996,3 +996,11 @@
 - [ ] Tirar screenshots do campeonato-fraterno atualizado
 - [ ] Substituir fotos da landing page pelas screenshots reais
 - [x] Alterar título da aba do navegador de "Futebol Fraterno 2026" para "Pelada Pro" (corrigido roteamento)
+
+
+## ## BUGS CRÍTICOS - Landing Page (24/01/2026)
+- [x] Banner mostra "30% OFF" mas deveria ser "40% OFF" - CORRIGIDO
+- [x] Cards de preço mostram badge "-30%" - REMOVIDO (agora mostra apenas preço CHEIO)
+- [x] Preço riscado (originalPrice) - REMOVIDO (confundia usuário)
+- [x] Cálculo "equivale a R$ XX/mês" estava CORRETO (195/2=97,50, 268/3=89,33, etc)
+- [x] Problema era VISUAL: badges e preços riscados davam impressão de desconto já aplicado
