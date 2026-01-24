@@ -1,0 +1,15 @@
+{
+  "query": "SELECT id, name, slug FROM campaigns WHERE slug = 'futebol-fraterno' OR name LIKE '%Fraterno%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, name, slug FROM campaigns WHERE slug = 'futebol-fraterno' OR name LIKE '%Fraterno%';",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Futebol Fraterno 2026",
+      "slug": "futebol-fraterno"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\n1\tFutebol Fraterno 2026\tfutebol-fraterno\n",
+  "stderr": "",
+  "execution_time_ms": 377
+}

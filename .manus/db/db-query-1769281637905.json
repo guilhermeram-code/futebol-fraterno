@@ -1,0 +1,13 @@
+{
+  "query": "\nSELECT COUNT(*) as total_jogadores_validos\nFROM players p \nINNER JOIN teams t ON p.teamId = t.id \nWHERE p.campaignId = 1;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT COUNT(*) as total_jogadores_validos\nFROM players p \nINNER JOIN teams t ON p.teamId = t.id \nWHERE p.campaignId = 1;\n",
+  "rows": [
+    {
+      "total_jogadores_validos": "120"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_jogadores_validos\n120\n",
+  "stderr": "",
+  "execution_time_ms": 360
+}
