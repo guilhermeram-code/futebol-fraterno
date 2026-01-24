@@ -111,6 +111,19 @@ export async function getAllPurchases(): Promise<Purchase[]> {
   return db.select().from(purchases).orderBy(desc(purchases.createdAt));
 }
 
+export async function getPurchaseById(id: number): Promise<Purchase | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [purchase] = await db.select().from(purchases).where(eq(purchases.id, id));
+  return purchase || null;
+}
+
+export async function deletePurchase(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(purchases).where(eq(purchases.id, id));
+}
+
 // ==================== RESERVED SLUGS ====================
 export async function isSlugAvailable(slug: string): Promise<boolean> {
   const db = await getDb();

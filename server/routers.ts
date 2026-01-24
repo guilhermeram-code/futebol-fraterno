@@ -58,6 +58,38 @@ export const appRouter = router({
         await db.deleteCampaign(input.id);
         return { success: true };
       }),
+
+    getAllPurchases: adminProcedure.query(async () => {
+      const database = await getDb();
+      if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+      
+      const purchases = await db.getAllPurchases();
+      return purchases;
+    }),
+
+    deletePurchase: adminProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+        
+        // Buscar purchase para pegar campaignSlug
+        const purchase = await db.getPurchaseById(input.id);
+        if (!purchase) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Compra não encontrada' });
+        }
+
+        // Buscar campanha associada
+        const campaign = await db.getCampaignBySlug(purchase.campaignSlug);
+        if (campaign) {
+          // Deletar campanha (cascade delete cuidará dos dados relacionados)
+          await db.deleteCampaign(campaign.id);
+        }
+
+        // Deletar purchase
+        await db.deletePurchase(input.id);
+        return { success: true };
+      }),
   }),
   
   auth: router({

@@ -145,12 +145,20 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold">Painel Admin - PeladaPro</h1>
           <p className="text-muted-foreground">Visão geral de todos os campeonatos e faturamento</p>
         </div>
-        <Button variant="outline" asChild>
-          <a href="/" target="_blank">
-            <ExternalLink className="mr-2 h-4 w-4" />
-            Ver Site
-          </a>
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <a href="/admin-users">
+              <Users className="mr-2 h-4 w-4" />
+              Gestão de Usuários
+            </a>
+          </Button>
+          <Button variant="outline" asChild>
+            <a href="/" target="_blank">
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Ver Site
+            </a>
+          </Button>
+        </div>
       </div>
 
       {/* Estatísticas */}

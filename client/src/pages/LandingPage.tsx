@@ -41,7 +41,7 @@ const FEATURES = [
     icon: Trophy,
     title: "Gestão Completa",
     description: "Cadastre times, jogadores, grupos e gerencie todo o campeonato em um só lugar.",
-    screenshot: "/screenshots/home.webp"
+    screenshot: "/screenshots/gestao.webp"
   },
   {
     icon: Calendar,

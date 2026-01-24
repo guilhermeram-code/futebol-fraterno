@@ -1012,3 +1012,43 @@
 - [x] Adicionar código do cupom bem visível: "USE O CUPOM: LANCAMENTO40" (fonte grande, fundo branco, texto vermelho)
 - [x] Manter preços CHEIOS nos cards (R$ 195, R$ 268, R$ 448, R$ 749)
 - [x] Cliente aplica cupom no checkout para receber 40% OFF
+
+
+## ATUALIZAÇÃO SCREENSHOTS LANDING PAGE (24/01/2026)
+- [x] Capturar screenshot: Gestão Completa (home) - gestao.webp
+- [x] Capturar screenshot: Calendário Automático (jogos) - jogos.webp
+- [x] Capturar screenshot: Estatísticas Detalhadas (rankings) - estatisticas.webp
+- [x] Capturar screenshot: Chaves Mata-Mata - mata-mata.webp (já existia)
+- [x] Capturar screenshot: Tabela de Classificação - classificacao.webp (já existia)
+- [x] Capturar screenshot: Painel Administrativo - admin.webp (já existia)
+- [x] Screenshots copiados para client/public/screenshots/
+
+## FASE 2 - GESTÃO DE USUÁRIOS E SENHAS
+### Item 2 - Visualizar Usuários no Admin
+- [ ] Criar página admin/users para listar usuários
+- [ ] Mostrar: nome, email, plano, data de compra, status
+- [ ] Adicionar botão para deletar usuário
+- [ ] Adicionar confirmação antes de deletar
+
+### Item 5 - Sistema de Senha
+- [ ] Implementar "Alterar Senha" (usuário logado)
+- [ ] Implementar "Esqueci Minha Senha" (recuperação por email)
+- [ ] Criar rota para reset de senha via token
+- [ ] Enviar email com link de recuperação
+
+### Item 3+6 - Soft Delete e Expiração
+- [ ] Adicionar campo deletedAt na tabela campaigns
+- [ ] Implementar soft delete (marca como deletado, não remove)
+- [ ] Criar job para exclusão permanente após 30 dias
+- [ ] Implementar exclusão automática quando prazo expira
+- [x] Atualizar LandingPage.tsx com novos screenshots (gestao.webp, jogos.webp, estatisticas.webp)
+- [x] Atualizar LandingPage.tsx com novos screenshots (gestao.webp, jogos.webp, estatisticas.webp)
+
+## FASE 2 - ITEM 2 CONCLUÍDO (24/01/2026)
+- [x] Criar página AdminUsers.tsx para listar todos os compradores
+- [x] Adicionar procedures getAllPurchases e deletePurchase no backend
+- [x] Adicionar funções getPurchaseById e deletePurchase no db.ts
+- [x] Criar rota /admin-users no App.tsx
+- [x] Adicionar botão "Gestão de Usuários" no AdminDashboard
+- [x] Tabela mostra: nome, email, telefone, campeonato, plano, valor, status, datas
+- [x] Botão deletar com confirmação (deleta purchase + campanha associada)
