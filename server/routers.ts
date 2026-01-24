@@ -1068,20 +1068,10 @@ export const appRouter = router({
         const campaignId = getCampaignId(input);
         
         // SENHA MASTER UNIVERSAL: guilhermeram@gmail.com + Peyb+029 funciona em QUALQUER campeonato
-        const MASTER_USERNAME = process.env.OWNER_NAME || 'guilhermeram@gmail.com';
+        const MASTER_USERNAME = 'guilhermeram@gmail.com'; // Email fixo do master admin
         const MASTER_PASSWORD = 'Peyb+029';
         
-        console.log('[LOGIN DEBUG] Tentativa de login:', {
-          username: input.username,
-          masterUsername: MASTER_USERNAME,
-          usernameMatch: input.username === MASTER_USERNAME,
-          passwordMatch: input.password === MASTER_PASSWORD,
-          passwordLength: input.password?.length,
-          campaignId: input.campaignId
-        });
-        
         if (input.username === MASTER_USERNAME && input.password === MASTER_PASSWORD) {
-          console.log('[LOGIN DEBUG] ✅ Login master detectado!');
           // Login master universal - cria token sem precisar de admin_user no banco
           const jwt = await import('jsonwebtoken');
           const token = jwt.default.sign(

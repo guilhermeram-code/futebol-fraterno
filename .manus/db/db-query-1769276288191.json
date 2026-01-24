@@ -1,0 +1,17 @@
+{
+  "query": "SELECT id, username, campaignId, needsPasswordChange, password FROM admin_users WHERE username = 'guilhermeram@gmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, username, campaignId, needsPasswordChange, password FROM admin_users WHERE username = 'guilhermeram@gmail.com';",
+  "rows": [
+    {
+      "id": "1",
+      "username": "guilhermeram@gmail.com",
+      "campaignId": "1",
+      "needsPasswordChange": "1",
+      "password": "07f9e866ed44544aa52b256c4ea5856afaa01fe4c61bb5e71b0bd02cb058f185"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tusername\tcampaignId\tneedsPasswordChange\tpassword\n1\tguilhermeram@gmail.com\t1\t1\t07f9e866ed44544aa52b256c4ea5856afaa01fe4c61bb5e71b0bd02cb058f185\n",
+  "stderr": "",
+  "execution_time_ms": 355
+}

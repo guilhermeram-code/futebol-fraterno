@@ -1321,3 +1321,35 @@ const [username, setUsername] = useState("");
 - Login guilhermeram@gmail.com + senha Peyb+029 deve funcionar em QUALQUER campeonato
 - NUNCA deve pedir troca de senha
 - Deve ter acesso total ao painel admin de qualquer campeonato
+
+
+## ✅ LOGIN MASTER UNIVERSAL - 24/01/2026
+
+### Implementação Completa
+- [x] Senha master universal: guilhermeram@gmail.com + Peyb+029
+- [x] Funciona em QUALQUER campeonato sem precisar de admin_user no banco
+- [x] NUNCA pede troca de senha (needsPasswordChange: false)
+- [x] Token JWT com 30 dias de validade (vs 7 dias para admins normais)
+- [x] Procedure `me` reconhece login master (adminUserId === -1)
+- [x] Testado em múltiplos campeonatos (futebol-fraterno, teste-guilherme)
+
+### Bug Corrigido
+- [x] BUG: process.env.OWNER_NAME retorna "Guilherme Ramos" ao invés do email
+  - Solução: Usar email fixo 'guilhermeram@gmail.com' ao invés de variável de ambiente
+  - Antes: `const MASTER_USERNAME = process.env.OWNER_NAME || 'guilhermeram@gmail.com';`
+  - Depois: `const MASTER_USERNAME = 'guilhermeram@gmail.com';`
+
+### Credenciais Master
+- Email: guilhermeram@gmail.com
+- Senha: Peyb+029
+- Funciona em: TODOS os campeonatos
+- Não pede troca de senha
+- Acesso total como owner
+
+### Testes Realizados
+- ✅ Login em futebol-fraterno (campaignId 300001)
+- ✅ Login em teste-guilherme (campaignId 300012)
+- ✅ Token JWT gerado corretamente
+- ✅ needsPasswordChange: false
+- ✅ isOwner: true
+- ✅ adminUserId: -1 (ID especial para master)
