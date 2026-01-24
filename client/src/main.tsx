@@ -19,7 +19,15 @@ const redirectToLoginIfUnauthorized = (error: unknown) => {
 
   if (!isUnauthorized) return;
 
-  window.location.href = "/login";
+  // Só redirecionar para login se estiver tentando acessar área administrativa
+  const currentPath = window.location.pathname;
+  if (currentPath.includes("/admin")) {
+    // Está em área admin, redirecionar para login do campeonato
+    const pathParts = currentPath.split("/").filter(Boolean);
+    const slug = pathParts[0];
+    window.location.href = `/${slug}/admin/login`;
+  }
+  // Se estiver em página pública, não fazer nada (cliente pode estar deslogado)
 };
 
 queryClient.getQueryCache().subscribe(event => {

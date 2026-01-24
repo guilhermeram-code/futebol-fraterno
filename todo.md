@@ -1423,3 +1423,8 @@ const [username, setUsername] = useState("");
 - [x] BUG: Ao criar time/grupo, pede login novamente (sessão expira)
 - [x] BUG: Redirect de login vai para /login ao invés de /{slug}/admin/login
 
+
+## 🚨 BUG REPORTADO - Botão Voltar Desloga (24/01/2026)
+
+- [x] BUG: Botão "Voltar" no admin desloga usuário ao ir para página pública
+
