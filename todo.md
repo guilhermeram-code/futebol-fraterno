@@ -935,3 +935,11 @@
 - [x] BUG #4: UX Adicionar jogadores - Não fechar modal após salvar, deixar campo aberto
 - [x] BUG #5: Jogadores Admin - Inverter ordem para TIME (subtítulo), mostrar (subtítulo) quando vazio
 - [x] BUG #6: Logout - Redirecionar para URL do campeonato, não para /admin/login
+
+
+## BUGS REPORTADOS - Documento bugs.docx (24/01/2026)
+- [x] BUG #1: Classificação - Grifar de VERDE todas as linhas dos times que classificam (bg-green-100 + borda esquerda verde)
+- [x] BUG #2: Painel Admin - Mostrar logo/escudo do campeonato no círculo (usando tournamentLogo do contexto)
+- [x] BUG #4: CRÍTICO - Modal adicionar jogador em Admin-Times agora permanece aberto após salvar (removido setOpen(false))
+- [x] BUG #6: CRÍTICO - Logout agora desloga de verdade (limpa localStorage e força reload da página)
+- [x] BUG #7: Mata-mata - Texto dinâmico baseado em teamsPerGroupAdvancing e knockoutSize do campaign

@@ -125,7 +125,7 @@ function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { grou
                   return (
                     <tr 
                       key={row.team.id} 
-                      className={`border-b last:border-0 transition-colors ${isQualified ? "bg-green-50 hover:bg-green-100" : "hover:bg-muted/50"}`}
+                      className={`border-b last:border-0 transition-colors ${isQualified ? "bg-green-100 hover:bg-green-200 border-l-4 border-l-green-600" : "hover:bg-muted/50"}`}
                     >
                       <td className="py-2 px-1">
                         <span className={`font-bold ${isQualified ? "text-green-600" : ""}`}>

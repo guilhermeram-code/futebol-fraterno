@@ -16,17 +16,14 @@ export function useAdminAuth() {
     enabled: hasToken, // Só fazer query se houver token
   });
 
-  const logoutMutation = trpc.adminUsers.logout.useMutation({
-    onSuccess: () => {
-      // Limpar token do localStorage
-      localStorage.removeItem("admin_token");
-      toast.success("Logout realizado com sucesso");
-      setLocation(`/${slug}`);
-    },
-  });
-
   const logout = () => {
-    logoutMutation.mutate();
+    // Limpar token IMEDIATAMENTE (antes de qualquer requisição)
+    localStorage.removeItem("admin_token");
+    toast.success("Logout realizado com sucesso");
+    // Redirecionar para página do campeonato (deslogado)
+    setLocation(`/${slug}`);
+    // Forçar reload da página para limpar estado
+    window.location.href = `/${slug}`;
   };
 
   return {

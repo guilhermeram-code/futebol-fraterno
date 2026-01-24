@@ -44,7 +44,7 @@ import { ConfirmDeleteDialog } from "@/components/ConfirmDeleteDialog";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Admin() {
-  const { campaignId } = useTournament();
+  const { campaignId, settings } = useTournament();
   const { adminUser, isAuthenticated, loading, logout } = useAdminAuth();
   const [location, setLocation] = useLocation();
   
@@ -95,11 +95,17 @@ export default function Admin() {
                   <ArrowLeft className="h-5 w-5" />
                 </Button>
               </Link>
-              <img 
-                src={`/logo-campeonato.jpg?v=${Date.now()}`} 
-                alt="Futebol Fraterno 2026" 
-                className="h-12 w-12 rounded-full object-cover border-2 border-primary"
-              />
+              {settings.tournamentLogo ? (
+                <img 
+                  src={settings.tournamentLogo} 
+                  alt={settings.tournamentName || "Logo do Campeonato"} 
+                  className="h-12 w-12 rounded-full object-cover border-2 border-primary"
+                />
+              ) : (
+                <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center border-2 border-primary">
+                  <Trophy className="h-6 w-6 text-muted-foreground" />
+                </div>
+              )}
               <div>
                 <h1 className="text-xl font-bold text-gold">Painel Administrativo</h1>
                 <p className="text-sm text-muted-foreground">Gerenciar Campeonato</p>
@@ -446,7 +452,7 @@ function AddPlayerToTeamButton({ teamId, teamName, campaignId }: { teamId: numbe
       setName("");
       setNumber("");
       setPosition("");
-      setOpen(false);
+      // Modal permanece aberto para adicionar mais jogadores
     },
     onError: (error) => toast.error(error.message)
   });

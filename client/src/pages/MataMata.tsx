@@ -5,14 +5,36 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/Header";
 import { Trophy, Target } from "lucide-react";
 import { useTournament } from "@/contexts/TournamentContext";
+import { useCampaign } from "@/App";
 
 export default function MataMata() {
   const { campaignId } = useTournament();
+  const { campaign } = useCampaign();
   const { data: round16Matches } = trpc.matches.byPhase.useQuery({ phase: "round16", campaignId });
   const { data: quarterMatches } = trpc.matches.byPhase.useQuery({ phase: "quarters", campaignId });
   const { data: semiMatches } = trpc.matches.byPhase.useQuery({ phase: "semis", campaignId });
   const { data: finalMatch } = trpc.matches.byPhase.useQuery({ phase: "final", campaignId });
   const { data: teams } = trpc.teams.list.useQuery({ campaignId });
+  
+  // Calcular texto dinâmico baseado nas configurações
+  const teamsPerGroup = campaign?.teamsPerGroupAdvancing || 2;
+  const knockoutSize = campaign?.knockoutSize || 4;
+  
+  // Determinar fase inicial do mata-mata baseado no knockoutSize
+  const getKnockoutPhase = () => {
+    switch (knockoutSize) {
+      case 32: return "trinta e dois avos de final";
+      case 16: return "oitavas de final";
+      case 8: return "quartas de final";
+      case 4: return "semifinais";
+      case 2: return "final";
+      default: return "mata-mata";
+    }
+  };
+  
+  const qualificationText = teamsPerGroup === 1 
+    ? `O 1º colocado de cada grupo se classifica para as ${getKnockoutPhase()}.`
+    : `Os ${teamsPerGroup} primeiros de cada grupo se classificam para as ${getKnockoutPhase()}.`;
 
   const getTeamName = (teamId: number) => {
     return teams?.find(t => t.id === teamId)?.name || "A definir";
@@ -47,7 +69,7 @@ export default function MataMata() {
                 As chaves serão definidas após a conclusão da fase de grupos.
               </p>
               <p className="text-sm text-muted-foreground">
-                Os 2 primeiros de cada grupo se classificam para as oitavas de final.
+                {qualificationText}
               </p>
             </CardContent>
           </Card>
