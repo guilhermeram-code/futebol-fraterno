@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO coupons (code, discountPercent, maxUses, usedCount, active, expiresAt, createdAt)\nVALUES ('LANCAMENTO40', 40, 100, 0, 1, '2026-12-31 23:59:59', NOW())\nON DUPLICATE KEY UPDATE \n  discountPercent = 40,\n  maxUses = 100,\n  active = 1,\n  expiresAt = '2026-12-31 23:59:59';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute INSERT INTO coupons (code, discountPercent, maxUses, usedCount, active, expiresAt, createdAt)\nVALUES ('LANCAMENTO40', 40, 100, 0, 1, '2026-12-31 23:59:59', NOW())\nON DUPLICATE KEY UPDATE \n  discountPercent = 40,\n  maxUses = 100,\n  active = 1,\n  expiresAt = '2026-12-31 23:59:59';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 700
+}

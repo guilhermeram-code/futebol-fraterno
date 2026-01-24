@@ -168,8 +168,13 @@ function MainRouter() {
     'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'change-password', 'admin-dashboard'
   ];
   
-  // Verificar se é a landing page (raiz)
+  // Verificar se é a landing page (raiz) - PRIORIDADE MÁXIMA
   const isLandingPage = location === '/' || location === '';
+  
+  // Se for landing page ou raiz, mostrar página de vendas ANTES de qualquer outra lógica
+  if (location === '/landing' || isLandingPage) {
+    return <LandingPage />;
+  }
   
   // Redirecionar /admin para /admin-dashboard (painel do dono do PeladaPro)
   if (location === '/admin') {
@@ -179,11 +184,6 @@ function MainRouter() {
   
   // Verificar se é uma rota legada (sem slug)
   const isLegacyRoute = reservedRoutes.includes(potentialSlug);
-  
-  // Se for landing page ou raiz, mostrar página de vendas
-  if (location === '/landing' || isLandingPage) {
-    return <LandingPage />;
-  }
   
   // Página de login
   if (location === '/login') {

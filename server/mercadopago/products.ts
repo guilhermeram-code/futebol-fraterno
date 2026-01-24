@@ -6,41 +6,41 @@ export const PLANS = {
   TEST: {
     id: "test",
     name: "Teste",
-    description: "Acesso ao sistema por 1 m\u00eas",
+    description: "Acesso ao sistema por 1 mês",
     price: 7,
     originalPrice: 7,
     months: 1,
   },
   BASIC: {
     id: "basic",
-    name: "Básico",
+    name: "Iniciante",
     description: "Acesso ao sistema por 2 meses",
-    price: 90.30,
-    originalPrice: 129,
+    price: 195.00, // Preço CHEIO (sem desconto)
+    originalPrice: 195.00,
     months: 2,
   },
   POPULAR: {
     id: "popular",
     name: "Popular",
     description: "Acesso ao sistema por 3 meses",
-    price: 125.30,
-    originalPrice: 179,
+    price: 268.00, // Preço CHEIO (sem desconto)
+    originalPrice: 268.00,
     months: 3,
   },
   EXTENDED: {
     id: "extended",
-    name: "Estendido",
+    name: "Semestral",
     description: "Acesso ao sistema por 6 meses",
-    price: 209.30,
-    originalPrice: 299,
+    price: 448.00, // Preço CHEIO (sem desconto)
+    originalPrice: 448.00,
     months: 6,
   },
   ANNUAL: {
     id: "annual",
     name: "Anual",
     description: "Acesso ao sistema por 12 meses",
-    price: 349.30,
-    originalPrice: 499,
+    price: 749.00, // Preço CHEIO (sem desconto)
+    originalPrice: 749.00,
     months: 12,
   },
 } as const;
@@ -59,10 +59,10 @@ export function calculateExpirationDate(months: number): Date {
 
 // Cupom de desconto para promoção de lançamento
 export const PROMO_COUPONS = {
-  LANCAMENTO30: {
-    code: "LANCAMENTO30",
-    discount: 0.3, // 30%
-    description: "🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO",
+  LANCAMENTO40: {
+    code: "LANCAMENTO40",
+    discount: 0.4, // 40%
+    description: "🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 40% OFF",
     validUntil: new Date("2026-12-31"),
     maxUses: 100,
   },

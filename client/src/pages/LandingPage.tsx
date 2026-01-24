@@ -27,13 +27,13 @@ import {
   CheckCircle2
 } from "lucide-react";
 
-// Planos disponíveis (com 30% de desconto)
+// Planos disponíveis (preços CHEIOS - use cupom LANCAMENTO40 para 40% OFF)
 const PLANS = [
-  { id: "test", name: "Teste", duration: "1 m\u00eas", price: 7.00, originalPrice: 7.00, pricePerMonth: 7.00, isTest: true },
-  { id: "basic", name: "Iniciante", duration: "2 meses", price: 90.30, originalPrice: 129, pricePerMonth: 45.15 },
-  { id: "popular", name: "Popular", duration: "3 meses", price: 125.30, originalPrice: 179, pricePerMonth: 41.77 },
-  { id: "extended", name: "Semestral", duration: "6 meses", price: 209.30, originalPrice: 299, pricePerMonth: 34.88, popular: true },
-  { id: "annual", name: "Anual", duration: "12 meses", price: 349.30, originalPrice: 499, pricePerMonth: 29.11, bestValue: true },
+  { id: "test", name: "Teste", duration: "1 mês", price: 7.00, originalPrice: 7.00, pricePerMonth: 7.00, isTest: true },
+  { id: "basic", name: "Iniciante", duration: "2 meses", price: 195.00, originalPrice: 195.00, pricePerMonth: 97.50, pricePerMonthWithDiscount: 58.50 },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 268.00, originalPrice: 268.00, pricePerMonth: 89.33, pricePerMonthWithDiscount: 53.60 },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 448.00, originalPrice: 448.00, pricePerMonth: 74.67, pricePerMonthWithDiscount: 44.80, popular: true },
+  { id: "annual", name: "Anual", duration: "12 meses", price: 749.00, originalPrice: 749.00, pricePerMonth: 62.42, pricePerMonthWithDiscount: 37.45, bestValue: true },
 ];
 
 // Funcionalidades do produto
@@ -264,7 +264,7 @@ export default function LandingPage() {
                 </Button>
               </div>
               <p className="text-sm text-gray-500 mt-4">
-                A partir de <span className="font-semibold text-emerald-600">R$ 29,11/mês</span> • Configuração em 5 minutos
+                <span className="font-semibold text-emerald-600">40% OFF</span> com cupom <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">LANCAMENTO40</span> • A partir de R$ 37,45/mês
               </p>
             </div>
 

@@ -6,6 +6,7 @@ import { getPlanById, calculateExpirationDate } from "./products";
 import { notifyOwner } from "../_core/notification";
 import { createOrganizerUser } from "../_core/createOrganizerUser";
 import { sendWelcomeEmail } from "../_core/sendWelcomeEmail";
+import { sendOwnerSaleNotification } from "../emails/emailService";
 
 // Inicializar Mercado Pago
 const client = new MercadoPagoConfig({
@@ -60,9 +61,15 @@ export async function createCheckoutSession(input: CreateCheckoutInput) {
   let discount = 0;
 
   if (input.couponCode) {
-    // TODO: Implementar lógica de cupons
-    // Por enquanto, cupom "TEST99" dá 99% de desconto
-    if (input.couponCode.toUpperCase() === "TEST99") {
+    const couponCode = input.couponCode.toUpperCase();
+    
+    // Cupom de lançamento: 40% OFF para os 100 primeiros
+    if (couponCode === "LANCAMENTO40") {
+      discount = plan.price * 0.40; // 40% de desconto
+      finalPrice = plan.price - discount;
+    }
+    // Cupom de teste para desenvolvimento
+    else if (couponCode === "TEST99") {
       discount = plan.price * 0.99;
       finalPrice = plan.price - discount;
     }
@@ -234,11 +241,31 @@ export async function handlePaymentApproved(paymentData: any) {
       // Não falha se email não for enviado
     }
 
-    // Notificar owner
+    // Notificar owner via notificação Manus
     await notifyOwner({
       title: "🎉 Nova Venda - Pelada Pro!",
       content: `Campeonato: ${campaignName}\nSlug: /${campaignSlug}\nEmail: ${email}\nPlano: ${planId} (${planMonths} meses)\nExpira em: ${expiresAt.toLocaleDateString("pt-BR")}\nSenha temporária: ${temporaryPassword || "(usuário já existia)"}`,
     });
+
+    // Enviar email para o owner
+    try {
+      const plan = getPlanById(planId);
+      await sendOwnerSaleNotification({
+        campaignName,
+        campaignSlug,
+        customerEmail: email,
+        customerPhone: whatsapp,
+        planName: plan?.name || planId,
+        planMonths,
+        amountPaid: Math.round(paymentData.transaction_amount * 100),
+        expiresAt,
+        temporaryPassword: temporaryPassword || "(usuário já existia)",
+      });
+      console.log(`[MercadoPago] Email de notificação enviado para owner`);
+    } catch (error: any) {
+      console.error(`[MercadoPago] Erro ao enviar email para owner:`, error.message);
+      // Não falha se email não for enviado
+    }
 
     console.log(`[MercadoPago] Campeonato ${campaignSlug} criado com sucesso!`);
   } catch (error) {

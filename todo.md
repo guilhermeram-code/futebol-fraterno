@@ -954,3 +954,45 @@
 - [x] MataMata.tsx agora busca de settings.get (teamsQualifyPerGroup e knockoutSize)
 - [x] Mesma fonte que Admin-Configurações usa para salvar
 - [x] Texto dinâmico agora funciona corretamente: "Os 4 primeiros de cada grupo se classificam para as oitavas de final"
+
+
+## FASE 1 - AJUSTES FINAIS (ALTA PRIORIDADE) - 24/01/2026
+
+### Item 11 - Notificação de Vendas por Email
+- [x] Adicionar envio de email no webhook do Mercado Pago (após confirmação de pagamento)
+- [x] Email para: contato@meucontomagico.com.br
+- [x] Conteúdo: nome do comprador, plano, valor, data, campeonato criado, credenciais, links
+- [x] Usar sistema Gmail SMTP já configurado
+
+### Item 1 - Atualizar Preços e Descontos
+- [x] Atualizar valores dos planos:
+  * Iniciante 2 meses: R$ 195,00 (era R$ 90,30)
+  * Popular 3 meses: R$ 268,00 (era R$ 125,30)
+  * Semestral 6 meses: R$ 448,00 (era R$ 209,30)
+  * Anual 12 meses: R$ 749,00 (era R$ 349,30)
+- [x] Atualizar cupom de desconto para 40% (era 30%) - Código: LANCAMENTO40
+- [x] Atualizar texto "A partir de R$ 29,11/mês" para "R$ 62,42/mês"
+- [x] Atualizar cálculos de "equivalente a R$xxx/mês" (automático via pricePerMonth)
+- [x] Preços no checkout atualizados (products.ts do Mercado Pago)
+
+### Item 7 - Atualizar Fotos da Landing Page
+- [x] Substituir screenshots/fotos da landing page (home, classificação, times)
+- [x] Usar imagens reais do campeonato-fraterno com dados atualizados
+- [x] Screenshots capturados e copiados para client/public/screenshots/
+
+
+## CORREÇÃO URGENTE - Preços Errados (24/01/2026)
+- [x] ERRO: Implementei preços como se fossem COM desconto, mas são CHEIOS (sem desconto)
+- [x] Corrigir products.ts: usar R$ 195, R$ 268, R$ 448, R$ 749 como preços CHEIOS
+- [x] Corrigir landing page: mostrar preços CHEIOS + campo de cupom (já existia)
+- [x] Adicionar banner/destaque do cupom LANCAMENTO40 na landing page (hero section)
+- [x] Recalcular "A partir de R$ XX/mês" com desconto aplicado (749 * 0.6 / 12 = R$ 37,45/mês)
+- [x] Implementar aplicação do cupom no checkout.ts (40% OFF)
+- [x] Criar cupom LANCAMENTO40 no banco de dados (100 usos, expira 31/12/2026)
+
+
+## AJUSTES ADICIONAIS (24/01/2026)
+- [x] Criar cupom TEST90 (90% OFF) para testes do owner (999 usos, expira 31/12/2027)
+- [ ] Tirar screenshots do campeonato-fraterno atualizado
+- [ ] Substituir fotos da landing page pelas screenshots reais
+- [x] Alterar título da aba do navegador de "Futebol Fraterno 2026" para "Pelada Pro" (corrigido roteamento)

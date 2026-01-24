@@ -181,6 +181,137 @@ Considere entrar em contato para oferecer renovação.
   return true;
 }
 
+// Owner sale notification email
+export async function sendOwnerSaleNotification(data: {
+  campaignName: string;
+  campaignSlug: string;
+  customerEmail: string;
+  customerPhone: string;
+  planName: string;
+  planMonths: number;
+  amountPaid: number;
+  expiresAt: Date;
+  temporaryPassword: string;
+}) {
+  const baseUrl = process.env.VITE_OAUTH_PORTAL_URL?.replace('/oauth', '') || 'https://peladapro.com.br';
+  const campaignUrl = `${baseUrl}/${data.campaignSlug}`;
+  const adminUrl = `${campaignUrl}/admin`;
+  
+  const formattedExpiry = data.expiresAt.toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  });
+  
+  const formattedAmount = (data.amountPaid / 100).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  });
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'contato@meucontomagico.com.br',
+      pass: ENV.gmailAppPassword
+    }
+  });
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+    .header h1 { margin: 0; font-size: 28px; }
+    .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+    .info-box { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; border-left: 4px solid #10b981; }
+    .info-box h3 { margin-top: 0; color: #10b981; }
+    .highlight { background: #fef3c7; padding: 15px; border-radius: 6px; margin: 15px 0; border: 2px solid #f59e0b; }
+    .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; }
+    td { padding: 8px 0; }
+    td:first-child { font-weight: bold; color: #059669; width: 40%; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎉 Nova Venda - PeladaPro!</h1>
+      <p>Um novo campeonato foi criado</p>
+    </div>
+    <div class="content">
+      <div class="info-box">
+        <h3>📋 Detalhes da Venda</h3>
+        <table>
+          <tr>
+            <td>Campeonato:</td>
+            <td>${data.campaignName}</td>
+          </tr>
+          <tr>
+            <td>Slug:</td>
+            <td>/${data.campaignSlug}</td>
+          </tr>
+          <tr>
+            <td>Email do Cliente:</td>
+            <td>${data.customerEmail}</td>
+          </tr>
+          <tr>
+            <td>WhatsApp:</td>
+            <td>${data.customerPhone}</td>
+          </tr>
+          <tr>
+            <td>Plano:</td>
+            <td>${data.planName} (${data.planMonths} meses)</td>
+          </tr>
+          <tr>
+            <td>Valor Pago:</td>
+            <td>${formattedAmount}</td>
+          </tr>
+          <tr>
+            <td>Expira em:</td>
+            <td>${formattedExpiry}</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="highlight">
+        <h3 style="margin-top: 0;">🔐 Credenciais de Acesso</h3>
+        <p><strong>Email:</strong> ${data.customerEmail}</p>
+        <p><strong>Senha Temporária:</strong> ${data.temporaryPassword || '(usuário já existia)'}</p>
+      </div>
+
+      <div class="info-box">
+        <h3>🔗 Links de Acesso</h3>
+        <p><strong>Site Público:</strong> <a href="${campaignUrl}">${campaignUrl}</a></p>
+        <p><strong>Painel Admin:</strong> <a href="${adminUrl}">${adminUrl}</a></p>
+      </div>
+    </div>
+    <div class="footer">
+      <p>© 2026 PeladaPro - Notificação Automática de Vendas</p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: '"PeladaPro - Sistema" <contato@meucontomagico.com.br>',
+      to: 'contato@meucontomagico.com.br',
+      subject: `🎉 Nova Venda - ${data.campaignName} (${formattedAmount})`,
+      html: htmlContent
+    });
+    console.log(`[Email] Owner sale notification sent successfully`);
+    return true;
+  } catch (error) {
+    console.error(`[Email] Failed to send owner sale notification:`, error);
+    return false;
+  }
+}
+
 // Expired email
 export async function sendExpiredEmail(data: {
   email: string;
