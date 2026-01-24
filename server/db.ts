@@ -1167,6 +1167,20 @@ export async function updateAdminUserPassword(id: number, newPasswordHash: strin
   await db.update(adminUsers).set({ password: newPasswordHash }).where(eq(adminUsers.id, id));
 }
 
+export async function setNeedsPasswordChange(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(adminUsers).set({ needsPasswordChange: true }).where(eq(adminUsers.id, id));
+}
+
+export async function clearNeedsPasswordChange(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(adminUsers).set({ needsPasswordChange: false }).where(eq(adminUsers.id, id));
+}
+
 // ==================== SPONSORS ====================
 export async function createSponsor(campaignId: number, sponsor: Omit<InsertSponsor, 'campaignId'>) {
   const db = await getDb();

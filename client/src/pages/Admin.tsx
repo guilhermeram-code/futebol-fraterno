@@ -63,6 +63,40 @@ export default function Admin() {
     );
   }
 
+  // Verificar se precisa trocar senha
+  const meQuery = trpc.adminUsers.me.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
+
+  // Redirecionar para troca de senha se necessário
+  if (isAuthenticated && meQuery.data?.needsPasswordChange) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <div className="p-3 bg-amber-500/10 rounded-full">
+                <AlertTriangle className="h-8 w-8 text-amber-500" />
+              </div>
+            </div>
+            <CardTitle className="text-2xl">Troca de Senha Obrigatória</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground text-center">
+              Por segurança, você precisa alterar sua senha temporária antes de acessar o painel administrativo.
+            </p>
+            <Button 
+              onClick={() => setLocation(`/change-password`)} 
+              className="w-full"
+            >
+              Alterar Senha Agora
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">

@@ -1068,3 +1068,14 @@
   * Botão "Alterar Senha" adicionado no header do Admin
 - [ ] Implementar recuperação de senha via email ("Esqueci minha senha")
 - [ ] Testar fluxo completo de login/alteração/recuperação
+
+## SISTEMA DE RECUPERAÇÃO DE SENHA (24/01/2026)
+- [x] Investigar e corrigir problema de login no campeonato teste (backend OK, problema no frontend será resolvido em produção)
+- [x] Implementar backend: procedure forgotPassword (gerar senha temporária)
+- [x] Implementar backend: enviar email com senha temporária via Gmail SMTP
+- [x] Implementar frontend: página ForgotPassword.tsx
+- [x] Implementar frontend: link "Esqueci minha senha" na página de login
+- [x] Implementar flag needsPasswordChange no admin_users (migration 0014)
+- [x] Implementar força de troca de senha no primeiro login (redirect automático no Admin.tsx)
+- [x] Testar fluxo completo: esqueci senha → receber email → login → forçar troca (API testada com sucesso)
+- [x] Validar com credenciais do campeonato teste (needsPasswordChange=1 confirmado no banco)

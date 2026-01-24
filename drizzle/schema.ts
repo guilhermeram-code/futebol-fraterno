@@ -262,6 +262,7 @@ export const adminUsers = mysqlTable("admin_users", {
   name: varchar("name", { length: 255 }),
   isOwner: boolean("isOwner").default(false).notNull(), // Se é o dono (pode cadastrar outros admins)
   active: boolean("active").default(true).notNull(),
+  needsPasswordChange: boolean("needsPasswordChange").default(false).notNull(), // Força troca de senha no próximo login
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   lastLogin: timestamp("lastLogin"),
 });

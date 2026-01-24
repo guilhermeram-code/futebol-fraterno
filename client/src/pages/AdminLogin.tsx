@@ -85,6 +85,14 @@ export default function AdminLogin() {
               <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
                 {loginMutation.isPending ? "Entrando..." : "Entrar"}
               </Button>
+              
+              <div className="text-center mt-4">
+                <Link href={`/${slug}/admin/forgot-password`}>
+                  <Button variant="link" className="text-sm text-muted-foreground hover:text-primary">
+                    Esqueci minha senha
+                  </Button>
+                </Link>
+              </div>
             </form>
           </CardContent>
         </Card>

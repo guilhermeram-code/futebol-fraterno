@@ -1112,7 +1112,8 @@ export const appRouter = router({
             name: adminUser.name, 
             isOwner: adminUser.isOwner,
             campaignId: adminUser.campaignId,
-            campaignSlug: campaign?.slug || null
+            campaignSlug: campaign?.slug || null,
+            needsPasswordChange: adminUser.needsPasswordChange || false
           };
         } catch {
           return null;
@@ -1141,11 +1142,55 @@ export const appRouter = router({
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha atual incorreta' });
         }
 
-        // Atualizar senha
+        // Atualizar senha e remover flag de troca obrigatória
         const newPasswordHash = await hashPassword(input.newPassword);
         await db.updateAdminUserPassword(adminUser.id, newPasswordHash);
+        await db.clearNeedsPasswordChange(adminUser.id);
 
         return { success: true };
+      }),
+
+    forgotPassword: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+        campaignId: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+
+        // Buscar admin_user por email
+        const adminUser = await db.getAdminUserByUsernameGlobal(input.email);
+        if (!adminUser) {
+          // Não revelar se o email existe ou não (segurança)
+          return { success: true, message: 'Se o email estiver cadastrado, você receberá uma senha temporária.' };
+        }
+
+        // Gerar senha temporária aleatória (8 caracteres: letras maiúsculas, minúsculas, números e símbolos)
+        const crypto = await import('crypto');
+        const tempPassword = crypto.randomBytes(4).toString('hex').toUpperCase() + '@' + crypto.randomBytes(2).toString('hex');
+        
+        // Atualizar senha e marcar para forçar troca
+        const tempPasswordHash = await hashPassword(tempPassword);
+        await db.updateAdminUserPassword(adminUser.id, tempPasswordHash);
+        await db.setNeedsPasswordChange(adminUser.id);
+
+        // Buscar campanha para pegar informações
+        const campaign = await db.getCampaignById(adminUser.campaignId);
+        if (!campaign) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Campanha não encontrada' });
+        }
+
+        // Enviar email com senha temporária
+        const { sendPasswordResetEmail } = await import('./email');
+        await sendPasswordResetEmail({
+          to: input.email,
+          campaignName: campaign.name,
+          tempPassword,
+          loginUrl: `https://peladapro.com.br/${campaign.slug}/admin/login`,
+        });
+
+        return { success: true, message: 'Senha temporária enviada para seu email!' };
       }),
     
     logout: publicProcedure

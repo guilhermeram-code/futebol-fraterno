@@ -16,6 +16,7 @@ import Galeria from "./pages/Galeria";
 import JogadorDetail from "./pages/JogadorDetail";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
+import ForgotPassword from "./pages/ForgotPassword";
 import Patrocinadores from "./pages/Patrocinadores";
 import Jogadores from "./pages/Jogadores";
 import LandingPage from "./pages/LandingPage";
@@ -124,6 +125,7 @@ function CampaignRouter({ slug }: { slug: string }) {
         <Route path={`/${slug}/galeria`} component={Galeria} />
         <Route path={`/${slug}/patrocinadores`} component={Patrocinadores} />
         <Route path={`/${slug}/admin/login`} component={AdminLogin} />
+        <Route path={`/${slug}/admin/forgot-password`} component={ForgotPassword} />
         <Route path={`/${slug}/admin`} component={Admin} />
         <Route component={NotFound} />
       </Switch>
