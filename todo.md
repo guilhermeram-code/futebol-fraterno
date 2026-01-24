@@ -1089,3 +1089,12 @@
   * Botão agora responde e envia requisição corretamente
 - [x] Validar que redirecionamento funciona após login bem-sucedido
   * Correção validada, precisa publicar para ambiente de produção
+
+## BUG - REACT ERROR #310 APÓS LOGIN (24/01/2026)
+- [x] Investigar causa do React error #310 no Admin.tsx
+  * Causa: Hook trpc.adminUsers.me.useQuery() estava sendo chamado DEPOIS de um return condicional
+  * React exige que todos os hooks sejam chamados no topo do componente, antes de qualquer return
+- [x] Corrigir hook useEffect sendo chamado fora do contexto correto
+  * Solução: Movido meQuery para ANTES do if (loading) return
+- [ ] Testar renderização do painel admin após login (aguardando publicação)
+- [ ] Validar que todas as abas do painel funcionam corretamente (aguardando publicação)

@@ -48,9 +48,14 @@ export default function Admin() {
   const { campaignId, settings } = useTournament();
   const { adminUser, isAuthenticated, loading, logout } = useAdminAuth();
   const [location, setLocation] = useLocation();
-  
+
   // Extrair slug da URL atual (formato: /{slug}/admin)
   const slug = useSlug();
+
+  // Verificar se precisa trocar senha (hook DEVE estar antes de qualquer return)
+  const meQuery = trpc.adminUsers.me.useQuery(undefined, {
+    enabled: isAuthenticated,
+  });
 
   if (loading) {
     return (
@@ -62,11 +67,6 @@ export default function Admin() {
       </div>
     );
   }
-
-  // Verificar se precisa trocar senha
-  const meQuery = trpc.adminUsers.me.useQuery(undefined, {
-    enabled: isAuthenticated,
-  });
 
   // Redirecionar para troca de senha se necessário
   if (isAuthenticated && meQuery.data?.needsPasswordChange) {
