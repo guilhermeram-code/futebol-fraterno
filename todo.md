@@ -1116,3 +1116,19 @@
 - [ ] Retornar erro "Email não encontrado" quando email não está cadastrado
 - [ ] Testar com email cadastrado (deve enviar senha temporária)
 - [ ] Testar com email não cadastrado (deve retornar erro sem enviar email)
+
+
+## BUG CRÍTICO - Admin User Não Encontrado (24/01/2026)
+
+- [ ] **PROBLEMA IDENTIFICADO**: Admin user guilherme.ramos@constrixengenharia.com.br não está no banco
+  - Campanha teste-guilherme (id=300004) existe
+  - Login via API retorna "Área restrita, você não tem acesso"
+  - Código corrigido (AdminLogin.tsx usa campaign?.id ao invés de campaignId default)
+  - **PRÓXIMO PASSO**: Verificar se admin user foi criado corretamente ou recriar manualmente
+
+### Correções Aplicadas (Race Condition):
+- [x] AdminLogin.tsx agora usa `campaign?.id` diretamente ao invés de `campaignId` do contexto
+- [x] Adicionado loading spinner enquanto campanha carrega
+- [x] Desabilitado formulário até campanha estar válida
+- [x] Validação robusta: `isValidCampaign = !isCampaignLoading && campaign && campaignId > 0`
+- [x] Logs de debug para facilitar identificação de problemas

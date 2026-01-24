@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Shield, ArrowLeft, Loader2 } from "lucide-react";
+import { Shield, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import { Link } from "wouter";
 import { useSlug } from "@/hooks/useSlug";
@@ -18,14 +18,7 @@ export default function AdminLogin() {
   
   // Extrair slug da URL atual (formato: /{slug}/admin/login)
   const slug = useSlug();
-  
-  // Usar o contexto completo para ter acesso a isLoading e campaign
-  const { campaignId, campaign, isLoading: isCampaignLoading } = useCampaign();
-  
-  // Verificação robusta: só considera válido se tiver campaign carregada E id > 0
-  // O default do contexto é campaignId: 1, então precisamos verificar se campaign existe
-  const isValidCampaign = !isCampaignLoading && campaign && campaignId > 0;
-  const actualCampaignId = campaign?.id; // Usar direto do campaign para evitar valor default
+  const { campaignId } = useCampaign();
 
   const loginMutation = trpc.adminUsers.login.useMutation({
     onSuccess: (data) => {
@@ -46,29 +39,12 @@ export default function AdminLogin() {
       toast.error("Preencha todos os campos");
       return;
     }
-    
-    // Usar actualCampaignId (do campaign object) em vez de campaignId (do contexto)
-    if (!actualCampaignId) {
+    if (!campaignId) {
       toast.error("Erro ao carregar campeonato. Recarregue a página.");
-      console.error("[AdminLogin] campaignId inválido:", { campaignId, actualCampaignId, campaign, isLoading: isCampaignLoading });
       return;
     }
-    
-    console.log("[AdminLogin] Enviando login:", { username, campaignId: actualCampaignId });
-    loginMutation.mutate({ username, password, campaignId: actualCampaignId });
+    loginMutation.mutate({ username, password, campaignId });
   };
-
-  // Se ainda está carregando o campeonato, mostrar loading
-  if (isCampaignLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-          <p className="text-muted-foreground">Carregando...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -87,12 +63,6 @@ export default function AdminLogin() {
             </div>
             <CardTitle>Painel Administrativo</CardTitle>
             <p className="text-sm text-muted-foreground">Entre com suas credenciais</p>
-            {/* Debug info removido em produção */}
-            {process.env.NODE_ENV === 'development' && (
-              <p className="text-xs text-muted-foreground mt-2">
-                Campaign ID: {actualCampaignId || 'carregando...'}
-              </p>
-            )}
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -105,7 +75,6 @@ export default function AdminLogin() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  disabled={!isValidCampaign}
                 />
               </div>
               <div className="space-y-2">
@@ -117,22 +86,10 @@ export default function AdminLogin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  disabled={!isValidCampaign}
                 />
               </div>
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={loginMutation.isPending || !isValidCampaign}
-              >
-                {loginMutation.isPending ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Entrando...
-                  </>
-                ) : (
-                  "Entrar"
-                )}
+              <Button type="submit" className="w-full" disabled={loginMutation.isPending || !campaignId}>
+                {loginMutation.isPending ? "Entrando..." : "Entrar"}
               </Button>
               
               <div className="text-center mt-4">
