@@ -1118,13 +1118,13 @@
 - [ ] Testar com email não cadastrado (deve retornar erro sem enviar email)
 
 
-## BUG CRÍTICO - Admin User Não Encontrado (24/01/2026)
+## BUG CRÍTICO - Admin User Não Encontrado (24/01/2026) ✅ RESOLVIDO
 
-- [ ] **PROBLEMA IDENTIFICADO**: Admin user guilherme.ramos@constrixengenharia.com.br não está no banco
-  - Campanha teste-guilherme (id=300004) existe
-  - Login via API retorna "Área restrita, você não tem acesso"
-  - Código corrigido (AdminLogin.tsx usa campaign?.id ao invés de campaignId default)
-  - **PRÓXIMO PASSO**: Verificar se admin user foi criado corretamente ou recriar manualmente
+- [x] **PROBLEMA IDENTIFICADO**: Admin user guilherme.ramos@constrixengenharia.com.br não estava no banco
+  - Campanha teste-guilherme (id=300012) existe
+  - Admin user foi criado manualmente no banco de dados
+  - Senha atualizada com hash bcrypt correto
+  - Login funcionando via API ✅
 
 ### Correções Aplicadas (Race Condition):
 - [x] AdminLogin.tsx agora usa `campaign?.id` diretamente ao invés de `campaignId` do contexto
@@ -1132,3 +1132,23 @@
 - [x] Desabilitado formulário até campanha estar válida
 - [x] Validação robusta: `isValidCampaign = !isCampaignLoading && campaign && campaignId > 0`
 - [x] Logs de debug para facilitar identificação de problemas
+- [x] Admin user criado no banco com credenciais corretas
+
+
+## URGENTE - Verificar Admin User (24/01/2026 - 02:35) ✅ RESOLVIDO
+
+- [x] Verificar se admin user guilherme.ramos@constrixengenharia.com.br existe no banco
+- [x] Verificar se senha está correta (hash bcrypt de 'senha123')
+- [x] Verificar se campaignId está correto (300012 para teste-guilherme)
+- [x] Criar/atualizar admin user com senha correta
+- [x] Testar login após correção
+
+**PROBLEMA IDENTIFICADO:**
+- Admin user não existia no banco de dados
+- Hash bcrypt estava incorreto (bcryptjs vs bcrypt)
+- CampaignId estava errado (300004 vs 300012)
+
+**SOLUÇÃO APLICADA:**
+- Criado admin user para campaign 300012 (teste-guilherme)
+- Senha atualizada com hash bcrypt correto: $2b$10$p5bFb5AwFhcRrgDHYMQdN.UzlXvFTqXpg4WcD9kf91/lNoI1Eunku
+- Login testado e funcionando via API ✅

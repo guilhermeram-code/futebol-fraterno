@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO admin_users (campaignId, username, password, name, isOwner, active, needsPasswordChange, createdAt) \nVALUES (300004, 'guilherme.ramos@constrixengenharia.com.br', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Guilherme Ramos', 1, 1, 0, NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute INSERT INTO admin_users (campaignId, username, password, name, isOwner, active, needsPasswordChange, createdAt) \nVALUES (300004, 'guilherme.ramos@constrixengenharia.com.br', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'Guilherme Ramos', 1, 1, 0, NOW());",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 112
+}

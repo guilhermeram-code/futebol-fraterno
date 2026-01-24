@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, campaignId, username, name, isOwner, active FROM admin_users WHERE campaignId = 300004;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, campaignId, username, name, isOwner, active FROM admin_users WHERE campaignId = 300004;",
+  "rows": [
+    {
+      "id": "270001",
+      "campaignId": "300004",
+      "username": "guilherme.ramos@constrixengenharia.com.br",
+      "name": "Guilherme Ramos",
+      "isOwner": "1",
+      "active": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcampaignId\tusername\tname\tisOwner\tactive\n270001\t300004\tguilherme.ramos@constrixengenharia.com.br\tGuilherme Ramos\t1\t1\n",
+  "stderr": "",
+  "execution_time_ms": 85
+}

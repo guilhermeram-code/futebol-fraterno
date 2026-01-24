@@ -1,0 +1,14 @@
+{
+  "query": "SELECT id, username FROM admin_users WHERE campaignId = 300012;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, username FROM admin_users WHERE campaignId = 300012;",
+  "rows": [
+    {
+      "id": "240007",
+      "username": "guilherme.ramos@constrixengenharia.com.br"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tusername\n240007\tguilherme.ramos@constrixengenharia.com.br\n",
+  "stderr": "",
+  "execution_time_ms": 56
+}

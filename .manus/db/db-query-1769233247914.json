@@ -1,0 +1,22 @@
+{
+  "query": "SELECT id, campaignId, username, active FROM admin_users WHERE username = 'guilherme.ramos@constrixengenharia.com.br' ORDER BY id DESC LIMIT 3;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, campaignId, username, active FROM admin_users WHERE username = 'guilherme.ramos@constrixengenharia.com.br' ORDER BY id DESC LIMIT 3;",
+  "rows": [
+    {
+      "id": "270002",
+      "campaignId": "300012",
+      "username": "guilherme.ramos@constrixengenharia.com.br",
+      "active": "1"
+    },
+    {
+      "id": "240007",
+      "campaignId": "300012",
+      "username": "guilherme.ramos@constrixengenharia.com.br",
+      "active": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcampaignId\tusername\tactive\n270002\t300012\tguilherme.ramos@constrixengenharia.com.br\t1\n240007\t300012\tguilherme.ramos@constrixengenharia.com.br\t1\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}
