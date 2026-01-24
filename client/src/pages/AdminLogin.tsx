@@ -39,6 +39,10 @@ export default function AdminLogin() {
       toast.error("Preencha todos os campos");
       return;
     }
+    if (!campaignId) {
+      toast.error("Erro ao carregar campeonato. Recarregue a página.");
+      return;
+    }
     loginMutation.mutate({ username, password, campaignId });
   };
 
@@ -84,7 +88,7 @@ export default function AdminLogin() {
                   required
                 />
               </div>
-              <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+              <Button type="submit" className="w-full" disabled={loginMutation.isPending || !campaignId}>
                 {loginMutation.isPending ? "Entrando..." : "Entrar"}
               </Button>
               

@@ -1,0 +1,18 @@
+{
+  "query": "SELECT \n  c.id as campaign_id,\n  c.slug,\n  c.name,\n  au.id as admin_id,\n  au.username,\n  au.name as admin_name\nFROM campaigns c\nLEFT JOIN admin_users au ON au.campaignId = c.id\nWHERE c.slug = 'teste-guilherme';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT \n  c.id as campaign_id,\n  c.slug,\n  c.name,\n  au.id as admin_id,\n  au.username,\n  au.name as admin_name\nFROM campaigns c\nLEFT JOIN admin_users au ON au.campaignId = c.id\nWHERE c.slug = 'teste-guilherme';",
+  "rows": [
+    {
+      "campaign_id": "300012",
+      "slug": "teste-guilherme",
+      "name": "Teste Guilherme",
+      "admin_id": "NULL",
+      "username": "NULL",
+      "admin_name": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "campaign_id\tslug\tname\tadmin_id\tusername\tadmin_name\n300012\tteste-guilherme\tTeste Guilherme\tNULL\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 86
+}

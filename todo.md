@@ -1110,3 +1110,9 @@
 - [x] Corrigir armazenamento/leitura de token
   * Solução: Adicionado useCampaign() no useAdminAuth e passando { campaignId } para me query
 - [ ] Testar fluxo: login → redirect → painel carrega autenticado (aguardando publicação)
+
+## BUG DE SEGURANÇA - RECUPERAÇÃO DE SENHA (24/01/2026)
+- [ ] Corrigir forgotPassword para validar se email existe no banco ANTES de enviar email
+- [ ] Retornar erro "Email não encontrado" quando email não está cadastrado
+- [ ] Testar com email cadastrado (deve enviar senha temporária)
+- [ ] Testar com email não cadastrado (deve retornar erro sem enviar email)
