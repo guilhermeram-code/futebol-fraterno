@@ -64,6 +64,12 @@ export async function getActiveCampaigns(): Promise<Campaign[]> {
   return db.select().from(campaigns).where(eq(campaigns.isActive, true)).orderBy(desc(campaigns.createdAt));
 }
 
+export async function getCampaignsByEmail(email: string): Promise<Campaign[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(campaigns).where(eq(campaigns.organizerEmail, email)).orderBy(desc(campaigns.createdAt));
+}
+
 export async function createCampaign(campaign: InsertCampaign): Promise<{ id: number }> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

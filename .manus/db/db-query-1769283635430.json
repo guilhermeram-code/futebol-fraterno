@@ -1,0 +1,16 @@
+{
+  "query": "\nSELECT id, email, passwordHash, createdAt \nFROM users \nWHERE email = 'rafanicolosi@hotmail.com'\nORDER BY createdAt DESC\nLIMIT 1;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT id, email, passwordHash, createdAt \nFROM users \nWHERE email = 'rafanicolosi@hotmail.com'\nORDER BY createdAt DESC\nLIMIT 1;\n",
+  "rows": [
+    {
+      "id": "1770064",
+      "email": "rafanicolosi@hotmail.com",
+      "passwordHash": "fce92830d59ba693b14816fe3499bd76949862e2b0bdee0ea21aa5fa2142c986",
+      "createdAt": "2026-01-24 19:10:46"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tpasswordHash\tcreatedAt\n1770064\trafanicolosi@hotmail.com\tfce92830d59ba693b14816fe3499bd76949862e2b0bdee0ea21aa5fa2142c986\t2026-01-24 19:10:46\n",
+  "stderr": "",
+  "execution_time_ms": 358
+}

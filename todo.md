@@ -1401,3 +1401,10 @@ const [username, setUsername] = useState("");
 - ✅ Sistema de recuperação de senha funcional
 - ✅ Troca de senha usa BCRYPT
 - ✅ Banco de dados preparado para senhas longas (72 caracteres)
+
+
+## 🚨 BUGS CRÍTICOS REPORTADOS - 24/01/2026
+
+- [x] BUG: "Esqueci minha senha" não funciona (função getCampaignsByEmail criada) (erro "campanha não existe")
+- [x] BUG: Email após compra JÁ envia senha (sendWelcomeEmail linha 133-135) em texto plano para o cliente
+- [x] Gerar senha temporária para Rafael: 19072EDB@009b (rafanicolosi@hotmail.com / campeonato: rafael)
