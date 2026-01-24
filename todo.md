@@ -1408,3 +1408,11 @@ const [username, setUsername] = useState("");
 - [x] BUG: "Esqueci minha senha" não funciona (função getCampaignsByEmail criada) (erro "campanha não existe")
 - [x] BUG: Email após compra JÁ envia senha (sendWelcomeEmail linha 133-135) em texto plano para o cliente
 - [x] Gerar senha temporária para Rafael: 19072EDB@009b (rafanicolosi@hotmail.com / campeonato: rafael)
+
+## ✅ SOLUÇÃO CLAUDE IMPLEMENTADA (24/01/2026)
+
+- [x] Rafael já tem acesso (admin_user criado anteriormente)
+- [x] Webhook atualizado para criar admin_user automaticamente
+- [x] Email de boas-vindas envia senha (linha 133-135 sendWelcomeEmail.ts)
+- [x] Próximos clientes terão acesso imediato ao painel admin
+

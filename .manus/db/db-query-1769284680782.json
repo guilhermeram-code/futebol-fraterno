@@ -1,0 +1,16 @@
+{
+  "query": "SELECT \n    id as CAMPAIGN_ID,\n    name,\n    slug,\n    organizerEmail\nFROM campaigns \nWHERE slug = 'rafael';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT \n    id as CAMPAIGN_ID,\n    name,\n    slug,\n    organizerEmail\nFROM campaigns \nWHERE slug = 'rafael';",
+  "rows": [
+    {
+      "CAMPAIGN_ID": "360002",
+      "name": "Rafael",
+      "slug": "rafael",
+      "organizerEmail": "rafanicolosi@hotmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "CAMPAIGN_ID\tname\tslug\torganizerEmail\n360002\tRafael\trafael\trafanicolosi@hotmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 360
+}

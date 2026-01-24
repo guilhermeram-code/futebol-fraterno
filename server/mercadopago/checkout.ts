@@ -1,7 +1,7 @@
 import { MercadoPagoConfig, Preference } from "mercadopago";
-import { getDb } from "../db";
-import { campaigns, purchases, reservedSlugs } from "../../drizzle/schema";
-import { eq } from "drizzle-orm";
+import { getDb, createAdminUser } from "../db";
+import { campaigns, purchases, reservedSlugs, adminUsers, users } from "../../drizzle/schema";
+import { eq, and } from "drizzle-orm";
 import { getPlanById, calculateExpirationDate } from "./products";
 import { notifyOwner } from "../_core/notification";
 import { createOrganizerUser } from "../_core/createOrganizerUser";
@@ -205,16 +205,101 @@ export async function handlePaymentApproved(paymentData: any) {
 
     // Criar conta de usuário para o organizador
     let temporaryPassword = "";
+    let userId = 0;
+    
     try {
       const userResult = await createOrganizerUser({
         email,
         name: campaignName,
       });
       temporaryPassword = userResult.temporaryPassword;
-      console.log(`[MercadoPago] Usuário criado para ${email}`);
+      userId = userResult.userId;
+      console.log(`[MercadoPago] Usuário criado para ${email} (ID: ${userId})`);
     } catch (error: any) {
       console.error(`[MercadoPago] Erro ao criar usuário:`, error.message);
-      // Se usuário já existe, continua sem criar
+      
+      // Se usuário já existe, buscar ID e gerar nova senha
+      if (error.message.includes('já existe')) {
+        try {
+          const database = await getDb();
+          if (database) {
+            const [existingUser] = await database
+              .select()
+              .from(users)
+              .where(eq(users.email, email))
+              .limit(1);
+            
+            if (existingUser) {
+              userId = existingUser.id;
+              console.log(`[MercadoPago] Usuário já existe (ID: ${userId}), continuando...`);
+            }
+          }
+        } catch (searchError: any) {
+          console.error(`[MercadoPago] Erro ao buscar usuário existente:`, searchError.message);
+        }
+      }
+    }
+
+    // NOVO: Criar admin_user vinculado ao campeonato (SEMPRE)
+    // Usa senha temporária se foi gerada, senão gera nova
+    if (!temporaryPassword) {
+      // Se usuário já existia, gerar nova senha temporária
+      const crypto = await import('crypto');
+      temporaryPassword = crypto.randomBytes(4).toString('hex').toUpperCase() + '@' + crypto.randomBytes(2).toString('hex');
+      console.log(`[MercadoPago] Nova senha temporária gerada: ${temporaryPassword}`);
+    }
+
+    try {
+      const database = await getDb();
+      if (database) {
+        // Verificar se admin_user já existe
+        const [existingAdmin] = await database
+          .select()
+          .from(adminUsers)
+          .where(
+            and(
+              eq(adminUsers.campaignId, newCampaign.id),
+              eq(adminUsers.username, email)
+            )
+          )
+          .limit(1);
+
+        if (existingAdmin) {
+          console.log(`[MercadoPago] Admin user já existe para ${email}, atualizando senha...`);
+          
+          // Atualizar senha do admin existente
+          const bcrypt = await import('bcrypt');
+          const hashedPassword = await bcrypt.hash(temporaryPassword, 10);
+          
+          await database
+            .update(adminUsers)
+            .set({ 
+              password: hashedPassword,
+              active: true
+            })
+            .where(eq(adminUsers.id, existingAdmin.id));
+          
+          console.log(`[MercadoPago] ✅ Senha do admin user atualizada (ID: ${existingAdmin.id})`);
+        } else {
+          // Criar novo admin_user
+          const adminUser = await createAdminUser(newCampaign.id, {
+            username: email,
+            password: temporaryPassword,
+            name: campaignName,
+            isOwner: true,
+          });
+          
+          if (adminUser) {
+            console.log(`[MercadoPago] ✅ Admin user criado para campanha ${campaignSlug} (Admin ID: ${adminUser.id})`);
+          } else {
+            console.error(`[MercadoPago] ❌ Falha ao criar admin user para ${email}`);
+          }
+        }
+      }
+    } catch (error: any) {
+      console.error(`[MercadoPago] ❌ Erro ao criar/atualizar admin user:`, error.message);
+      console.error(`[MercadoPago] Stack:`, error.stack);
+      // Não falha a compra se admin user não for criado/atualizado
     }
 
     // Salvar senha em texto plano no purchase
