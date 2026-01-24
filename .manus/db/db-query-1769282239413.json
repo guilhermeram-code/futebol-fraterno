@@ -1,0 +1,20 @@
+{
+  "query": "\nSELECT au.id, au.campaignId, au.username, au.name, au.isOwner, au.needsPasswordChange, au.active, c.slug\nFROM admin_users au\nINNER JOIN campaigns c ON au.campaignId = c.id\nWHERE c.slug = 'rafael';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT au.id, au.campaignId, au.username, au.name, au.isOwner, au.needsPasswordChange, au.active, c.slug\nFROM admin_users au\nINNER JOIN campaigns c ON au.campaignId = c.id\nWHERE c.slug = 'rafael';\n",
+  "rows": [
+    {
+      "id": "330001",
+      "campaignId": "360001",
+      "username": "rafanicolosi@hotmail.com",
+      "name": "rafael",
+      "isOwner": "1",
+      "needsPasswordChange": "0",
+      "active": "1",
+      "slug": "rafael"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcampaignId\tusername\tname\tisOwner\tneedsPasswordChange\tactive\tslug\n330001\t360001\trafanicolosi@hotmail.com\trafael\t1\t0\t1\trafael\n",
+  "stderr": "",
+  "execution_time_ms": 346
+}

@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, customerEmail, campaignSlug, plainPassword, status, createdAt FROM purchases WHERE campaignSlug = 'rafael';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, customerEmail, campaignSlug, plainPassword, status, createdAt FROM purchases WHERE campaignSlug = 'rafael';",
+  "rows": [
+    {
+      "id": "300001",
+      "customerEmail": "rafanicolosi@hotmail.com",
+      "campaignSlug": "rafael",
+      "plainPassword": "BBcgwKJc",
+      "status": "completed",
+      "createdAt": "2026-01-24 19:10:46"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcustomerEmail\tcampaignSlug\tplainPassword\tstatus\tcreatedAt\n300001\trafanicolosi@hotmail.com\trafael\tBBcgwKJc\tcompleted\t2026-01-24 19:10:46\n",
+  "stderr": "",
+  "execution_time_ms": 345
+}

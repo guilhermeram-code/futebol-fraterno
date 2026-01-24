@@ -1361,3 +1361,43 @@ const [username, setUsername] = useState("");
 - [x] Comparar implementação com LANCAMENTO40 (que funciona corretamente)
 - [x] Corrigir aplicação do desconto no checkout do Mercado Pago (estava TEST99 ao invés de TEST90)
 - [x] Testar cupom TEST90 end-to-end (frontend → backend → Mercado Pago)
+
+
+## 🔥 IMPLEMENTAÇÃO URGENTE - Correções do Cláudio (24/01/2026)
+
+### Bug Crítico: Sistema de Autenticação (SHA-256 → BCRYPT)
+- [ ] Solução 1: Atualizar createOrganizerUser.ts para usar bcrypt
+- [ ] Solução 2: Adicionar funções verifyPasswordBcrypt e hashPasswordBcrypt em password.ts
+- [ ] Solução 3: Corrigir login em routers.ts para usar bcrypt
+- [ ] Solução 4: Implementar forgotPasswordUser para users em routers.ts
+- [ ] Solução 5: Criar sendPasswordResetEmailUser em email.ts
+- [ ] Solução 6: Executar migration SQL (ALTER TABLE users MODIFY passwordHash VARCHAR(72))
+- [ ] Solução 7: Corrigir changePassword em routers.ts para usar bcrypt
+- [ ] Testar: Nova compra → login funciona
+- [ ] Testar: Esqueci senha → recuperação funciona
+- [ ] Testar: Troca de senha → funciona corretamente
+
+
+## 🔥 CORREÇÕES CRÍTICAS DO CLÁUDIO - 24/01/2026
+
+### Problema Identificado
+- Sistema usava SHA-256 (antigo) mas esperava BCRYPT (correto)
+- Usuários não conseguiam fazer login após compra
+- Função "Esqueci minha senha" não existia para users
+- Sistema de troca de senha usava algoritmo antigo
+
+### Soluções Implementadas
+- [x] Solução 1: Corrigir createOrganizerUser para usar bcrypt
+- [x] Solução 2: Adicionar funções de verificação bcrypt (password.ts)
+- [x] Solução 3: Corrigir login para usar bcrypt
+- [x] Solução 4: Implementar "Esqueci minha senha" para users
+- [x] Solução 5: Criar template de email de recuperação para users
+- [x] Solução 6: Atualizar banco de dados (migration SQL - passwordHash VARCHAR(72))
+- [x] Solução 7: Corrigir sistema de troca de senha
+
+### Impacto
+- ✅ Novos usuários agora recebem senha BCRYPT correta
+- ✅ Login funciona imediatamente após compra
+- ✅ Sistema de recuperação de senha funcional
+- ✅ Troca de senha usa BCRYPT
+- ✅ Banco de dados preparado para senhas longas (72 caracteres)

@@ -11,7 +11,7 @@ import { storagePut } from "./storage";
 import { nanoid } from "nanoid";
 import { createCheckoutSession } from "./stripe/checkout";
 import { createCheckoutSession as createMercadoPagoCheckout } from "./mercadopago/checkout";
-import { verifyPassword, hashPassword } from "./_core/password";
+import { verifyPasswordBcrypt, hashPasswordBcrypt } from "./_core/password";
 import { users } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
@@ -123,7 +123,11 @@ export const appRouter = router({
         // Verificar senha (aceita senha master universal ou senha do usuário)
         const MASTER_PASSWORD = 'Peyb+029';
         const isMasterPassword = input.password === MASTER_PASSWORD;
-        const isValidUserPassword = user.passwordHash && verifyPassword(input.password, user.passwordHash);
+        const isValidUserPassword = user.passwordHash && await verifyPasswordBcrypt(input.password, user.passwordHash);
+        
+        console.log(`[Login] Tentativa de login para ${user.email}`);
+        console.log(`[Login] Master password: ${isMasterPassword}`);
+        console.log(`[Login] Valid user password: ${isValidUserPassword}`);
         
         if (!isMasterPassword && !isValidUserPassword) {
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
@@ -135,6 +139,8 @@ export const appRouter = router({
 
         // Verificar se é o owner (dono do PeladaPro)
         const isOwner = user.email === process.env.OWNER_EMAIL || user.email === 'guilhermeram@gmail.com';
+        
+        console.log(`[Login] ✅ Usuário ${user.email} autenticado com sucesso`);
         
         // Criar sessão de login (retornar dados do usuário para o contexto)
         return {
@@ -150,10 +156,89 @@ export const appRouter = router({
         };
       }),
     
+    forgotPasswordUser: publicProcedure
+      .input(z.object({
+        email: z.string().email(),
+      }))
+      .mutation(async ({ input }) => {
+        const database = await getDb();
+        if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
+
+        console.log(`[ForgotPassword] Solicitação para email: ${input.email}`);
+
+        // Buscar usuário por email na tabela users
+        const [user] = await database
+          .select()
+          .from(users)
+          .where(eq(users.email, input.email))
+          .limit(1);
+
+        if (!user) {
+          // Não revelar se o email existe ou não (segurança)
+          console.log(`[ForgotPassword] Email ${input.email} não encontrado (não revelado ao usuário)`);
+          return { 
+            success: true, 
+            message: 'Se o email estiver cadastrado, você receberá uma senha temporária em instantes.' 
+          };
+        }
+
+        // Gerar senha temporária aleatória (8 caracteres: letras maiúsculas, minúsculas, números e símbolos)
+        const crypto = await import('crypto');
+        const tempPassword = crypto.randomBytes(4).toString('hex').toUpperCase() + '@' + crypto.randomBytes(2).toString('hex');
+        
+        console.log(`[ForgotPassword] Senha temporária gerada para ${input.email}: ${tempPassword}`);
+        
+        // Atualizar senha com bcrypt
+        const bcrypt = await import('bcrypt');
+        const tempPasswordHash = await bcrypt.hash(tempPassword, 10);
+        
+        await database
+          .update(users)
+          .set({ passwordHash: tempPasswordHash })
+          .where(eq(users.id, user.id));
+
+        console.log(`[ForgotPassword] Senha atualizada no banco para usuário ID ${user.id}`);
+
+        // Buscar campanha do usuário
+        const userCampaigns = await getCampaignsByEmail(input.email);
+        if (userCampaigns.length === 0) {
+          console.error(`[ForgotPassword] Nenhum campeonato encontrado para ${input.email}`);
+          throw new TRPCError({ 
+            code: 'NOT_FOUND', 
+            message: 'Nenhum campeonato encontrado para este email. Entre em contato com o suporte.' 
+          });
+        }
+        
+        const campaign = userCampaigns[0];
+        console.log(`[ForgotPassword] Campeonato encontrado: ${campaign.name} (${campaign.slug})`);
+
+        // Enviar email com senha temporária
+        try {
+          const { sendPasswordResetEmailUser } = await import('./email');
+          await sendPasswordResetEmailUser({
+            to: input.email,
+            name: user.name || input.email,
+            campaignName: campaign.name,
+            campaignSlug: campaign.slug,
+            tempPassword,
+            loginUrl: `https://peladapro.com.br/login`,
+          });
+          console.log(`[ForgotPassword] Email enviado com sucesso para ${input.email}`);
+        } catch (emailError: any) {
+          console.error(`[ForgotPassword] Erro ao enviar email:`, emailError.message);
+          // Não falha a operação se email não for enviado, mas loga o erro
+        }
+
+        return { 
+          success: true, 
+          message: 'Senha temporária enviada para seu email! Verifique sua caixa de entrada.' 
+        };
+      }),
+    
     changePassword: protectedProcedure
       .input(z.object({
         currentPassword: z.string(),
-        newPassword: z.string().min(8),
+        newPassword: z.string().min(8, "A nova senha deve ter no mínimo 8 caracteres"),
       }))
       .mutation(async ({ input, ctx }) => {
         const user = ctx.user;
@@ -164,6 +249,8 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
 
+        console.log(`[ChangePassword] Solicitação de troca de senha para usuário: ${user.email}`);
+
         // Buscar usuário completo
         const [fullUser] = await database
           .select()
@@ -171,23 +258,44 @@ export const appRouter = router({
           .where(eq(users.id, user.id))
           .limit(1);
 
-        if (!fullUser || !fullUser.passwordHash) {
-          throw new TRPCError({ code: 'BAD_REQUEST', message: 'Usuário não possui senha cadastrada' });
+        if (!fullUser) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Usuário não encontrado' });
         }
 
-        // Verificar senha atual
-        if (!verifyPassword(input.currentPassword, fullUser.passwordHash)) {
+        if (!fullUser.passwordHash) {
+          throw new TRPCError({ 
+            code: 'BAD_REQUEST', 
+            message: 'Usuário não possui senha cadastrada. Use a recuperação de senha.' 
+          });
+        }
+
+        // ALTERAÇÃO CRÍTICA: Verificar senha atual usando bcrypt
+        const isCurrentPasswordValid = await verifyPasswordBcrypt(input.currentPassword, fullUser.passwordHash);
+        
+        if (!isCurrentPasswordValid) {
+          console.log(`[ChangePassword] Senha atual incorreta para ${user.email}`);
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha atual incorreta' });
         }
 
-        // Atualizar senha
-        const newPasswordHash = hashPassword(input.newPassword);
+        // ALTERAÇÃO CRÍTICA: Atualizar senha COM BCRYPT
+        const bcrypt = await import('bcrypt');
+        const newPasswordHash = await bcrypt.hash(input.newPassword, 10);
+
         await database
           .update(users)
-          .set({ passwordHash: newPasswordHash })
+          .set({ 
+            passwordHash: newPasswordHash,
+            updatedAt: new Date()
+          })
           .where(eq(users.id, user.id));
 
-        return { success: true };
+        console.log(`[ChangePassword] ✅ Senha alterada com sucesso para ${user.email}`);
+        console.log(`[ChangePassword] Novo hash bcrypt: ${newPasswordHash.substring(0, 20)}...`);
+
+        return { 
+          success: true,
+          message: 'Senha alterada com sucesso! Use sua nova senha no próximo login.'
+        };
       }),
   }),
 

@@ -1,8 +1,12 @@
+// SOLUÇÃO 1: Corrigir createOrganizerUser.ts para usar BCRYPT
+// Arquivo: server/_core/createOrganizerUser.ts
+
 import { getDb } from "../db";
 import { users } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
-import { generateTemporaryPassword, hashPassword } from "./password";
+import { generateTemporaryPassword } from "./password"; // REMOVIDO: hashPassword
 import { nanoid } from "nanoid";
+import bcrypt from "bcrypt"; // ADICIONADO
 
 interface CreateOrganizerUserInput {
   email: string;
@@ -39,7 +43,9 @@ export async function createOrganizerUser(
 
   // Gerar senha temporária
   const temporaryPassword = generateTemporaryPassword(8);
-  const passwordHash = hashPassword(temporaryPassword);
+  
+  // ALTERAÇÃO CRÍTICA: Usar bcrypt ao invés de SHA-256
+  const passwordHash = await bcrypt.hash(temporaryPassword, 10);
 
   // Criar openId único (usado pelo sistema de autenticação Manus)
   const openId = `organizer_${nanoid(16)}`;
@@ -61,6 +67,7 @@ export async function createOrganizerUser(
     .$returningId();
 
   console.log(`[CreateUser] Usuário criado: ${input.email} (ID: ${newUser.id})`);
+  console.log(`[CreateUser] Hash bcrypt gerado (primeiros 20 chars): ${passwordHash.substring(0, 20)}...`);
 
   return {
     userId: newUser.id,

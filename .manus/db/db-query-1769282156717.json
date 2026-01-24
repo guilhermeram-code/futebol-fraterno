@@ -1,0 +1,9 @@
+{
+  "query": "\nSELECT au.id, au.campaignId, au.username, au.name, au.isOwner, au.needsPasswordChange, au.active, au.createdAt, c.slug\nFROM admin_users au\nINNER JOIN campaigns c ON au.campaignId = c.id\nWHERE c.slug = 'rafael';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT au.id, au.campaignId, au.username, au.name, au.isOwner, au.needsPasswordChange, au.active, au.createdAt, c.slug\nFROM admin_users au\nINNER JOIN campaigns c ON au.campaignId = c.id\nWHERE c.slug = 'rafael';\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 348
+}

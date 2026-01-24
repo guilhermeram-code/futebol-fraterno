@@ -1,0 +1,90 @@
+{
+  "query": "SELECT \n    id,\n    email,\n    name,\n    CASE \n        WHEN passwordHash IS NULL THEN 'SEM_SENHA'\n        WHEN passwordHash LIKE '$2%' THEN 'BCRYPT'\n        WHEN LENGTH(passwordHash) = 64 THEN 'SHA256'\n        ELSE 'DESCONHECIDO'\n    END as tipo_hash,\n    LENGTH(passwordHash) as tamanho_hash,\n    createdAt\nFROM users\nORDER BY createdAt DESC\nLIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT \n    id,\n    email,\n    name,\n    CASE \n        WHEN passwordHash IS NULL THEN 'SEM_SENHA'\n        WHEN passwordHash LIKE '$2%' THEN 'BCRYPT'\n        WHEN LENGTH(passwordHash) = 64 THEN 'SHA256'\n        ELSE 'DESCONHECIDO'\n    END as tipo_hash,\n    LENGTH(passwordHash) as tamanho_hash,\n    createdAt\nFROM users\nORDER BY createdAt DESC\nLIMIT 10;",
+  "rows": [
+    {
+      "id": "1770064",
+      "email": "rafanicolosi@hotmail.com",
+      "name": "rafael",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 19:10:46"
+    },
+    {
+      "id": "1560482",
+      "email": "guilhermeram@gmail.com",
+      "name": "Guilherme Ramos",
+      "tipo_hash": "SEM_SENHA",
+      "tamanho_hash": "NULL",
+      "createdAt": "2026-01-24 05:11:49"
+    },
+    {
+      "id": "1560481",
+      "email": "test-login@example.com",
+      "name": "Test User",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 05:11:14"
+    },
+    {
+      "id": "1560479",
+      "email": "teste-flow@example.com",
+      "name": "Campeonato Teste Flow",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 05:11:13"
+    },
+    {
+      "id": "1560480",
+      "email": "guilhermeram@gmail.com",
+      "name": "Meu Campeonato de Teste",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 05:11:13"
+    },
+    {
+      "id": "1560398",
+      "email": "test-login@example.com",
+      "name": "Test User",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 04:44:04"
+    },
+    {
+      "id": "1560372",
+      "email": "test-login@example.com",
+      "name": "Test User",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 04:37:39"
+    },
+    {
+      "id": "1560355",
+      "email": "test-login@example.com",
+      "name": "Test User",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 04:32:20"
+    },
+    {
+      "id": "1560315",
+      "email": "test-login@example.com",
+      "name": "Test User",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 04:21:35"
+    },
+    {
+      "id": "1560188",
+      "email": "test-login@example.com",
+      "name": "Test User",
+      "tipo_hash": "SHA256",
+      "tamanho_hash": "64",
+      "createdAt": "2026-01-24 03:52:41"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\ttipo_hash\ttamanho_hash\tcreatedAt\n1770064\trafanicolosi@hotmail.com\trafael\tSHA256\t64\t2026-01-24 19:10:46\n1560482\tguilhermeram@gmail.com\tGuilherme Ramos\tSEM_SENHA\tNULL\t2026-01-24 05:11:49\n1560481\ttest-login@example.com\tTest User\tSHA256\t64\t2026-01-24 05:11:14\n1560479\tteste-flow@example.com\tCampeonato Teste Flow\tSHA256\t64\t2026-01-24 05:11:13\n1560480\tguilhermeram@gmail.com\tMeu Campeonato de Teste\tSHA256\t64\t2026-01-24 05:11:13\n1560398\ttest-login@example.com\tTest User\tSHA256\t64\t2026-01-24 04:44:04\n1560372\ttest-login@example.com\tTest User\tSHA256\t64\t2026-01-24 04:37:39\n1560355\ttest-login@example.com\tTest User\tSHA256\t64\t2026-01-24 04:32:20\n1560315\ttest-login@example.com\tTest User\tSHA256\t64\t2026-01-24 04:21:35\n1560188\ttest-login@example.com\tTest User\tSHA256\t64\t2026-01-24 03:52:41\n",
+  "stderr": "",
+  "execution_time_ms": 362
+}

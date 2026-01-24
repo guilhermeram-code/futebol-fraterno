@@ -1,0 +1,16 @@
+{
+  "query": "SELECT \n    COLUMN_NAME, \n    DATA_TYPE, \n    CHARACTER_MAXIMUM_LENGTH,\n    COLUMN_COMMENT\nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'users' \n  AND COLUMN_NAME = 'passwordHash';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT \n    COLUMN_NAME, \n    DATA_TYPE, \n    CHARACTER_MAXIMUM_LENGTH,\n    COLUMN_COMMENT\nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'users' \n  AND COLUMN_NAME = 'passwordHash';",
+  "rows": [
+    {
+      "COLUMN_NAME": "passwordHash",
+      "DATA_TYPE": "varchar",
+      "CHARACTER_MAXIMUM_LENGTH": "72",
+      "COLUMN_COMMENT": "BCRYPT hash (até 72 caracteres)"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tDATA_TYPE\tCHARACTER_MAXIMUM_LENGTH\tCOLUMN_COMMENT\npasswordHash\tvarchar\t72\tBCRYPT hash (até 72 caracteres)\n",
+  "stderr": "",
+  "execution_time_ms": 422
+}

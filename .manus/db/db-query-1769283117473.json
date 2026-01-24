@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE users \nMODIFY COLUMN passwordHash VARCHAR(72) COMMENT 'BCRYPT hash (até 72 caracteres)';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute ALTER TABLE users \nMODIFY COLUMN passwordHash VARCHAR(72) COMMENT 'BCRYPT hash (até 72 caracteres)';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 522
+}
