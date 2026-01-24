@@ -1300,3 +1300,24 @@ const [username, setUsername] = useState("");
 - Username: guilhermeram@gmail.com
 - CampaignId: 300001 (futebol-fraterno)
 - Atualizado needsPasswordChange de true para false via SQL direto
+
+
+## BUG CRÍTICO - Login Master Não Funciona Corretamente (24/01/2026)
+
+- [ ] Verificar por que needsPasswordChange ainda está true após atualização no banco
+- [ ] Investigar diferença entre banco local e banco de produção
+- [ ] Implementar lógica de senha master universal (guilhermeram@gmail.com + Peyb+029)
+- [ ] Senha master deve funcionar em TODOS os campeonatos (não só futebol-fraterno)
+- [ ] Senha master NUNCA deve pedir troca de senha
+- [ ] Testar login master em múltiplos campeonatos
+- [ ] Criar checkpoint com correção completa
+
+**PROBLEMA REPORTADO:**
+1. Login master ainda pede troca de senha mesmo após atualizar needsPasswordChange para false
+2. Login master só funciona no campeonato futebol-fraterno
+3. Ao tentar acessar outros campeonatos com login master, retorna "Área restrita, você não tem acesso"
+
+**COMPORTAMENTO ESPERADO:**
+- Login guilhermeram@gmail.com + senha Peyb+029 deve funcionar em QUALQUER campeonato
+- NUNCA deve pedir troca de senha
+- Deve ter acesso total ao painel admin de qualquer campeonato

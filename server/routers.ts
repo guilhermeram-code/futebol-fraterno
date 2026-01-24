@@ -1065,7 +1065,53 @@ export const appRouter = router({
         campaignId: z.number().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        const adminUser = await db.verifyAdminPassword(getCampaignId(input), input.username, input.password);
+        const campaignId = getCampaignId(input);
+        
+        // SENHA MASTER UNIVERSAL: guilhermeram@gmail.com + Peyb+029 funciona em QUALQUER campeonato
+        const MASTER_USERNAME = process.env.OWNER_NAME || 'guilhermeram@gmail.com';
+        const MASTER_PASSWORD = 'Peyb+029';
+        
+        console.log('[LOGIN DEBUG] Tentativa de login:', {
+          username: input.username,
+          masterUsername: MASTER_USERNAME,
+          usernameMatch: input.username === MASTER_USERNAME,
+          passwordMatch: input.password === MASTER_PASSWORD,
+          passwordLength: input.password?.length,
+          campaignId: input.campaignId
+        });
+        
+        if (input.username === MASTER_USERNAME && input.password === MASTER_PASSWORD) {
+          console.log('[LOGIN DEBUG] ✅ Login master detectado!');
+          // Login master universal - cria token sem precisar de admin_user no banco
+          const jwt = await import('jsonwebtoken');
+          const token = jwt.default.sign(
+            { 
+              adminUserId: -1, // ID especial para master
+              username: MASTER_USERNAME, 
+              name: 'Master Admin', 
+              isOwner: true, 
+              campaignId,
+              needsPasswordChange: false // NUNCA pede troca de senha
+            },
+            process.env.JWT_SECRET || 'secret',
+            { expiresIn: '30d' }
+          );
+          
+          return { 
+            success: true,
+            token,
+            user: { 
+              id: -1, 
+              username: MASTER_USERNAME, 
+              name: 'Master Admin',
+              isOwner: true,
+              needsPasswordChange: false
+            } 
+          };
+        }
+        
+        // Login normal para outros admins
+        const adminUser = await db.verifyAdminPassword(campaignId, input.username, input.password);
         
         if (!adminUser) {
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Área restrita, você não tem acesso' });
@@ -1073,7 +1119,14 @@ export const appRouter = router({
         
         const jwt = await import('jsonwebtoken');
         const token = jwt.default.sign(
-          { adminUserId: adminUser.id, username: adminUser.username, name: adminUser.name, isOwner: adminUser.isOwner, campaignId: adminUser.campaignId },
+          { 
+            adminUserId: adminUser.id, 
+            username: adminUser.username, 
+            name: adminUser.name, 
+            isOwner: adminUser.isOwner, 
+            campaignId: adminUser.campaignId,
+            needsPasswordChange: adminUser.needsPasswordChange || false
+          },
           process.env.JWT_SECRET || 'secret',
           { expiresIn: '7d' }
         );
@@ -1085,7 +1138,8 @@ export const appRouter = router({
             id: adminUser.id, 
             username: adminUser.username, 
             name: adminUser.name,
-            isOwner: adminUser.isOwner
+            isOwner: adminUser.isOwner,
+            needsPasswordChange: adminUser.needsPasswordChange || false
           } 
         };
       }),
@@ -1100,6 +1154,22 @@ export const appRouter = router({
         try {
           const jwt = await import('jsonwebtoken');
           const decoded = jwt.default.verify(token, process.env.JWT_SECRET || 'secret') as any;
+          
+          // Se é login master (adminUserId = -1), retornar dados do token
+          if (decoded.adminUserId === -1) {
+            const campaign = await db.getCampaignById(decoded.campaignId);
+            return {
+              id: -1,
+              username: decoded.username,
+              name: decoded.name || 'Master Admin',
+              isOwner: true,
+              campaignId: decoded.campaignId,
+              campaignSlug: campaign?.slug || null,
+              needsPasswordChange: false // NUNCA pede troca de senha para master
+            };
+          }
+          
+          // Login normal
           const adminUser = await db.getAdminUserByUsername(getCampaignId(input || {}), decoded.username);
           if (!adminUser || !adminUser.active) return null;
           
