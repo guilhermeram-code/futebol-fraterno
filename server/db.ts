@@ -269,6 +269,26 @@ export async function updateTeam(id: number, team: Partial<InsertTeam>) {
 export async function deleteTeam(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
+  
+  // Get all players of this team first
+  const teamPlayers = await db.select({ id: players.id }).from(players).where(eq(players.teamId, id));
+  const playerIds = teamPlayers.map(p => p.id);
+  
+  // Delete in cascade order (respecting foreign key constraints):
+  // 1. Delete goals for these players
+  if (playerIds.length > 0) {
+    await db.delete(goals).where(inArray(goals.playerId, playerIds));
+  }
+  
+  // 2. Delete cards for these players
+  if (playerIds.length > 0) {
+    await db.delete(cards).where(inArray(cards.playerId, playerIds));
+  }
+  
+  // 3. Delete all players of this team
+  await db.delete(players).where(eq(players.teamId, id));
+  
+  // 4. Finally delete the team itself
   await db.delete(teams).where(eq(teams.id, id));
 }
 

@@ -366,7 +366,7 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
                   <TeamLogoUpload teamId={team.id} />
                   <ConfirmDeleteDialog
                     title="Excluir Time"
-                    description={`Você está prestes a excluir o time "${team.name}". Todos os jogadores, jogos e estatísticas relacionados serão permanentemente removidos.`}
+                    description={`Você está prestes a excluir o time "${team.name}" e TODOS os seus jogadores. ATENCAO: Todos os gols, cartões amarelos, cartões vermelhos e estatísticas relacionados serão PERMANENTEMENTE REMOVIDOS. Esta ação não pode ser desfeita.`}
                     requireTyping={true}
                     onConfirm={() => deleteTeam.mutate({ id: team.id })}
                     isDeleting={deleteTeam.isPending}
@@ -614,7 +614,6 @@ function PlayersTab({ campaignId }: { campaignId: number }) {
     onSuccess: () => {
       utils.players.list.invalidate();
       toast.success("Jogador criado!");
-      setOpen(false);
       resetForm();
     },
     onError: (error) => toast.error(error.message)
@@ -988,8 +987,8 @@ function PlayersTab({ campaignId }: { campaignId: number }) {
                                 <ChevronRight className="h-4 w-4" />
                               )}
                               <Shield className="h-4 w-4 text-muted-foreground" />
-                              <span className="font-medium text-sm">{lodgeData.lodge}</span>
-                              <span className="text-xs text-muted-foreground">({lodgeData.team.name})</span>
+                              <span className="font-medium text-sm">{lodgeData.team.name}</span>
+                              <span className="text-xs text-muted-foreground">({lodgeData.lodge === "Sem Loja" ? "subtítulo" : lodgeData.lodge})</span>
                             </div>
                             <Badge variant="outline" className="text-xs">
                               {lodgeData.players.length}

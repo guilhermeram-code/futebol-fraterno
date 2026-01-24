@@ -927,3 +927,11 @@
 - [x] Adicionar MERCADOPAGO_WEBHOOK_SECRET (assinatura secreta do painel)
 - [x] Testar webhook manualmente para validar correção (6/6 testes passando)
 - [ ] Validar que emails de boas-vindas chegam após compra (aguardando compra real)
+
+## BUGS REPORTADOS - Correção (23/01/2026)
+- [x] BUG #1: Classificação - Times que avançam devem ficar com linha verde
+- [x] BUG #2: Painel Admin - Mostrar logo/escudo do time ao invés de ícone genérico
+- [x] BUG #3: Deletar time - Deve deletar jogadores junto (cascade delete) - Backend implementado
+- [x] BUG #4: UX Adicionar jogadores - Não fechar modal após salvar, deixar campo aberto
+- [x] BUG #5: Jogadores Admin - Inverter ordem para TIME (subtítulo), mostrar (subtítulo) quando vazio
+- [x] BUG #6: Logout - Redirecionar para URL do campeonato, não para /admin/login
