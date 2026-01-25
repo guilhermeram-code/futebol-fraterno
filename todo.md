@@ -1433,3 +1433,4 @@ const [username, setUsername] = useState("");
 ## GOOGLE ANALYTICS - 24/01/2026
 
 - [x] Adicionar Google Analytics (G-EV7YN2B589) no index.html
+- [x] Corrigir ID do Google Analytics para G-QKXKE4MD6L
