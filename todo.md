@@ -1434,3 +1434,4 @@ const [username, setUsername] = useState("");
 
 - [x] Adicionar Google Analytics (G-EV7YN2B589) no index.html
 - [x] Corrigir ID do Google Analytics para G-QKXKE4MD6L
+- [x] Atualizar Google Analytics para G-KRVRQK93B3 (mesmo email do Google Ads)
