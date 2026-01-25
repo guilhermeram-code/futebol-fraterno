@@ -25,6 +25,8 @@ import Login from "./pages/Login";
 import ChangePassword from "./pages/ChangePassword";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import { createContext, useContext, useState, useEffect } from "react";
 import { trpc } from "./lib/trpc";
 
@@ -169,7 +171,8 @@ function MainRouter() {
   // Lista de rotas que NÃO são slugs de campeonato
   const reservedRoutes = [
     'admin', 'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
-    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'admin-dashboard', 'admin-users'
+    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'admin-dashboard', 'admin-users',
+    'privacidade', 'termos'
   ];
   
   // Verificar se é a landing page (raiz) - PRIORIDADE MÁXIMA
@@ -192,6 +195,16 @@ function MainRouter() {
   // Página de login
   if (location === '/login') {
     return <Login />;
+  }
+  
+  // Política de Privacidade
+  if (location === '/privacidade') {
+    return <PrivacyPolicy />;
+  }
+  
+  // Termos de Uso
+  if (location === '/termos') {
+    return <TermsOfService />;
   }
   
   

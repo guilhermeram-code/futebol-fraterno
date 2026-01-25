@@ -510,8 +510,8 @@ export default function LandingPage() {
               © 2026 Pelada Pro. Todos os direitos reservados.
             </p>
             <div className="flex items-center gap-6">
-              <a href="#" className="hover:text-white transition-colors">Termos de Uso</a>
-              <a href="#" className="hover:text-white transition-colors">Privacidade</a>
+              <a href="/termos" className="hover:text-white transition-colors">Termos de Uso</a>
+              <a href="/privacidade" className="hover:text-white transition-colors">Privacidade</a>
               <a href="mailto:contato@meucontomagico.com.br" className="hover:text-white transition-colors">contato@meucontomagico.com.br</a>
             </div>
           </div>
