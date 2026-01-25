@@ -1428,3 +1428,8 @@ const [username, setUsername] = useState("");
 
 - [x] BUG: Botão "Voltar" no admin desloga usuário ao ir para página pública
 
+
+
+## GOOGLE ANALYTICS - 24/01/2026
+
+- [x] Adicionar Google Analytics (G-EV7YN2B589) no index.html
