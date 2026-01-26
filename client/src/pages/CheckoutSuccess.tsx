@@ -78,9 +78,22 @@ export default function CheckoutSuccess() {
           </div>
 
           <div className="space-y-3">
-            <p className="text-sm text-slate-400">
-              Enviamos um email com todos os detalhes e instruções de acesso.
-            </p>
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 space-y-2">
+              <p className="text-sm text-slate-300">
+                📧 <strong>Enviamos um email para você!</strong>
+              </p>
+              <p className="text-sm text-slate-300">
+                Nele você encontrará:
+              </p>
+              <ul className="text-sm text-slate-300 ml-4 space-y-1">
+                <li>• Link de acesso ao seu campeonato</li>
+                <li>• Login e senha para o painel administrativo</li>
+                <li>• Primeiros passos para começar</li>
+              </ul>
+              <p className="text-sm text-amber-300 font-semibold mt-3">
+                ⚠️ Não recebeu? Verifique sua caixa de <strong>SPAM</strong> ou <strong>lixo eletrônico</strong>.
+              </p>
+            </div>
             
             <div className="flex gap-2">
               <Button 

@@ -1435,3 +1435,10 @@ const [username, setUsername] = useState("");
 - [x] Adicionar Google Analytics (G-EV7YN2B589) no index.html
 - [x] Corrigir ID do Google Analytics para G-QKXKE4MD6L
 - [x] Atualizar Google Analytics para G-KRVRQK93B3 (mesmo email do Google Ads)
+
+
+## MELHORIAS UX - 25/01/2026
+
+- [x] Remover estatística falsa "+500 campeonatos criados" da landing page
+- [x] Corrigir bloqueio de pop-up no pagamento (trocar window.open por window.location.href)
+- [x] Adicionar aviso para verificar spam na página de sucesso após pagamento

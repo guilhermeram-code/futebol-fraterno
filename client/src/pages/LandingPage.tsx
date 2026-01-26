@@ -137,7 +137,7 @@ export default function LandingPage() {
   const checkoutMutation = trpc.checkout.createMercadoPagoSession.useMutation({
     onSuccess: (data) => {
       if (data.checkoutUrl) {
-        window.open(data.checkoutUrl, '_blank');
+        window.location.href = data.checkoutUrl;
       }
     },
     onError: (error) => {
@@ -277,18 +277,7 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
               </div>
-              {/* Floating badge */}
-              <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg p-4 border border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
-                    <Trophy className="w-6 h-6 text-emerald-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">+500 campeonatos</p>
-                    <p className="text-sm text-gray-500">criados na plataforma</p>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
