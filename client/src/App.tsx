@@ -171,7 +171,7 @@ function MainRouter() {
   // Lista de rotas que NÃO são slugs de campeonato
   const reservedRoutes = [
     'admin', 'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
-    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'login', 'admin-dashboard', 'admin-users',
+    'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'checkout-success', 'login', 'admin-dashboard', 'admin-users',
     'privacidade', 'termos'
   ];
   
@@ -219,7 +219,7 @@ function MainRouter() {
   }
   
   // Página de sucesso do checkout
-  if (location.startsWith('/checkout/success')) {
+  if (location.startsWith('/checkout/success') || location === '/checkout-success') {
     return <CheckoutSuccess />;
   }
   

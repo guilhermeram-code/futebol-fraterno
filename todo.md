@@ -1442,3 +1442,10 @@ const [username, setUsername] = useState("");
 - [x] Remover estatística falsa "+500 campeonatos criados" da landing page
 - [x] Corrigir bloqueio de pop-up no pagamento (trocar window.open por window.location.href)
 - [x] Adicionar aviso para verificar spam na página de sucesso após pagamento
+
+
+## GOOGLE ADS - RASTREAMENTO DE CONVERSÕES - 26/01/2026
+
+- [x] Corrigir rota /checkout-success (não deve ser interpretada como slug de campeonato)
+- [ ] Adicionar código de conversão do Google Ads na página de sucesso
+- [ ] Testar rastreamento de conversões com valor dinâmico por plano
