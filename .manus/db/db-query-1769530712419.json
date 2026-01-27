@@ -1,0 +1,59 @@
+{
+  "query": "\n-- Ver todos os purchases\nSELECT id, customerEmail, campaignSlug, planType, status FROM purchases ORDER BY id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \n-- Ver todos os purchases\nSELECT id, customerEmail, campaignSlug, planType, status FROM purchases ORDER BY id;\n",
+  "rows": [
+    {
+      "id": "1",
+      "customerEmail": "guilhermeram@gmail.com",
+      "campaignSlug": "teste",
+      "planType": "3_months",
+      "status": "completed"
+    },
+    {
+      "id": "60001",
+      "customerEmail": "guilherme.ramos@constrixengenharia.com.br",
+      "campaignSlug": "firma",
+      "planType": "1_year",
+      "status": "completed"
+    },
+    {
+      "id": "90001",
+      "customerEmail": "guilherme.ramos@constrixengenharia.com.br",
+      "campaignSlug": "2026",
+      "planType": "1_year",
+      "status": "completed"
+    },
+    {
+      "id": "120010",
+      "customerEmail": "gui_ramos_@hotmail.com",
+      "campaignSlug": "magico",
+      "planType": "2_months",
+      "status": "completed"
+    },
+    {
+      "id": "300002",
+      "customerEmail": "rafanicolosi@hotmail.com",
+      "campaignSlug": "rafael",
+      "planType": "2_months",
+      "status": "completed"
+    },
+    {
+      "id": "300003",
+      "customerEmail": "rafanicolosi@gmail.com",
+      "campaignSlug": "nicolosi",
+      "planType": "2_months",
+      "status": "completed"
+    },
+    {
+      "id": "480001",
+      "customerEmail": "brunonesdamasceno@hotmail.com",
+      "campaignSlug": "bbc",
+      "planType": "2_months",
+      "status": "completed"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcustomerEmail\tcampaignSlug\tplanType\tstatus\n1\tguilhermeram@gmail.com\tteste\t3_months\tcompleted\n60001\tguilherme.ramos@constrixengenharia.com.br\tfirma\t1_year\tcompleted\n90001\tguilherme.ramos@constrixengenharia.com.br\t2026\t1_year\tcompleted\n120010\tgui_ramos_@hotmail.com\tmagico\t2_months\tcompleted\n300002\trafanicolosi@hotmail.com\trafael\t2_months\tcompleted\n300003\trafanicolosi@gmail.com\tnicolosi\t2_months\tcompleted\n480001\tbrunonesdamasceno@hotmail.com\tbbc\t2_months\tcompleted\n",
+  "stderr": "",
+  "execution_time_ms": 1566
+}

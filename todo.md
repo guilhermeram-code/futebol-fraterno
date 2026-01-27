@@ -1533,3 +1533,5 @@ const [username, setUsername] = useState("");
 - [x] Implementar página unificada
 - [x] Remover /admin-users (não precisa mais, tudo em /admin)
 - [x] Testar que tudo funciona em uma página só (login OAuth funciona, redireciona corretamente)
+
+- [x] Corrigir contador 'Total de Campeonatos' (mostra 5 mas deveria mostrar 7)

@@ -1,0 +1,15 @@
+{
+  "query": "\nSELECT \n  (SELECT COUNT(*) FROM purchases) as total_purchases,\n  (SELECT COUNT(*) FROM campaigns) as total_campaigns,\n  (SELECT COUNT(*) FROM campaigns WHERE slug != 'futebol-fraterno') as campaigns_sem_demo;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  (SELECT COUNT(*) FROM purchases) as total_purchases,\n  (SELECT COUNT(*) FROM campaigns) as total_campaigns,\n  (SELECT COUNT(*) FROM campaigns WHERE slug != 'futebol-fraterno') as campaigns_sem_demo;\n",
+  "rows": [
+    {
+      "total_purchases": "7",
+      "total_campaigns": "5",
+      "campaigns_sem_demo": "4"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_purchases\ttotal_campaigns\tcampaigns_sem_demo\n7\t5\t4\n",
+  "stderr": "",
+  "execution_time_ms": 1623
+}

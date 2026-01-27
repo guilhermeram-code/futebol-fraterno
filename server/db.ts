@@ -114,7 +114,20 @@ export async function updatePurchase(id: number, data: Partial<InsertPurchase>):
 export async function getAllPurchases(): Promise<Purchase[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(purchases).orderBy(desc(purchases.createdAt));
+  
+  // Buscar todas as purchases
+  const allPurchases = await db.select().from(purchases).orderBy(desc(purchases.createdAt));
+  
+  // Filtrar apenas purchases que têm campaign válido
+  const validPurchases: Purchase[] = [];
+  for (const purchase of allPurchases) {
+    const campaign = await getCampaignBySlug(purchase.campaignSlug);
+    if (campaign) {
+      validPurchases.push(purchase);
+    }
+  }
+  
+  return validPurchases;
 }
 
 export async function getPurchaseById(id: number): Promise<Purchase | null> {

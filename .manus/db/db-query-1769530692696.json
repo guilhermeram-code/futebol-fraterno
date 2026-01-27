@@ -1,0 +1,43 @@
+{
+  "query": "\n-- Contar purchases\nSELECT COUNT(*) as total_purchases FROM purchases;\n\n-- Contar campaigns\nSELECT COUNT(*) as total_campaigns FROM campaigns;\n\n-- Ver todas as purchases com seus campaigns\nSELECT \n  p.id as purchase_id,\n  p.customerEmail,\n  p.campaignSlug,\n  c.id as campaign_id,\n  c.name as campaign_name\nFROM purchases p\nLEFT JOIN campaigns c ON p.campaignSlug = c.slug\nORDER BY p.id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \n-- Contar purchases\nSELECT COUNT(*) as total_purchases FROM purchases;\n\n-- Contar campaigns\nSELECT COUNT(*) as total_campaigns FROM campaigns;\n\n-- Ver todas as purchases com seus campaigns\nSELECT \n  p.id as purchase_id,\n  p.customerEmail,\n  p.campaignSlug,\n  c.id as campaign_id,\n  c.name as campaign_name\nFROM purchases p\nLEFT JOIN campaigns c ON p.campaignSlug = c.slug\nORDER BY p.id;\n",
+  "rows": [
+    {
+      "total_purchases": "7"
+    },
+    {
+      "total_purchases": "total_campaigns"
+    },
+    {
+      "total_purchases": "5"
+    },
+    {
+      "total_purchases": "purchase_id\tcustomerEmail\tcampaignSlug\tcampaign_id\tcampaign_name"
+    },
+    {
+      "total_purchases": "1\tguilhermeram@gmail.com\tteste\tNULL\tNULL"
+    },
+    {
+      "total_purchases": "60001\tguilherme.ramos@constrixengenharia.com.br\tfirma\tNULL\tNULL"
+    },
+    {
+      "total_purchases": "90001\tguilherme.ramos@constrixengenharia.com.br\t2026\tNULL\tNULL"
+    },
+    {
+      "total_purchases": "120010\tgui_ramos_@hotmail.com\tmagico\t150010\tmagico"
+    },
+    {
+      "total_purchases": "300002\trafanicolosi@hotmail.com\trafael\t360002\tRafael"
+    },
+    {
+      "total_purchases": "300003\trafanicolosi@gmail.com\tnicolosi\t360003\tNicolosi"
+    },
+    {
+      "total_purchases": "480001\tbrunonesdamasceno@hotmail.com\tbbc\t540001\tBrutus Brasil Champs"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_purchases\n7\ntotal_campaigns\n5\npurchase_id\tcustomerEmail\tcampaignSlug\tcampaign_id\tcampaign_name\n1\tguilhermeram@gmail.com\tteste\tNULL\tNULL\n60001\tguilherme.ramos@constrixengenharia.com.br\tfirma\tNULL\tNULL\n90001\tguilherme.ramos@constrixengenharia.com.br\t2026\tNULL\tNULL\n120010\tgui_ramos_@hotmail.com\tmagico\t150010\tmagico\n300002\trafanicolosi@hotmail.com\trafael\t360002\tRafael\n300003\trafanicolosi@gmail.com\tnicolosi\t360003\tNicolosi\n480001\tbrunonesdamasceno@hotmail.com\tbbc\t540001\tBrutus Brasil Champs\n",
+  "stderr": "",
+  "execution_time_ms": 2134
+}

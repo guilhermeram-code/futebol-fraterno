@@ -1,0 +1,40 @@
+{
+  "query": "\n-- Ver todos os campaigns\nSELECT id, name, slug, isActive FROM campaigns ORDER BY id;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \n-- Ver todos os campaigns\nSELECT id, name, slug, isActive FROM campaigns ORDER BY id;\n",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Futebol Fraterno 2026",
+      "slug": "futebol-fraterno",
+      "isActive": "1"
+    },
+    {
+      "id": "150010",
+      "name": "magico",
+      "slug": "magico",
+      "isActive": "1"
+    },
+    {
+      "id": "360002",
+      "name": "Rafael",
+      "slug": "rafael",
+      "isActive": "1"
+    },
+    {
+      "id": "360003",
+      "name": "Nicolosi",
+      "slug": "nicolosi",
+      "isActive": "1"
+    },
+    {
+      "id": "540001",
+      "name": "Brutus Brasil Champs",
+      "slug": "bbc",
+      "isActive": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\tisActive\n1\tFutebol Fraterno 2026\tfutebol-fraterno\t1\n150010\tmagico\tmagico\t1\n360002\tRafael\trafael\t1\n360003\tNicolosi\tnicolosi\t1\n540001\tBrutus Brasil Champs\tbbc\t1\n",
+  "stderr": "",
+  "execution_time_ms": 1493
+}
