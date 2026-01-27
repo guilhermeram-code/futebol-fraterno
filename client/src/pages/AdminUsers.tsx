@@ -23,8 +23,20 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Trash2, Users, Calendar, Mail, Phone, CreditCard, Loader2, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { useLocation } from "wouter";
+import { useEffect } from "react";
 
 export default function AdminUsers() {
+  const { isAuthenticated } = useAuth();
+  const [, setLocation] = useLocation();
+
+  // Redirecionar para login se não estiver autenticado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/login");
+    }
+  }, [isAuthenticated, setLocation]);
   const [deleteId, setDeleteId] = useState<number | null>(null);
   
   const { data: purchases, isLoading, refetch } = trpc.admin.getAllPurchases.useQuery();

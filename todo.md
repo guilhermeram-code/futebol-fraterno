@@ -1488,3 +1488,20 @@ const [username, setUsername] = useState("");
 - [x] Garantir que sessão permanece ativa ao navegar entre páginas
 - [x] Sessão só expira ao fechar navegador ou clicar "Sair"
 - [ ] Testar que não pede login ao mudar de Campeonatos → Usuários
+
+
+## CORREÇÃO URGENTE - 27/01/2026
+
+### VULNERABILIDADE: /admin-users acessível sem senha
+- [x] Adicionar hook useAuth() em AdminUsers.tsx
+- [x] Redirecionar para /login se não autenticado
+- [x] Testar acesso direto a /admin-users sem login (deve pedir senha)
+- [x] Testar navegação /admin → /admin-users logado (não deve pedir senha)
+- [x] Testar navegação /admin-users → /admin logado (não deve pedir senha)
+
+### MELHORIA UX: Destaque do botão Demo
+- [x] Tornar mockup clicável (link para campeonato demo)
+- [x] Adicionar badge animado "👆 CLIQUE PARA EXPLORAR"
+- [x] Adicionar hover effect (mockup cresce 5% + cursor pointer)
+- [x] Adicionar texto descritivo "Campeonato real funcionando"
+- [x] Testar que clique no mockup abre campeonato demo
