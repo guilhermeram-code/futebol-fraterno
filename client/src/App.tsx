@@ -183,10 +183,9 @@ function MainRouter() {
     return <LandingPage />;
   }
   
-  // Redirecionar /admin para /admin-dashboard (painel do dono do PeladaPro)
+  // Painel admin principal (gestão de usuários)
   if (location === '/admin') {
-    window.location.href = '/admin-dashboard';
-    return null;
+    return <AdminUsers />;
   }
   
   // Verificar se é uma rota legada (sem slug)

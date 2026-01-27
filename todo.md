@@ -1458,3 +1458,11 @@ const [username, setUsername] = useState("");
 - [x] Mostrar "X dias restantes / Total dias" 
 - [x] Adicionar porcentagem do tempo restante
 - [x] Alerta visual quando faltar menos de 7 dias
+
+
+## CORREÇÃO ROTA /ADMIN - 27/01/2026
+
+- [x] Investigar por que /admin retorna 404
+- [x] Verificar histórico de mudanças no App.tsx
+- [x] Restaurar rota /admin para login administrativo
+- [x] Testar login em /admin
