@@ -1449,3 +1449,12 @@ const [username, setUsername] = useState("");
 - [x] Corrigir rota /checkout-success (não deve ser interpretada como slug de campeonato)
 - [ ] Adicionar código de conversão do Google Ads na página de sucesso
 - [ ] Testar rastreamento de conversões com valor dinâmico por plano
+
+
+## BARRA DE PROGRESSO - DIAS RESTANTES - 26/01/2026
+
+- [x] Adicionar cálculo de dias restantes baseado em expiresAt
+- [x] Implementar barra de progresso visual (verde → amarelo → vermelho)
+- [x] Mostrar "X dias restantes / Total dias" 
+- [x] Adicionar porcentagem do tempo restante
+- [x] Alerta visual quando faltar menos de 7 dias

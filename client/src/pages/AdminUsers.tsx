@@ -21,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Trash2, Users, Calendar, Mail, Phone, CreditCard, Loader2 } from "lucide-react";
+import { Trash2, Users, Calendar, Mail, Phone, CreditCard, Loader2, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 export default function AdminUsers() {
@@ -64,6 +64,34 @@ export default function AdminUsers() {
       "1_year": "1 Ano",
     };
     return plans[planType] || planType;
+  };
+
+  const getPlanDuration = (planType: string): number => {
+    const durations: Record<string, number> = {
+      "2_months": 60,
+      "3_months": 90,
+      "6_months": 180,
+      "1_year": 365,
+    };
+    return durations[planType] || 30;
+  };
+
+  const calculateDaysRemaining = (expiresAt: Date | string | null, planType: string) => {
+    if (!expiresAt) return { daysRemaining: 0, totalDays: 0, percentage: 0 };
+    
+    const now = new Date();
+    const expiryDate = new Date(expiresAt);
+    const totalDays = getPlanDuration(planType);
+    const daysRemaining = Math.max(0, Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+    const percentage = Math.round((daysRemaining / totalDays) * 100);
+    
+    return { daysRemaining, totalDays, percentage };
+  };
+
+  const getProgressColor = (percentage: number) => {
+    if (percentage > 50) return "bg-emerald-500";
+    if (percentage > 20) return "bg-yellow-500";
+    return "bg-red-500";
   };
 
   const getStatusBadge = (status: string) => {
@@ -124,7 +152,7 @@ export default function AdminUsers() {
                     <TableHead>Valor Pago</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Data Compra</TableHead>
-                    <TableHead>Expira Em</TableHead>
+                    <TableHead>Tempo Restante</TableHead>
                     <TableHead className="text-right">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -178,10 +206,45 @@ export default function AdminUsers() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <span className="text-sm">{formatDate(purchase.expiresAt || null)}</span>
-                        </div>
+                        {(() => {
+                          const { daysRemaining, totalDays, percentage } = calculateDaysRemaining(
+                            purchase.expiresAt,
+                            purchase.planType
+                          );
+                          const progressColor = getProgressColor(percentage);
+                          
+                          return (
+                            <div className="space-y-2 min-w-[180px]">
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-4 w-4 text-muted-foreground" />
+                                <span className="text-sm font-medium">
+                                  {daysRemaining} dias restantes / {totalDays} dias
+                                </span>
+                              </div>
+                              <div className="w-full">
+                                <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                  <div
+                                    className={`h-full ${progressColor} transition-all duration-300`}
+                                    style={{ width: `${percentage}%` }}
+                                  />
+                                </div>
+                                <span className="text-xs text-muted-foreground mt-1 block">
+                                  {percentage}% restante
+                                </span>
+                              </div>
+                              {daysRemaining <= 7 && daysRemaining > 0 && (
+                                <Badge variant="destructive" className="text-xs">
+                                  Expira em breve!
+                                </Badge>
+                              )}
+                              {daysRemaining === 0 && (
+                                <Badge variant="destructive" className="text-xs">
+                                  Expirado
+                                </Badge>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </TableCell>
                       <TableCell className="text-right">
                         <Button
