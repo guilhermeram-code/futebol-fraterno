@@ -1466,3 +1466,25 @@ const [username, setUsername] = useState("");
 - [x] Verificar histórico de mudanças no App.tsx
 - [x] Restaurar rota /admin para login administrativo
 - [x] Testar login em /admin
+
+
+## CORREÇÃO CRÍTICA DE SEGURANÇA - 27/01/2026
+
+### PROBLEMA 1: Rota /admin sem autenticação (CRÍTICO)
+- [x] Investigar sistema de autenticação atual (AdminLogin, AdminDashboard)
+- [x] Restaurar tela de login em /admin (pedir senha antes de acessar)
+- [x] Proteger rota /admin-users (só acessível após login)
+- [x] Verificar se outras rotas admin estão protegidas
+- [x] Testar que /admin pede login e senha
+
+### PROBLEMA 2: Falta navegação entre páginas admin
+- [x] Criar menu lateral/sidebar para painel admin
+- [x] Adicionar opção "Campeonatos" no menu
+- [x] Adicionar opção "Usuários" no menu
+- [x] Adicionar botão "Sair" no menu
+- [ ] Testar navegação Campeonatos ↔ Usuários sem pedir login novamente
+
+### PROBLEMA 3: Sessão deve persistir durante navegação
+- [x] Garantir que sessão permanece ativa ao navegar entre páginas
+- [x] Sessão só expira ao fechar navegador ou clicar "Sair"
+- [ ] Testar que não pede login ao mudar de Campeonatos → Usuários

@@ -128,9 +128,17 @@ export default function AdminUsers() {
                 Visualize todos os compradores e gerencie suas assinaturas
               </CardDescription>
             </div>
-            <Badge variant="secondary" className="text-lg">
-              {purchases?.length || 0} usuários
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" asChild>
+                <a href="/admin">
+                  <Calendar className="mr-2 h-4 w-4" />
+                  Campeonatos
+                </a>
+              </Button>
+              <Badge variant="secondary" className="text-lg">
+                {purchases?.length || 0} usuários
+              </Badge>
+            </div>
           </div>
         </CardHeader>
         <CardContent>

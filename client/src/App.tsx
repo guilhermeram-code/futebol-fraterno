@@ -183,9 +183,9 @@ function MainRouter() {
     return <LandingPage />;
   }
   
-  // Painel admin principal (gestão de usuários)
+  // Painel admin principal (dashboard com autenticação)
   if (location === '/admin') {
-    return <AdminUsers />;
+    return <AdminDashboard />;
   }
   
   // Verificar se é uma rota legada (sem slug)
