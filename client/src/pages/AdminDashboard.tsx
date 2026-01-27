@@ -4,12 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { 
   DollarSign, 
@@ -20,7 +37,9 @@ import {
   Trash2, 
   Key, 
   TrendingUp,
-  Clock
+  Clock,
+  Mail,
+  Loader2
 } from "lucide-react";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -39,28 +58,28 @@ export default function AdminDashboard() {
       setLocation("/login");
     }
   }, [isAuthenticated, setLocation]);
+
   const { data: stats, isLoading: statsLoading } = trpc.admin.getStats.useQuery();
-  const { data: campaigns, isLoading: campaignsLoading } = trpc.admin.getAllCampaigns.useQuery();
+  const { data: purchases, isLoading: purchasesLoading } = trpc.admin.getAllPurchases.useQuery();
   
   const [credentialsDialog, setCredentialsDialog] = useState<{
     open: boolean;
-    campaign: any | null;
-  }>({ open: false, campaign: null });
+    purchase: any | null;
+  }>({ open: false, purchase: null });
   
   const [deleteDialog, setDeleteDialog] = useState<{
     open: boolean;
-    campaignId: number | null;
-  }>({ open: false, campaignId: null });
+    purchaseId: number | null;
+  }>({ open: false, purchaseId: null });
 
   const utils = trpc.useUtils();
   
-  const deleteCampaign = trpc.admin.deleteCampaign.useMutation({
+  const deletePurchase = trpc.admin.deletePurchase.useMutation({
     onSuccess: () => {
-      setDeleteDialog({ open: false, campaignId: null });
+      setDeleteDialog({ open: false, purchaseId: null });
       toast.success("Campeonato excluído com sucesso!");
-      // Usar setTimeout para evitar erro React #321
       setTimeout(() => {
-        utils.admin.getAllCampaigns.invalidate();
+        utils.admin.getAllPurchases.invalidate();
         utils.admin.getStats.invalidate();
       }, 0);
     },
@@ -69,7 +88,56 @@ export default function AdminDashboard() {
     },
   });
 
-  if (statsLoading || campaignsLoading) {
+  const formatCurrency = (cents: number) => {
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(cents / 100);
+  };
+
+  const getPlanDuration = (planType: string): number => {
+    const durations: Record<string, number> = {
+      "2_months": 60,
+      "3_months": 90,
+      "6_months": 180,
+      "1_year": 365,
+    };
+    return durations[planType] || 30;
+  };
+
+  const calculateDaysRemaining = (expiresAt: Date | string | null, planType: string) => {
+    if (!expiresAt) return { daysRemaining: 0, totalDays: 0, percentage: 0 };
+    
+    const now = new Date();
+    const expiryDate = new Date(expiresAt);
+    const totalDays = getPlanDuration(planType);
+    const daysRemaining = Math.max(0, Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+    const percentage = Math.round((daysRemaining / totalDays) * 100);
+    
+    return { daysRemaining, totalDays, percentage };
+  };
+
+  const getProgressColor = (percentage: number) => {
+    if (percentage > 50) return "bg-emerald-500";
+    if (percentage > 20) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
+  const handleShowCredentials = (purchase: any) => {
+    setCredentialsDialog({ open: true, purchase });
+  };
+
+  const handleDeletePurchase = (purchaseId: number) => {
+    setDeleteDialog({ open: true, purchaseId });
+  };
+
+  const confirmDelete = () => {
+    if (deleteDialog.purchaseId) {
+      deletePurchase.mutate({ id: deleteDialog.purchaseId });
+    }
+  };
+
+  if (statsLoading || purchasesLoading) {
     return (
       <div className="container py-8">
         <h1 className="text-3xl font-bold mb-8">Painel Admin - PeladaPro</h1>
@@ -91,74 +159,19 @@ export default function AdminDashboard() {
     );
   }
 
-  const formatCurrency = (cents: number) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(cents / 100);
-  };
-
-  const getDaysUntilExpiration = (expiresAt: Date | null) => {
-    if (!expiresAt) return null;
-    const days = differenceInDays(new Date(expiresAt), new Date());
-    return days;
-  };
-
-  const handleShowCredentials = (campaign: any) => {
-    setCredentialsDialog({ open: true, campaign });
-  };
-
-  const handleDeleteCampaign = (campaignId: number) => {
-    setDeleteDialog({ open: true, campaignId });
-  };
-
-  const confirmDelete = () => {
-    if (deleteDialog.campaignId) {
-      deleteCampaign.mutate({ id: deleteDialog.campaignId });
-    }
-  };
-
-  // Calcular estatísticas adicionais
-  const revenueByMonth = campaigns?.reduce((acc: any, c) => {
-    if (!c.createdAt) return acc;
-    const month = new Date(c.createdAt).toLocaleDateString('pt-BR', { year: 'numeric', month: 'short' });
-    acc[month] = (acc[month] || 0) + (c.amountPaid || 0);
-    return acc;
-  }, {});
-
-  const revenueByPlan = campaigns?.reduce((acc: any, c) => {
-    if (!c.planType) return acc;
-    const planName = {
-      '2_months': '2 meses',
-      '3_months': '3 meses',
-      '6_months': '6 meses',
-      '1_year': '1 ano'
-    }[c.planType] || 'Desconhecido';
-    acc[planName] = (acc[planName] || 0) + (c.amountPaid || 0);
-    return acc;
-  }, {});
-
   return (
     <div className="container py-8">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold">Painel Admin - PeladaPro</h1>
-          <p className="text-muted-foreground">Visão geral de todos os campeonatos e faturamento</p>
+          <p className="text-muted-foreground">Gestão completa de usuários e campeonatos</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" asChild>
-            <a href="/admin-users">
-              <Users className="mr-2 h-4 w-4" />
-              Gestão de Usuários
-            </a>
-          </Button>
-          <Button variant="outline" asChild>
-            <a href="/" target="_blank">
-              <ExternalLink className="mr-2 h-4 w-4" />
-              Ver Site
-            </a>
-          </Button>
-        </div>
+        <Button variant="outline" asChild>
+          <a href="/" target="_blank">
+            <ExternalLink className="mr-2 h-4 w-4" />
+            Ver Site
+          </a>
+        </Button>
       </div>
 
       {/* Estatísticas */}
@@ -208,221 +221,209 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Gráficos de Receita */}
-      <div className="grid gap-4 md:grid-cols-2 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Receita por Mês
-            </CardTitle>
-            <CardDescription>Faturamento mensal acumulado</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {revenueByMonth && Object.entries(revenueByMonth).map(([month, revenue]: [string, any]) => (
-                <div key={month} className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{month}</span>
-                  <span className="text-sm text-muted-foreground">{formatCurrency(revenue)}</span>
-                </div>
-              ))}
-              {(!revenueByMonth || Object.keys(revenueByMonth).length === 0) && (
-                <p className="text-sm text-muted-foreground text-center py-4">Nenhuma venda ainda</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Receita por Plano
-            </CardTitle>
-            <CardDescription>Faturamento por tipo de assinatura</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {revenueByPlan && Object.entries(revenueByPlan).map(([plan, revenue]: [string, any]) => (
-                <div key={plan} className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{plan}</span>
-                  <span className="text-sm text-muted-foreground">{formatCurrency(revenue)}</span>
-                </div>
-              ))}
-              {(!revenueByPlan || Object.keys(revenueByPlan).length === 0) && (
-                <p className="text-sm text-muted-foreground text-center py-4">Nenhuma venda ainda</p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Lista de Campeonatos */}
+      {/* Tabela Unificada: Usuários + Campeonatos */}
       <Card>
         <CardHeader>
-          <CardTitle>Todos os Campeonatos</CardTitle>
-          <CardDescription>Lista completa de campeonatos criados na plataforma</CardDescription>
+          <CardTitle>Usuários e Campeonatos</CardTitle>
+          <CardDescription>
+            Lista completa de usuários e seus campeonatos com tempo restante
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {campaigns && campaigns.length === 0 && (
-              <p className="text-center text-muted-foreground py-8">Nenhum campeonato criado ainda</p>
-            )}
+          {purchases && purchases.length === 0 && (
+            <p className="text-center text-muted-foreground py-8">Nenhum campeonato criado ainda</p>
+          )}
 
-            {campaigns?.map((campaign) => {
-              const daysUntilExpiration = getDaysUntilExpiration(campaign.expiresAt);
-              
-              return (
-                <div
-                  key={campaign.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent transition-colors"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold">{campaign.name}</h3>
-                      {campaign.isActive ? (
-                        <Badge variant="default" className="bg-green-500">
-                          Ativo
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary">Expirado</Badge>
-                      )}
-                      {campaign.isDemo && <Badge variant="outline">Demo</Badge>}
-                      {daysUntilExpiration !== null && (
-                        <Badge 
-                          variant={daysUntilExpiration < 7 ? "destructive" : "outline"}
-                          className="flex items-center gap-1"
-                        >
-                          <Clock className="h-3 w-3" />
-                          {daysUntilExpiration > 0 
-                            ? `${daysUntilExpiration} dias restantes`
-                            : `Expirou há ${Math.abs(daysUntilExpiration)} dias`
-                          }
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>/{campaign.slug}</span>
-                      <span>•</span>
-                      <span>{campaign.organizerEmail}</span>
-                      <span>•</span>
-                      <span>Criado {formatDistanceToNow(new Date(campaign.createdAt), { addSuffix: true, locale: ptBR })}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleShowCredentials(campaign)}
-                    >
-                      <Key className="mr-2 h-4 w-4" />
-                      Credenciais
-                    </Button>
-                    <Button variant="outline" size="sm" asChild>
-                      <a href={`/${campaign.slug}`} target="_blank">
-                        <ExternalLink className="mr-2 h-4 w-4" />
-                        Ver Campeonato
-                      </a>
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleDeleteCampaign(campaign.id)}
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          {purchases && purchases.length > 0 && (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Campeonato</TableHead>
+                  <TableHead>Tempo Restante</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {purchases.map((purchase) => {
+                  const { daysRemaining, totalDays, percentage } = calculateDaysRemaining(
+                    purchase.expiresAt,
+                    purchase.planType
+                  );
+                  const progressColor = getProgressColor(percentage);
+
+                  return (
+                    <TableRow key={purchase.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <span className="font-medium">{purchase.customerEmail}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span className="font-semibold">{purchase.campaignName}</span>
+                          <span className="text-xs text-muted-foreground">/{purchase.campaignSlug}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-2 min-w-[200px]">
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium">
+                              {daysRemaining} dias restantes / {totalDays} dias
+                            </span>
+                            <span className="text-muted-foreground">{percentage}%</span>
+                          </div>
+                          <div className="w-full bg-secondary rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full transition-all ${progressColor}`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          {daysRemaining <= 7 && daysRemaining > 0 && (
+                            <p className="text-xs text-yellow-600 dark:text-yellow-500 flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              Expira em breve!
+                            </p>
+                          )}
+                          {daysRemaining === 0 && (
+                            <p className="text-xs text-red-600 dark:text-red-500 font-medium">
+                              Expirado
+                            </p>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {purchase.status === "completed" && daysRemaining > 0 ? (
+                          <Badge variant="default" className="bg-green-500">Ativo</Badge>
+                        ) : (
+                          <Badge variant="secondary">Expirado</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleShowCredentials(purchase)}
+                          >
+                            <Key className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            asChild
+                          >
+                            <a href={`/${purchase.campaignSlug}`} target="_blank">
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleDeletePurchase(purchase.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
 
       {/* Dialog de Credenciais */}
-      <Dialog open={credentialsDialog.open} onOpenChange={(open) => setCredentialsDialog({ open, campaign: null })}>
+      <Dialog open={credentialsDialog.open} onOpenChange={(open) => setCredentialsDialog({ open, purchase: null })}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Credenciais do Organizador</DialogTitle>
+            <DialogTitle>Credenciais de Acesso</DialogTitle>
             <DialogDescription>
-              Informações de acesso para o campeonato {credentialsDialog.campaign?.name}
+              Informações de login para o campeonato {credentialsDialog.purchase?.campaignName}
             </DialogDescription>
           </DialogHeader>
-          {credentialsDialog.campaign && (
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Nome</label>
-                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
-                  {credentialsDialog.campaign.organizerName || "Não informado"}
-                </p>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">URL de Login</label>
+              <div className="flex items-center gap-2 mt-1">
+                <code className="flex-1 p-2 bg-muted rounded text-sm">
+                  {`https://peladapro.com.br/${credentialsDialog.purchase?.campaignSlug}/admin/login`}
+                </code>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(
+                      `https://peladapro.com.br/${credentialsDialog.purchase?.campaignSlug}/admin/login`
+                    );
+                    toast.success("URL copiada!");
+                  }}
+                >
+                  Copiar
+                </Button>
               </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Email (Login)</label>
-                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
-                  {credentialsDialog.campaign.organizerEmail}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">WhatsApp</label>
-                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
-                  {credentialsDialog.campaign.organizerPhone || "Não informado"}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Senha</label>
-                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
-                  {credentialsDialog.campaign.plainPassword || "Não disponível (campeonato antigo)"}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">URL do Campeonato</label>
-                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
-                  https://peladapro.com.br/{credentialsDialog.campaign.slug}
-                </p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">URL do Admin</label>
-                <p className="text-sm font-mono bg-muted p-2 rounded mt-1">
-                  https://peladapro.com.br/{credentialsDialog.campaign.slug}/admin
-                </p>
-              </div>
-
             </div>
-          )}
-          <DialogFooter>
-            <Button onClick={() => setCredentialsDialog({ open: false, campaign: null })}>
-              Fechar
-            </Button>
-          </DialogFooter>
+            <div>
+              <label className="text-sm font-medium">Email</label>
+              <div className="flex items-center gap-2 mt-1">
+                <code className="flex-1 p-2 bg-muted rounded text-sm">
+                  {credentialsDialog.purchase?.customerEmail}
+                </code>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(credentialsDialog.purchase?.customerEmail || "");
+                    toast.success("Email copiado!");
+                  }}
+                >
+                  Copiar
+                </Button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Senha</label>
+              <div className="flex items-center gap-2 mt-1">
+                <code className="flex-1 p-2 bg-muted rounded text-sm">
+                  {credentialsDialog.purchase?.tempPassword || "Senha não disponível"}
+                </code>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => {
+                    navigator.clipboard.writeText(credentialsDialog.purchase?.tempPassword || "");
+                    toast.success("Senha copiada!");
+                  }}
+                >
+                  Copiar
+                </Button>
+              </div>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
       {/* Dialog de Confirmação de Exclusão */}
-      <Dialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, campaignId: null })}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar Exclusão</DialogTitle>
-            <DialogDescription>
-              Tem certeza que deseja deletar este campeonato? Esta ação não pode ser desfeita.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button 
-              variant="outline" 
-              onClick={() => setDeleteDialog({ open: false, campaignId: null })}
-            >
-              Cancelar
-            </Button>
-            <Button 
-              variant="destructive" 
-              onClick={confirmDelete}
-            >
-              Deletar Campeonato
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AlertDialog open={deleteDialog.open} onOpenChange={(open) => !open && setDeleteDialog({ open: false, purchaseId: null })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmar Exclusão</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este campeonato? Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

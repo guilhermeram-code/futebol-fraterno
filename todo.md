@@ -1511,3 +1511,25 @@ const [username, setUsername] = useState("");
 - [x] Implementar verificação OAuth em AdminUsers.tsx
 - [x] Testar acesso direto a /admin-users sem login
 - [x] Testar navegação entre /admin e /admin-users (verificado: useEffect só bloqueia se não autenticado)
+
+
+## UNIFICAR PÁGINA ADMIN - 27/01/2026
+
+### Problema:
+- Navegação entre /admin e /admin-users continua quebrando
+- Sistema de autenticação OAuth não está funcionando corretamente
+
+### Solução proposta pelo usuário:
+- Juntar tudo em UMA página só (/admin)
+- Mostrar campeonatos E usuários na mesma tela
+- Eliminar navegação entre páginas
+
+### Tarefas:
+- [x] Propor layout unificado ao usuário
+- [x] Aguardar confirmação
+- [x] Modificar AdminDashboard.tsx para mostrar tabela unificada
+- [x] Remover botão "Gestão de Usuários" (não precisa mais)
+- [x] Adicionar colunas: Email, Campeonato, Tempo Restante, Ações
+- [x] Implementar página unificada
+- [x] Remover /admin-users (não precisa mais, tudo em /admin)
+- [x] Testar que tudo funciona em uma página só (login OAuth funciona, redireciona corretamente)
