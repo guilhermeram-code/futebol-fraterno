@@ -269,15 +269,42 @@ export default function LandingPage() {
 
             {/* Right side - Screenshot */}
             <div className="relative">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border border-gray-200">
+              {/* Badge animado */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+                <Badge className="bg-emerald-500 text-white px-4 py-2 text-sm font-semibold shadow-lg">
+                  👆 CLIQUE PARA EXPLORAR
+                </Badge>
+              </div>
+              
+              {/* Mockup clicável */}
+              <a 
+                href="/futebol-fraterno" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border border-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-3xl hover:shadow-emerald-300/50 cursor-pointer group"
+              >
                 <img 
                   src="/screenshots/home.webp" 
                   alt="Pelada Pro - Página inicial do campeonato"
                   className="w-full"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent group-hover:from-black/30" />
+                
+                {/* Overlay com texto ao hover */}
+                <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-all duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/95 px-6 py-3 rounded-lg shadow-xl">
+                    <p className="text-emerald-600 font-semibold flex items-center gap-2">
+                      <Play className="w-5 h-5" />
+                      Ver campeonato demo ao vivo
+                    </p>
+                  </div>
+                </div>
+              </a>
+              
+              {/* Texto descritivo abaixo */}
+              <p className="text-center text-sm text-gray-600 mt-4 font-medium">
+                ✨ Campeonato real funcionando - Clique para explorar
+              </p>
             </div>
           </div>
         </div>

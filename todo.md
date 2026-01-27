@@ -1488,3 +1488,13 @@ const [username, setUsername] = useState("");
 - [x] Garantir que sessão permanece ativa ao navegar entre páginas
 - [x] Sessão só expira ao fechar navegador ou clicar "Sair"
 - [ ] Testar que não pede login ao mudar de Campeonatos → Usuários
+
+
+## REIMPLEMENTAR MELHORIAS LANDING PAGE - 27/01/2026
+
+### Melhorias do mockup/demo (SEM TOCAR AUTENTICAÇÃO)
+- [x] Tornar mockup clicável (link para campeonato demo)
+- [x] Adicionar badge animado "👆 CLIQUE PARA EXPLORAR"
+- [x] Adicionar hover effect (mockup cresce 5% + cursor pointer)
+- [x] Adicionar texto descritivo "Campeonato real funcionando"
+- [x] Testar que clique no mockup abre campeonato demo
