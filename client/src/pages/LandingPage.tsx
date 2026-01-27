@@ -269,41 +269,15 @@ export default function LandingPage() {
 
             {/* Right side - Screenshot */}
             <div className="relative">
-              {/* Badge animado */}
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
-                <Badge className="bg-emerald-500 text-white px-4 py-2 text-sm font-semibold shadow-lg">
-                  👆 CLIQUE PARA EXPLORAR
-                </Badge>
-              </div>
-              
-              {/* Mockup clicável */}
-              <a 
-                href="/futebol-fraterno" 
-                target="_blank"
-                className="block relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border border-gray-200 cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-3xl hover:shadow-emerald-300/50 group"
-              >
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border border-gray-200">
                 <img 
                   src="/screenshots/home.webp" 
                   alt="Pelada Pro - Página inicial do campeonato"
                   className="w-full"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-                
-                {/* Overlay ao passar mouse */}
-                <div className="absolute inset-0 bg-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="bg-white/95 px-6 py-3 rounded-full shadow-lg">
-                    <span className="text-emerald-600 font-semibold flex items-center gap-2">
-                      <Play className="w-5 h-5" />
-                      Ver Campeonato Demo
-                    </span>
-                  </div>
-                </div>
-              </a>
-              
-              {/* Texto descritivo */}
-              <p className="text-center text-sm text-gray-600 mt-4 font-medium">
-                🏆 Campeonato real funcionando - Clique para explorar
-              </p>
+              </div>
+
             </div>
           </div>
         </div>
