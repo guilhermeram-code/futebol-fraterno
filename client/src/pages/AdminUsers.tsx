@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,6 +28,15 @@ import { toast } from "sonner";
 
 export default function AdminUsers() {
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [, setLocation] = useLocation();
+  const { isAuthenticated } = useAuth();
+
+  // Proteger rota: redirecionar para login se não estiver autenticado
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setLocation("/login");
+    }
+  }, [isAuthenticated, setLocation]);
   
   const { data: purchases, isLoading, refetch } = trpc.admin.getAllPurchases.useQuery();
   const deleteMutation = trpc.admin.deletePurchase.useMutation({

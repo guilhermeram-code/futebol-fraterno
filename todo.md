@@ -1498,3 +1498,16 @@ const [username, setUsername] = useState("");
 - [x] Adicionar hover effect (mockup cresce 5% + cursor pointer)
 - [x] Adicionar texto descritivo "Campeonato real funcionando"
 - [x] Testar que clique no mockup abre campeonato demo
+
+
+## INVESTIGAÇÃO E CORREÇÃO SEGURANÇA - 27/01/2026
+
+### Requisitos do usuário:
+- [x] Investigar sistema de login atual (AdminLogin.tsx, AdminDashboard.tsx)
+- [x] Entender por que tentativa anterior quebrou o login
+- [x] Propor solução que proteja /admin-users sem quebrar navegação
+- [x] Explicar solução ao usuário antes de executar
+- [x] Aguardar confirmação do usuário
+- [x] Implementar verificação OAuth em AdminUsers.tsx
+- [x] Testar acesso direto a /admin-users sem login
+- [x] Testar navegação entre /admin e /admin-users (verificado: useEffect só bloqueia se não autenticado)
