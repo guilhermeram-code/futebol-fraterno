@@ -68,7 +68,7 @@
 }
 
 :root {
-  /* Tema Maçônico - Dourado e Preto com fundo claro */
+  /* Tema Esportivo - Dourado e Preto com fundo claro */
   --primary: oklch(0.70 0.15 85); /* Dourado */
   --primary-foreground: oklch(0.15 0.02 85);
   --sidebar-primary: oklch(0.70 0.15 85);

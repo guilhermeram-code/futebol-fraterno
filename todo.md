@@ -1535,3 +1535,4 @@ const [username, setUsername] = useState("");
 - [x] Testar que tudo funciona em uma página só (login OAuth funciona, redireciona corretamente)
 
 - [x] Corrigir contador 'Total de Campeonatos' (mostra 5 mas deveria mostrar 7)
+- [x] Remover todas as referências a "maçônico" e "maçonaria" do site (meta tags, títulos, textos)
