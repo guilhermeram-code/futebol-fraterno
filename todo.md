@@ -1537,3 +1537,4 @@ const [username, setUsername] = useState("");
 - [x] Corrigir contador 'Total de Campeonatos' (mostra 5 mas deveria mostrar 7)
 - [x] Remover todas as referências a "maçônico" e "maçonaria" do site (meta tags, títulos, textos)
 - [x] Renomear campeonato demo de "Futebol Fraterno 2026" para "Copa Amigos 2026"
+- [x] Encontrar e remover texto "Site completo para torneio de futebol maçônico" que aparece na prévia do WhatsApp
