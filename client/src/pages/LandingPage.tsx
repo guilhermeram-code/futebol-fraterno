@@ -534,7 +534,7 @@ export default function LandingPage() {
               Tire Suas Dúvidas
             </h2>
             <p className="text-gray-600 text-lg mb-10">
-              Entre em contato para tirar dúvidas, pedir descontos ou conhecer melhor o PeladaPro
+              Entre em contato para tirar dúvidas ou conhecer melhor o PeladaPro
             </p>
             <div className="grid md:grid-cols-2 gap-6">
               {/* Email */}

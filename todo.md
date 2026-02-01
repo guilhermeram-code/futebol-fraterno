@@ -1553,3 +1553,8 @@ const [username, setUsername] = useState("");
 - [x] Criar seção de contato com email: contato@meucontomagico.com.br
 - [x] Adicionar WhatsApp Business: +55 11 5198-1694 (link direto para abrir conversa)
 - [x] Adicionar ícone de WhatsApp verde no botão/link
+
+
+## 📝 AJUSTE TEXTO - Seção Contato (01/02/2026)
+- [x] Remover "pedir descontos" do subtítulo da seção Contato
+- [x] Deixar apenas: "Entre em contato para tirar dúvidas ou conhecer melhor o PeladaPro"
