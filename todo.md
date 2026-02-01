@@ -1558,3 +1558,23 @@ const [username, setUsername] = useState("");
 ## 📝 AJUSTE TEXTO - Seção Contato (01/02/2026)
 - [x] Remover "pedir descontos" do subtítulo da seção Contato
 - [x] Deixar apenas: "Entre em contato para tirar dúvidas ou conhecer melhor o PeladaPro"
+
+
+## 📊 GOOGLE ANALYTICS 4 - Tracking de Conversão (01/02/2026)
+
+### Instalação do GA4
+- [x] Adicionar script do Google Analytics 4 no index.html
+- [x] Configurar Measurement ID: G-KRVRQK93B3
+- [x] Verificar que o GA4 está carregando corretamente (já estava instalado!)
+
+### Evento iniciar_checkout
+- [x] Implementar função de tracking no código
+- [x] Adicionar evento nos botões "Escolher Plano" da landing page
+- [x] Enviar parâmetros: nome do plano, valor, duração
+- [x] Testar disparo do evento no GA4 (Tempo Real)
+
+### Parâmetros do Evento
+- [x] event_name: iniciar_checkout
+- [x] plano: nome do plano (Iniciante, Popular, Semestral, Anual)
+- [x] valor: preço do plano
+- [x] duracao: período do plano (2 meses, 3 meses, 6 meses, 12 meses)

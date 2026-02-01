@@ -181,6 +181,17 @@ export default function LandingPage() {
   };
 
   const openCheckout = (plan: typeof PLANS[0]) => {
+    // Disparar evento GA4: iniciar_checkout
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'iniciar_checkout', {
+        plano: plan.name,
+        valor: plan.price,
+        duracao: plan.duration,
+        event_category: 'ecommerce',
+        event_label: `Plano ${plan.name} - ${plan.duration}`
+      });
+    }
+    
     setSelectedPlan(plan);
     setCheckoutOpen(true);
   };
