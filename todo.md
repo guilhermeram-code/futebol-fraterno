@@ -1538,3 +1538,18 @@ const [username, setUsername] = useState("");
 - [x] Remover todas as referências a "maçônico" e "maçonaria" do site (meta tags, títulos, textos)
 - [x] Renomear campeonato demo de "Futebol Fraterno 2026" para "Copa Amigos 2026"
 - [x] Encontrar e remover texto "Site completo para torneio de futebol maçônico" que aparece na prévia do WhatsApp
+- [x] Duplicar campeonato /futebol-fraterno para /copa-amigos-2026 (resolver cache WhatsApp)
+
+
+## 📋 MELHORIAS UX - Landing Page (31/01/2026)
+
+### Clareza de Preços
+- [x] Adicionar badge "PAGAMENTO ÚNICO" em cada card de preço
+- [x] Adicionar texto "Sem mensalidades recorrentes" abaixo do preço
+- [x] Adicionar aviso "⚠️ Após o período, o campeonato expira" em destaque
+
+### Menu de Contato
+- [x] Adicionar item "Contato" no header da landing page
+- [x] Criar seção de contato com email: contato@meucontomagico.com.br
+- [x] Adicionar WhatsApp Business: +55 11 5198-1694 (link direto para abrir conversa)
+- [x] Adicionar ícone de WhatsApp verde no botão/link
