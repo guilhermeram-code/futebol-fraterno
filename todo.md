@@ -1578,3 +1578,10 @@ const [username, setUsername] = useState("");
 - [x] plano: nome do plano (Iniciante, Popular, Semestral, Anual)
 - [x] valor: preço do plano
 - [x] duracao: período do plano (2 meses, 3 meses, 6 meses, 12 meses)
+
+
+## 🐛 BUG FIX - Link WhatsApp (01/02/2026)
+- [x] Corrigir link do WhatsApp na seção Contato
+- [x] Número correto: +55 11 5198-1694
+- [x] Problema: Link está gerando +551151981694**1** (dígito extra no final)
+- [x] Testar link após correção

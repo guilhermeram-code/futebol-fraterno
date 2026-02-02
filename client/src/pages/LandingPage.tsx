@@ -565,7 +565,7 @@ export default function LandingPage() {
               </a>
               {/* WhatsApp */}
               <a 
-                href="https://wa.me/5511519816941?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20PeladaPro"
+                href="https://wa.me/551151981694?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20PeladaPro"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex flex-col items-center gap-4 p-6 bg-white rounded-xl border-2 border-gray-200 hover:border-green-500 transition-all shadow-sm hover:shadow-md"
