@@ -19,7 +19,8 @@ import {
   campaigns, InsertCampaign, Campaign,
   purchases, InsertPurchase, Purchase,
   reservedSlugs, InsertReservedSlug, ReservedSlug,
-  coupons, InsertCoupon, Coupon
+  coupons, InsertCoupon, Coupon,
+  trialSignups, InsertTrialSignup, TrialSignup
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -1371,4 +1372,58 @@ export async function deleteCampaign(id: number) {
 
   // Deletar campeonato (cascade vai deletar dados relacionados)
   await database.delete(campaigns).where(eq(campaigns.id, id));
+}
+
+
+// ==================== TRIAL SIGNUPS ====================
+export async function createTrialSignup(data: InsertTrialSignup): Promise<{ id: number }> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const result = await db.insert(trialSignups).values(data);
+  return { id: result[0].insertId };
+}
+
+export async function getTrialSignupByEmail(email: string): Promise<TrialSignup | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [trial] = await db.select().from(trialSignups).where(eq(trialSignups.email, email));
+  return trial || null;
+}
+
+export async function getTrialSignupBySlug(slug: string): Promise<TrialSignup | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const [trial] = await db.select().from(trialSignups).where(eq(trialSignups.campaignSlug, slug));
+  return trial || null;
+}
+
+export async function getAllTrialSignups(status?: 'active' | 'expired' | 'converted'): Promise<TrialSignup[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  if (status) {
+    return await db.select().from(trialSignups)
+      .where(eq(trialSignups.status, status))
+      .orderBy(desc(trialSignups.createdAt));
+  }
+  
+  return await db.select().from(trialSignups).orderBy(desc(trialSignups.createdAt));
+}
+
+export async function updateTrialSignupStatus(id: number, status: 'active' | 'expired' | 'converted'): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(trialSignups).set({ status }).where(eq(trialSignups.id, id));
+}
+
+export async function getExpiredTrials(): Promise<TrialSignup[]> {
+  const db = await getDb();
+  if (!db) return [];
+  
+  const now = new Date();
+  return await db.select().from(trialSignups)
+    .where(and(
+      eq(trialSignups.status, 'active'),
+      sql`${trialSignups.expiresAt} < ${now}`
+    ));
 }

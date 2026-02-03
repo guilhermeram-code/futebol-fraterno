@@ -1521,6 +1521,107 @@ export const appRouter = router({
         return { url };
       }),
   }),
+
+  // ==================== TRIAL SIGNUPS ====================
+  trial: router({
+    signup: publicProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+        whatsapp: z.string().optional(),
+        campaignName: z.string().min(1),
+        campaignSlug: z.string().min(3).max(30),
+      }))
+      .mutation(async ({ input }) => {
+        // Verificar se email já existe
+        const existing = await db.getTrialSignupByEmail(input.email);
+        if (existing) {
+          throw new TRPCError({ 
+            code: 'BAD_REQUEST', 
+            message: 'Este email já foi usado para criar um trial gratuito.' 
+          });
+        }
+
+        // Verificar se slug já existe
+        const existingSlug = await db.getTrialSignupBySlug(input.campaignSlug);
+        if (existingSlug) {
+          throw new TRPCError({ 
+            code: 'BAD_REQUEST', 
+            message: 'Este nome de campeonato já está em uso. Escolha outro.' 
+          });
+        }
+
+        // Gerar senha aleatória
+        const password = nanoid(8);
+
+        // Calcular data de expiração (7 dias)
+        const expiresAt = new Date();
+        expiresAt.setDate(expiresAt.getDate() + 7);
+
+        // Criar trial signup
+        const { id } = await db.createTrialSignup({
+          name: input.name,
+          email: input.email,
+          whatsapp: input.whatsapp,
+          campaignName: input.campaignName,
+          campaignSlug: input.campaignSlug,
+          plainPassword: password,
+          expiresAt,
+          status: 'active',
+        });
+
+        // Criar campeonato trial
+        const campaign = await db.createCampaign({
+          name: input.campaignName,
+          slug: input.campaignSlug,
+          organizerName: input.name,
+          organizerEmail: input.email,
+          organizerPhone: input.whatsapp,
+          isActive: true,
+          isDemo: false,
+        });
+
+        // Criar admin user para o campeonato
+        await db.createAdminUser(campaign.id, {
+          username: input.email,
+          password: password,
+          name: input.name,
+          isOwner: true,
+        });
+
+        // Atualizar trial signup com campaignId
+        await db.updateTrialSignupStatus(id, 'active');
+
+        // TODO: Enviar email de boas-vindas
+        // await sendTrialWelcomeEmail(input.email, input.name, input.campaignSlug, password);
+
+        return {
+          success: true,
+          campaignSlug: input.campaignSlug,
+          password,
+          expiresAt,
+        };
+      }),
+
+    getAll: adminProcedure
+      .input(z.object({ status: z.enum(['active', 'expired', 'converted']).optional() }).optional())
+      .query(async ({ input }) => {
+        return db.getAllTrialSignups(input?.status);
+      }),
+
+    exportCSV: adminProcedure
+      .query(async () => {
+        const trials = await db.getAllTrialSignups();
+        
+        // Gerar CSV
+        const header = 'Nome,Email,WhatsApp,Campeonato,Slug,Status,Data Criação,Data Expiração\n';
+        const rows = trials.map(t => 
+          `"${t.name}","${t.email}","${t.whatsapp || ''}","${t.campaignName}","${t.campaignSlug}","${t.status}","${t.createdAt}","${t.expiresAt}"`
+        ).join('\n');
+        
+        return { csv: header + rows };
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

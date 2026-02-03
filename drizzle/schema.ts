@@ -30,6 +30,25 @@ export const campaigns = mysqlTable("campaigns", {
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = typeof campaigns.$inferInsert;
 
+// Tabela de trials gratuitos (leads)
+export const trialSignups = mysqlTable("trial_signups", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull().unique(),
+  whatsapp: varchar("whatsapp", { length: 20 }),
+  campaignName: varchar("campaignName", { length: 255 }).notNull(),
+  campaignSlug: varchar("campaignSlug", { length: 100 }).notNull().unique(),
+  campaignId: int("campaignId"), // Referência ao campeonato criado
+  status: mysqlEnum("status", ["active", "expired", "converted"]).default("active"),
+  plainPassword: varchar("plainPassword", { length: 50 }), // Senha em texto plano para email
+  expiresAt: timestamp("expiresAt").notNull(), // 7 dias após criação
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrialSignup = typeof trialSignups.$inferSelect;
+export type InsertTrialSignup = typeof trialSignups.$inferInsert;
+
 // Tabela de compras/assinaturas
 export const purchases = mysqlTable("purchases", {
   id: int("id").autoincrement().primaryKey(),
@@ -48,6 +67,8 @@ export const purchases = mysqlTable("purchases", {
   status: mysqlEnum("status", ["pending", "completed", "failed", "refunded", "expired"]).default("pending"),
   renewalEmailSent: boolean("renewalEmailSent").default(false),
   plainPassword: varchar("plainPassword", { length: 50 }), // Senha em texto plano para admin
+  isTrial: boolean("isTrial").default(false), // Indica se é trial gratuito
+  trialSignupId: int("trialSignupId"), // Referência ao trial signup (se aplicável)
   expiresAt: timestamp("expiresAt"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

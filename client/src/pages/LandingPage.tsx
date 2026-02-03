@@ -120,6 +120,17 @@ export default function LandingPage() {
   const [slugError, setSlugError] = useState("");
   const [couponApplied, setCouponApplied] = useState<{ valid: boolean; discount: number } | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  
+  // Trial modal state
+  const [showTrialModal, setShowTrialModal] = useState(false);
+  const [trialFormData, setTrialFormData] = useState({
+    name: "",
+    email: "",
+    whatsapp: "",
+    campaignName: "",
+    campaignSlug: "",
+  });
+  const [trialSlugError, setTrialSlugError] = useState("");
 
   // Verificar disponibilidade do slug
   const { data: slugCheck, isLoading: checkingSlug } = trpc.campaigns.checkSlug.useQuery(
@@ -146,6 +157,38 @@ export default function LandingPage() {
   });
 
   const isCreatingCheckout = checkoutMutation.isPending;
+
+  // Mutation para criar trial signup
+  const trialSignupMutation = trpc.trial.signup.useMutation({
+    onSuccess: (data) => {
+      // Mostrar modal de sucesso com credenciais
+      alert(`✅ Campeonato criado com sucesso!\n\nURL: peladapro.com.br/${data.campaignSlug}\nSenha: ${data.password}\n\nVerifique seu email para mais detalhes.`);
+      setShowTrialModal(false);
+      // Resetar formulário
+      setTrialFormData({
+        name: "",
+        email: "",
+        whatsapp: "",
+        campaignName: "",
+        campaignSlug: "",
+      });
+    },
+    onError: (error) => {
+      alert(`Erro: ${error.message}`);
+    },
+  });
+
+  const isCreatingTrial = trialSignupMutation.isPending;
+
+  const handleTrialSignup = () => {
+    trialSignupMutation.mutate({
+      name: trialFormData.name,
+      email: trialFormData.email,
+      whatsapp: trialFormData.whatsapp || undefined,
+      campaignName: trialFormData.campaignName,
+      campaignSlug: trialFormData.campaignSlug,
+    });
+  };
 
   const handleCheckout = () => {
     if (!selectedPlan) return;
@@ -372,6 +415,62 @@ export default function LandingPage() {
                 </CardContent>
               </Card>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trial Section */}
+      <section id="trial" className="py-20 px-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+        <div className="container">
+          <div className="max-w-4xl mx-auto">
+            <Card className="border-4 border-emerald-500 shadow-2xl bg-white/95 backdrop-blur-sm overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400"></div>
+              <CardHeader className="text-center pt-12 pb-8 bg-gradient-to-br from-emerald-50 to-teal-50">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full mx-auto mb-6 shadow-lg">
+                  <span className="text-4xl">🎁</span>
+                </div>
+                <CardTitle className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
+                  EXPERIMENTE GRÁTIS POR 7 DIAS
+                </CardTitle>
+                <CardDescription className="text-xl text-gray-700 font-medium">
+                  Teste TODAS as funcionalidades antes de decidir qual plano é melhor para você
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="px-8 pb-8">
+                <div className="grid md:grid-cols-3 gap-6 mb-8">
+                  <div className="flex flex-col items-center text-center p-6 bg-emerald-50 rounded-xl">
+                    <CheckCircle2 className="w-12 h-12 text-emerald-600 mb-3" />
+                    <h3 className="font-bold text-gray-900 mb-2">Sem Cartão</h3>
+                    <p className="text-sm text-gray-600">Não pedimos cartão de crédito</p>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-6 bg-teal-50 rounded-xl">
+                    <CheckCircle2 className="w-12 h-12 text-teal-600 mb-3" />
+                    <h3 className="font-bold text-gray-900 mb-2">Sem Compromisso</h3>
+                    <p className="text-sm text-gray-600">Cancele quando quiser</p>
+                  </div>
+                  <div className="flex flex-col items-center text-center p-6 bg-cyan-50 rounded-xl">
+                    <CheckCircle2 className="w-12 h-12 text-cyan-600 mb-3" />
+                    <h3 className="font-bold text-gray-900 mb-2">Acesso Completo</h3>
+                    <p className="text-sm text-gray-600">Todas as funcionalidades liberadas</p>
+                  </div>
+                </div>
+                <div className="text-center">
+                  <Button 
+                    size="lg"
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-12 py-7 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105"
+                    onClick={() => setShowTrialModal(true)}
+                  >
+                    <Play className="w-6 h-6 mr-3" />
+                    COMEÇAR TESTE GRÁTIS AGORA
+                    <ArrowRight className="w-6 h-6 ml-3" />
+                  </Button>
+                  <p className="text-sm text-gray-500 mt-4">
+                    <Clock className="w-4 h-4 inline mr-1" />
+                    Crie seu campeonato em menos de 2 minutos
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
@@ -775,6 +874,124 @@ export default function LandingPage() {
 
             <p className="text-xs text-center text-gray-500">
               Pagamento seguro via Mercado Pago. Aceita PIX, cartão e boleto.
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Trial Modal */}
+      <Dialog open={showTrialModal} onOpenChange={setShowTrialModal}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold text-gray-900">
+              🎁 Teste Grátis por 7 Dias
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Crie seu campeonato agora e teste TODAS as funcionalidades
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="trialName" className="text-gray-700">Seu Nome Completo</Label>
+              <Input
+                id="trialName"
+                placeholder="Ex: João Silva"
+                value={trialFormData.name}
+                onChange={(e) => setTrialFormData({ ...trialFormData, name: e.target.value })}
+                className="border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="trialEmail" className="text-gray-700">Email</Label>
+              <Input
+                id="trialEmail"
+                type="email"
+                placeholder="seu@email.com"
+                value={trialFormData.email}
+                onChange={(e) => setTrialFormData({ ...trialFormData, email: e.target.value })}
+                className="border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="trialWhatsapp" className="text-gray-700">WhatsApp (opcional)</Label>
+              <Input
+                id="trialWhatsapp"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                value={trialFormData.whatsapp}
+                onChange={(e) => setTrialFormData({ ...trialFormData, whatsapp: e.target.value })}
+                className="border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="trialCampaignName" className="text-gray-700">Nome do Campeonato</Label>
+              <Input
+                id="trialCampaignName"
+                placeholder="Ex: Campeonato da Firma 2026"
+                value={trialFormData.campaignName}
+                onChange={(e) => setTrialFormData({ ...trialFormData, campaignName: e.target.value })}
+                className="border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="trialSlug" className="text-gray-700">URL do seu site</Label>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">peladapro.com.br/</span>
+                <Input
+                  id="trialSlug"
+                  placeholder="meu-campeonato"
+                  value={trialFormData.campaignSlug}
+                  onChange={(e) => {
+                    const slug = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                    setTrialFormData({ ...trialFormData, campaignSlug: slug });
+                  }}
+                  className="border-gray-300 focus:border-emerald-500 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
+
+            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+              <p className="text-sm text-emerald-800 font-medium mb-2">✨ O que você vai receber:</p>
+              <ul className="text-sm text-emerald-700 space-y-1">
+                <li>✓ Acesso completo por 7 dias</li>
+                <li>✓ Todas as funcionalidades liberadas</li>
+                <li>✓ Senha de acesso enviada por email</li>
+                <li>✓ Sem cartão de crédito</li>
+              </ul>
+            </div>
+
+            <Button 
+              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+              onClick={handleTrialSignup}
+              disabled={
+                isCreatingTrial ||
+                !trialFormData.name || 
+                !trialFormData.email || 
+                !trialFormData.campaignName || 
+                !trialFormData.campaignSlug ||
+                trialFormData.campaignSlug.length < 3
+              }
+            >
+              {isCreatingTrial ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Criando...
+                </>
+              ) : (
+                <>
+                  <Play className="w-4 h-4 mr-2" />
+                  Criar Campeonato Grátis
+                </>
+              )}
+            </Button>
+
+            <p className="text-xs text-center text-gray-500">
+              Após 7 dias, o campeonato expira. Sem cobranças automáticas.
             </p>
           </div>
         </DialogContent>

@@ -1585,3 +1585,102 @@ const [username, setUsername] = useState("");
 - [x] Número correto: +55 11 5198-1694
 - [x] Problema: Link está gerando +551151981694**1** (dígito extra no final)
 - [x] Testar link após correção
+
+
+## 🎁 SISTEMA DE TRIAL GRATUITO (7 DIAS) - Implementação (02/02/2026)
+
+### 1. Banco de Dados
+- [x] Criar tabela `trial_signups` com campos:
+  - [x] id, nome, email, whatsapp, nome_campeonato
+  - [x] data_criacao, data_expiracao, status (ativo/expirado/convertido)
+  - [x] campaign_id (referência ao campeonato criado)
+- [x] Adicionar campo `is_trial` (boolean) na tabela de campanhas/compras
+- [x] Adicionar campo `trial_signup_id` na tabela de campanhas (FK)
+- [x] Rodar `pnpm db:push` para aplicar migrações
+
+### 2. Backend - Routers & DB Helpers
+- [x] Criar rota `trial.signup` (publicProcedure)
+  - [x] Validar email único
+  - [x] Criar registro em trial_signups
+  - [x] Criar campeonato trial (7 dias, todas funcionalidades)
+  - [ ] Enviar email de boas-vindas (TODO)
+- [x] Criar rota `trial.getAll` (protectedProcedure, admin only)
+  - [x] Listar todos os trials com status
+  - [x] Filtros: ativo, expirado, convertido
+- [x] Criar rota `trial.exportCSV` (protectedProcedure, admin only)
+- [ ] Criar job/cron para expiração automática (implementar depois)
+  - [ ] Rodar diariamente
+  - [ ] Deletar campeonatos expirados (7 dias)
+  - [ ] Enviar emails de expiração
+
+### 3. Sistema de Emails Automáticos
+- [ ] Email Dia 0 (Boas-vindas)
+  - [ ] Assunto: "🎉 Seu campeonato está pronto!"
+  - [ ] Link de acesso + senha temporária
+  - [ ] Dicas de uso
+  - [ ] Contato (email + WhatsApp)
+- [ ] Email Dia 2 (Engajamento + Feedback)
+  - [ ] Assunto: "Como está sendo sua experiência? 🤔"
+  - [ ] Pedir feedback
+  - [ ] Oferecer suporte
+  - [ ] Lembrete: expira em 5 dias
+- [ ] Email Dia 5 (Lembrete - 2 dias antes)
+  - [ ] Assunto: "⏰ Seu trial expira em 2 dias!"
+  - [ ] Mostrar planos disponíveis
+  - [ ] Link para criar campeonato pago
+- [ ] Email Dia 7 (Expiração)
+  - [ ] Assunto: "😢 Seu trial expirou - Mas temos uma novidade!"
+  - [ ] Cupom LANCAMENTO40 (40% OFF, limitado 100 clientes)
+  - [ ] Preços com desconto
+  - [ ] Urgência: válido por 48h
+- [ ] Email Dia 14 (Reengajamento)
+  - [ ] Assunto: "Sentimos sua falta! 💙"
+  - [ ] Oferta de ajuda
+  - [ ] Link para WhatsApp
+
+### 4. Frontend - Landing Page
+- [x] Adicionar seção de destaque ANTES dos preços
+  - [x] Título: "🎁 EXPERIMENTE GRÁTIS POR 7 DIAS"
+  - [x] Subtítulo: "Teste TODAS as funcionalidades antes de decidir"
+  - [x] Lista de benefícios (sem cartão, sem compromisso, acesso completo)
+  - [x] Botão GRANDE: "COMEÇAR TESTE GRÁTIS AGORA"
+  - [x] Design: fundo verde claro/azul claro, destaque visual
+- [x] Criar modal de cadastro trial
+  - [x] Campos: Nome completo, Email, WhatsApp (opcional), Nome do campeonato, Slug
+  - [x] Validações: email válido, campos obrigatórios
+  - [x] Botão: "Criar Campeonato Grátis"
+  - [x] Loading state durante criação
+  - [x] Alert de sucesso com credenciais (URL + senha)
+
+### 5. Frontend - Painel Admin
+- [ ] Criar página `/admin/trials` (admin only)
+  - [ ] Tabela com todos os trials
+  - [ ] Colunas: Nome, Email, WhatsApp, Campeonato, Data Criação, Status
+  - [ ] Filtros: Todos, Ativos, Expirados, Convertidos
+  - [ ] Botão "Exportar CSV"
+  - [ ] Botão "Exportar Excel"
+  - [ ] Contador: "X trials cadastrados, Y ativos, Z convertidos"
+- [ ] Adicionar link no menu admin: "Trials Gratuitos"
+
+### 6. Atualização de Emails com Cupom Existente
+- [ ] Usar cupom LANCAMENTO40 (40% OFF) nos emails
+- [ ] Destacar: "Limitado aos 100 primeiros clientes do ano"
+- [ ] Mostrar preços com desconto aplicado
+
+### 7. Testes
+- [x] Testar visualização da seção de trial na landing page
+- [x] Testar abertura do modal de cadastro
+- [x] Verificar campos do formulário
+- [x] Verificar design e UX
+- [ ] Testar cadastro completo (preencher + enviar)
+- [ ] Verificar criação de campeonato trial (7 dias)
+- [ ] Testar envio de email de boas-vindas
+- [ ] Verificar painel admin de trials
+- [ ] Testar exportação CSV
+- [ ] Simular expiração (mudar data manualmente)
+- [ ] Verificar email de expiração com cupom
+
+### 8. Documentação
+- [ ] Documentar fluxo de emails no README
+- [ ] Documentar estrutura de tabelas
+- [ ] Criar guia de uso do painel admin de trials
