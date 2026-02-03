@@ -240,6 +240,7 @@ export default function AdminDashboard() {
                 <TableRow>
                   <TableHead>Email</TableHead>
                   <TableHead>Campeonato</TableHead>
+                  <TableHead>Plano</TableHead>
                   <TableHead>Tempo Restante</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Ações</TableHead>
@@ -266,6 +267,33 @@ export default function AdminDashboard() {
                           <span className="font-semibold">{purchase.campaignName}</span>
                           <span className="text-xs text-muted-foreground">/{purchase.campaignSlug}</span>
                         </div>
+                      </TableCell>
+                      <TableCell>
+                        {purchase.isTrial ? (
+                          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300 dark:bg-green-950 dark:text-green-400 dark:border-green-800">
+                            🎁 Trial 7 dias
+                          </Badge>
+                        ) : purchase.planType === '2_months' ? (
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800">
+                            📅 2 meses
+                          </Badge>
+                        ) : purchase.planType === '3_months' ? (
+                          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800">
+                            📅 3 meses
+                          </Badge>
+                        ) : purchase.planType === '6_months' ? (
+                          <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-300 dark:bg-purple-950 dark:text-purple-400 dark:border-purple-800">
+                            📅 6 meses
+                          </Badge>
+                        ) : purchase.planType === '1_year' ? (
+                          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-300 dark:bg-yellow-950 dark:text-yellow-400 dark:border-yellow-800">
+                            📅 1 ano
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline">
+                            {purchase.planType}
+                          </Badge>
+                        )}
                       </TableCell>
                       <TableCell>
                         <div className="space-y-2 min-w-[200px]">

@@ -1700,3 +1700,28 @@ const [username, setUsername] = useState("");
 - [x] BUG CRÍTICO: Email de boas-vindas não está sendo enviado - CORRIGIDO (Gmail + Nodemailer implementado)
 - [x] Investigar: Purchase não existia no banco - RESOLVIDO (criado via SQL)
 - [x] Implementado: Envio automático de email de boas-vindas para novos trials
+- [x] Implementado: Sistema completo de emails de nurturing (Day 2, 5, 7, 14)
+
+
+## NOVAS FUNCIONALIDADES SOLICITADAS (03/02/2026 - 23:30)
+
+### 1. Coluna "Plano" no Painel Admin
+- [x] Adicionar coluna "Plano" na tabela de usuários/campeonatos
+- [x] Mostrar badge visual para cada tipo de plano:
+  - [x] 🎁 "Trial 7 dias" (verde) - para trials gratuitos
+  - [x] 📅 "2 meses" (azul) - para plano de 2 meses
+  - [x] 📅 "3 meses" (azul) - para plano de 3 meses
+  - [x] 📅 "6 meses" (roxo) - para plano de 6 meses
+  - [x] 📅 "1 ano" (dourado) - para plano anual
+- [x] Buscar dados de `purchases.planType` e `purchases.isTrial`
+
+### 2. Sistema de Emails Automáticos de Nurturing
+- [x] Criar template de email Day 2 ("Como está indo?")
+- [x] Criar template de email Day 5 ("Expira em 2 dias + cupom")
+- [x] Criar template de email Day 7 ("Trial expirado + criar novo campeonato")
+- [x] Criar template de email Day 14 (pós-expiração, última chance)
+- [x] Implementar sistema de agendamento (cron job a cada 1 hora)
+- [x] Criar tabela `email_queue` para controlar envios
+- [x] Integrar scheduler com trial.signup (agendar emails ao criar trial)
+- [x] Iniciar scheduler automaticamente quando servidor inicia
+- [x] Reescrever emails com abordagem correta (trial = teste, criar novo campeonato após expirar)

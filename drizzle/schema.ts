@@ -353,3 +353,19 @@ export const coupons = mysqlTable("coupons", {
 
 export type Coupon = typeof coupons.$inferSelect;
 export type InsertCoupon = typeof coupons.$inferInsert;
+
+// Tabela de fila de emails automáticos
+export const emailQueue = mysqlTable("email_queue", {
+  id: int("id").autoincrement().primaryKey(),
+  trialSignupId: int("trialSignupId").notNull(), // Referência ao trial
+  emailType: mysqlEnum("emailType", ["day_0", "day_2", "day_5", "day_7", "day_14"]).notNull(),
+  scheduledFor: timestamp("scheduledFor").notNull(), // Data/hora agendada para envio
+  sentAt: timestamp("sentAt"), // null = não enviado ainda
+  status: mysqlEnum("status", ["pending", "sent", "failed"]).default("pending").notNull(),
+  errorMessage: text("errorMessage"), // Mensagem de erro se falhar
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailQueue = typeof emailQueue.$inferSelect;
+export type InsertEmailQueue = typeof emailQueue.$inferInsert;

@@ -72,6 +72,13 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    
+    // Iniciar scheduler de emails automáticos
+    import('../emailScheduler').then(({ startEmailScheduler }) => {
+      startEmailScheduler();
+    }).catch(error => {
+      console.error('[Server] Erro ao iniciar email scheduler:', error);
+    });
   });
 }
 

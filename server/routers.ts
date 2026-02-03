@@ -1628,6 +1628,15 @@ export const appRouter = router({
           // Não bloqueia o cadastro se o email falhar
         }
 
+        // Agendar emails de nurturing (Day 2, 5, 7, 14)
+        try {
+          const { scheduleTrialEmails } = await import('./emailScheduler');
+          await scheduleTrialEmails(id, new Date());
+        } catch (schedulerError) {
+          console.error('[Trial] Erro ao agendar emails:', schedulerError);
+          // Não bloqueia o cadastro se o agendamento falhar
+        }
+
         return {
           success: true,
           campaignSlug: input.campaignSlug,
