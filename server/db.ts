@@ -1416,6 +1416,12 @@ export async function updateTrialSignupStatus(id: number, status: 'active' | 'ex
   await db.update(trialSignups).set({ status }).where(eq(trialSignups.id, id));
 }
 
+export async function updateTrialSignup(id: number, data: Partial<InsertTrialSignup>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(trialSignups).set(data).where(eq(trialSignups.id, id));
+}
+
 export async function getExpiredTrials(): Promise<TrialSignup[]> {
   const db = await getDb();
   if (!db) return [];

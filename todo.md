@@ -1684,3 +1684,11 @@ const [username, setUsername] = useState("");
 - [ ] Documentar fluxo de emails no README
 - [ ] Documentar estrutura de tabelas
 - [ ] Criar guia de uso do painel admin de trials
+
+
+## BUGS REPORTADOS - Sistema de Trial (03/02/2026)
+
+- [ ] BUG: Email de boas-vindas não está sendo enviado após cadastro de trial (TODO: implementar serviço de email)
+- [x] BUG: Campeonato trial não aparece na lista do painel admin - CORRIGIDO (agora cria purchase com isTrial=true)
+- [x] BUG: Campo is_trial não está sendo salvo corretamente no banco de dados - CORRIGIDO (purchase.isTrial=true)
+- [x] MELHORIA: Adicionar link "Experimente Grátis" no menu superior (ao lado de Funcionalidades, Preços, etc) - IMPLEMENTADO

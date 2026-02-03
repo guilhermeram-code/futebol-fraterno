@@ -1581,6 +1581,23 @@ export const appRouter = router({
           isDemo: false,
         });
 
+        // Criar purchase trial (para aparecer no painel admin)
+        const purchase = await db.createPurchase({
+          customerName: input.name,
+          customerEmail: input.email,
+          customerPhone: input.whatsapp,
+          campaignName: input.campaignName,
+          campaignSlug: input.campaignSlug,
+          planType: '2_months', // Placeholder (trial não tem plano real)
+          amountPaid: 0, // Trial é grátis
+          currency: 'BRL',
+          status: 'completed',
+          isTrial: true, // MARCA COMO TRIAL
+          trialSignupId: id,
+          plainPassword: password,
+          expiresAt,
+        });
+
         // Criar admin user para o campeonato
         await db.createAdminUser(campaign.id, {
           username: input.email,
@@ -1589,8 +1606,11 @@ export const appRouter = router({
           isOwner: true,
         });
 
-        // Atualizar trial signup com campaignId
-        await db.updateTrialSignupStatus(id, 'active');
+        // Atualizar trial signup com campaignId e purchaseId
+        await db.updateTrialSignup(id, { 
+          campaignId: campaign.id,
+          status: 'active'
+        });
 
         // TODO: Enviar email de boas-vindas
         // await sendTrialWelcomeEmail(input.email, input.name, input.campaignSlug, password);

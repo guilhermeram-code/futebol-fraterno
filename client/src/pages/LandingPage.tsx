@@ -253,6 +253,7 @@ export default function LandingPage() {
             <span className="font-bold text-xl text-gray-800">Pelada<span className="text-emerald-600">Pro</span></span>
           </div>
           <nav className="hidden md:flex items-center gap-8">
+            <a href="#trial" className="text-emerald-600 hover:text-emerald-700 transition-colors font-semibold">Experimente Grátis</a>
             <a href="#features" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Funcionalidades</a>
             <a href="#pricing" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Preços</a>
             <a href="#how-it-works" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">Como Funciona</a>
