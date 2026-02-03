@@ -1612,8 +1612,21 @@ export const appRouter = router({
           status: 'active'
         });
 
-        // TODO: Enviar email de boas-vindas
-        // await sendTrialWelcomeEmail(input.email, input.name, input.campaignSlug, password);
+        // Enviar email de boas-vindas
+        try {
+          const { sendTrialWelcomeEmail } = await import('./email');
+          await sendTrialWelcomeEmail({
+            name: input.name,
+            email: input.email,
+            campaignName: input.campaignName,
+            campaignSlug: input.campaignSlug,
+            password,
+            expiresAt,
+          });
+        } catch (emailError) {
+          console.error('[Trial] Erro ao enviar email de boas-vindas:', emailError);
+          // Não bloqueia o cadastro se o email falhar
+        }
 
         return {
           success: true,

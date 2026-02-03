@@ -269,3 +269,175 @@ export async function sendPasswordResetEmailUser(params: PasswordResetEmailUserP
     throw error;
   }
 }
+
+
+// ==================== EMAIL DE BOAS-VINDAS TRIAL ====================
+
+interface TrialWelcomeEmailData {
+  name: string;
+  email: string;
+  campaignName: string;
+  campaignSlug: string;
+  password: string;
+  expiresAt: Date;
+}
+
+/**
+ * Envia email de boas-vindas para novo trial
+ */
+export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promise<boolean> {
+  try {
+    const campaignUrl = `https://peladapro.com.br/${data.campaignSlug}`;
+    const adminUrl = `https://peladapro.com.br/${data.campaignSlug}/admin`;
+    const expirationDate = new Date(data.expiresAt).toLocaleDateString('pt-BR');
+
+    // Configurar transporte Gmail SMTP
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'contato@meucontomagico.com.br',
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bem-vindo ao PeladaPro - Trial Gratuito</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">🎉 Bem-vindo ao PeladaPro!</h1>
+              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Seu campeonato está pronto para começar</p>
+            </td>
+          </tr>
+
+          <!-- Conteúdo -->
+          <tr>
+            <td style="padding: 40px 30px;">
+              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Olá <strong>${data.name}</strong>,
+              </p>
+              
+              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
+                Seu campeonato <strong>"${data.campaignName}"</strong> foi criado com sucesso! 🎊
+              </p>
+
+              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
+                Você tem <strong>7 dias de acesso gratuito</strong> a todas as funcionalidades da plataforma. Aproveite para testar tudo!
+              </p>
+
+              <!-- Box de Credenciais -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; margin-bottom: 30px;">
+                <tr>
+                  <td style="padding: 25px;">
+                    <h2 style="color: #059669; margin: 0 0 15px 0; font-size: 18px;">🔑 Suas Credenciais de Acesso</h2>
+                    
+                    <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;">
+                      <strong>Site do Campeonato:</strong><br>
+                      <a href="${campaignUrl}" style="color: #10b981; text-decoration: none; font-size: 16px;">${campaignUrl}</a>
+                    </p>
+
+                    <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;">
+                      <strong>Painel Administrativo:</strong><br>
+                      <a href="${adminUrl}" style="color: #10b981; text-decoration: none; font-size: 16px;">${adminUrl}</a>
+                    </p>
+
+                    <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;">
+                      <strong>Usuário:</strong> ${data.email}
+                    </p>
+
+                    <p style="color: #333333; margin: 0; font-size: 14px;">
+                      <strong>Senha:</strong> <span style="background-color: #ffffff; padding: 5px 10px; border-radius: 4px; font-family: monospace; font-size: 16px; color: #059669; font-weight: bold;">${data.password}</span>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Botão CTA -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td align="center">
+                    <a href="${adminUrl}" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                      Acessar Painel Admin
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Informações do Trial -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 30px;">
+                <tr>
+                  <td>
+                    <p style="color: #92400e; margin: 0; font-size: 14px; line-height: 1.6;">
+                      ⏰ <strong>Seu trial expira em:</strong> ${expirationDate}<br>
+                      💳 <strong>Sem cobranças automáticas</strong> - você decide se quer continuar<br>
+                      🎁 <strong>Cupom especial:</strong> Use <strong>LANCAMENTO40</strong> para 40% OFF em qualquer plano
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Próximos Passos -->
+              <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px;">📋 Próximos Passos:</h3>
+              <ol style="color: #333333; font-size: 14px; line-height: 1.8; margin: 0 0 30px 0; padding-left: 20px;">
+                <li>Acesse o painel administrativo com suas credenciais</li>
+                <li>Personalize o logo e cores do seu campeonato</li>
+                <li>Cadastre os times e jogadores</li>
+                <li>Comece a registrar os jogos e resultados</li>
+                <li>Compartilhe o link do campeonato com os participantes</li>
+              </ol>
+
+              <!-- Suporte -->
+              <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 0;">
+                Precisa de ajuda? Responda este email ou entre em contato pelo WhatsApp: <strong>+55 11 5198-1694</strong>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 8px 8px;">
+              <p style="color: #6b7280; font-size: 12px; margin: 0 0 10px 0;">
+                © 2026 PeladaPro - Organize seu campeonato como um profissional
+              </p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                <a href="https://peladapro.com.br" style="color: #10b981; text-decoration: none;">peladapro.com.br</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    `;
+
+    await transporter.sendMail({
+      from: '"PeladaPro" <contato@meucontomagico.com.br>',
+      to: data.email,
+      subject: `🎉 Bem-vindo ao PeladaPro - Seu campeonato "${data.campaignName}" está pronto!`,
+      html: htmlContent,
+    });
+
+    console.log(`[Email] ✅ Email de boas-vindas enviado para ${data.email}`);
+    return true;
+  } catch (error) {
+    console.error('[Email] ❌ Erro ao enviar email de boas-vindas:', error);
+    return false;
+  }
+}

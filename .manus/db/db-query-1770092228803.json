@@ -1,0 +1,33 @@
+{
+  "query": "SELECT * FROM purchases WHERE campaignSlug = 'guilherme';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM purchases WHERE campaignSlug = 'guilherme';",
+  "rows": [
+    {
+      "id": "540001",
+      "customerName": "Guilherme Ramos",
+      "customerEmail": "guilherme.ramos@constrixengenharia.com.br",
+      "customerPhone": "NULL",
+      "campaignName": "guilherme",
+      "campaignSlug": "guilherme",
+      "planType": "2_months",
+      "amountPaid": "0",
+      "currency": "BRL",
+      "couponCode": "NULL",
+      "discountAmount": "0",
+      "stripeSessionId": "NULL",
+      "stripePaymentIntentId": "NULL",
+      "status": "completed",
+      "renewalEmailSent": "0",
+      "expiresAt": "2026-02-10 04:00:55",
+      "createdAt": "2026-02-03 04:00:54",
+      "updatedAt": "2026-02-03 04:00:54",
+      "plainPassword": "RV8eprcV",
+      "isTrial": "1",
+      "trialSignupId": "2"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcustomerName\tcustomerEmail\tcustomerPhone\tcampaignName\tcampaignSlug\tplanType\tamountPaid\tcurrency\tcouponCode\tdiscountAmount\tstripeSessionId\tstripePaymentIntentId\tstatus\trenewalEmailSent\texpiresAt\tcreatedAt\tupdatedAt\tplainPassword\tisTrial\ttrialSignupId\n540001\tGuilherme Ramos\tguilherme.ramos@constrixengenharia.com.br\tNULL\tguilherme\tguilherme\t2_months\t0\tBRL\tNULL\t0\tNULL\tNULL\tcompleted\t0\t2026-02-10 04:00:55\t2026-02-03 04:00:54\t2026-02-03 04:00:54\tRV8eprcV\t1\t2\n",
+  "stderr": "",
+  "execution_time_ms": 351
+}

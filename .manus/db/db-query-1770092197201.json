@@ -1,0 +1,24 @@
+{
+  "query": "SELECT * FROM trial_signups WHERE campaignSlug = 'guilherme';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM trial_signups WHERE campaignSlug = 'guilherme';",
+  "rows": [
+    {
+      "id": "2",
+      "name": "Guilherme Ramos",
+      "email": "guilherme.ramos@constrixengenharia.com.br",
+      "whatsapp": "NULL",
+      "campaignName": "guilherme",
+      "campaignSlug": "guilherme",
+      "campaignId": "NULL",
+      "status": "active",
+      "plainPassword": "RV8eprcV",
+      "expiresAt": "2026-02-10 04:00:55",
+      "createdAt": "2026-02-03 04:00:54",
+      "updatedAt": "2026-02-03 04:00:54"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\twhatsapp\tcampaignName\tcampaignSlug\tcampaignId\tstatus\tplainPassword\texpiresAt\tcreatedAt\tupdatedAt\n2\tGuilherme Ramos\tguilherme.ramos@constrixengenharia.com.br\tNULL\tguilherme\tguilherme\tNULL\tactive\tRV8eprcV\t2026-02-10 04:00:55\t2026-02-03 04:00:54\t2026-02-03 04:00:54\n",
+  "stderr": "",
+  "execution_time_ms": 360
+}

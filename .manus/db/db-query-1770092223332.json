@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO purchases (customerName, customerEmail, customerPhone, campaignName, campaignSlug, planType, amountPaid, currency, status, isTrial, trialSignupId, plainPassword, expiresAt, createdAt, updatedAt) \nSELECT name, email, whatsapp, campaignName, campaignSlug, '2_months', 0, 'BRL', 'completed', true, id, plainPassword, expiresAt, createdAt, updatedAt \nFROM trial_signups \nWHERE campaignSlug = 'guilherme';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute INSERT INTO purchases (customerName, customerEmail, customerPhone, campaignName, campaignSlug, planType, amountPaid, currency, status, isTrial, trialSignupId, plainPassword, expiresAt, createdAt, updatedAt) \nSELECT name, email, whatsapp, campaignName, campaignSlug, '2_months', 0, 'BRL', 'completed', true, id, plainPassword, expiresAt, createdAt, updatedAt \nFROM trial_signups \nWHERE campaignSlug = 'guilherme';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 400
+}

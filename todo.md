@@ -1692,3 +1692,11 @@ const [username, setUsername] = useState("");
 - [x] BUG: Campeonato trial não aparece na lista do painel admin - CORRIGIDO (agora cria purchase com isTrial=true)
 - [x] BUG: Campo is_trial não está sendo salvo corretamente no banco de dados - CORRIGIDO (purchase.isTrial=true)
 - [x] MELHORIA: Adicionar link "Experimente Grátis" no menu superior (ao lado de Funcionalidades, Preços, etc) - IMPLEMENTADO
+
+
+## BUGS CRÍTICOS REPORTADOS - Trial /guilherme (03/02/2026 - 23:15)
+
+- [x] BUG CRÍTICO: Campeonato trial /guilherme não aparece no painel admin - CORRIGIDO (purchase criado manualmente)
+- [x] BUG CRÍTICO: Email de boas-vindas não está sendo enviado - CORRIGIDO (Gmail + Nodemailer implementado)
+- [x] Investigar: Purchase não existia no banco - RESOLVIDO (criado via SQL)
+- [x] Implementado: Envio automático de email de boas-vindas para novos trials
