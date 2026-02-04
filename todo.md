@@ -1838,3 +1838,9 @@ const [username, setUsername] = useState("");
 - [ ] Monitorar métricas de conversão do Google Ads
 - [ ] A/B test de variações do título
 - [ ] Adicionar depoimentos reais após primeiras vendas
+
+
+## CORREÇÕES LANDING PAGE - Duplicação e Texto Incorreto (04/02/2026)
+
+- [x] Remover seção duplicada "Veja Como Funciona na Prática" (estava logo abaixo do preview de demo da hero)
+- [x] Corrigir texto do card "Sem Compromisso": trocar "Cancele quando quiser" por "Expira automaticamente" (trial grátis não precisa cancelar)

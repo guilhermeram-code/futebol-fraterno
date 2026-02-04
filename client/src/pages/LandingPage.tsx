@@ -369,73 +369,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Demo Section - Em Destaque */}
-      <section className="py-16 px-4 bg-gradient-to-b from-emerald-50/50 to-white">
-        <div className="container max-w-5xl">
-          <div className="text-center mb-8">
-            <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-base px-4 py-2">
-              <Play className="w-4 h-4 mr-2" />
-              Veja na Prática
-            </Badge>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-              👁️ Veja Como Funciona na Prática
-            </h2>
-            <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto mb-8">
-              Explore um campeonato real funcionando. Clique para ver tabelas, estatísticas, jogadores e muito mais!
-            </p>
-          </div>
-          
-          {/* Preview grande do demo */}
-          <div className="relative mb-8">
-            {/* Badge animado */}
-            <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 animate-bounce">
-              <Badge className="bg-emerald-500 text-white px-4 py-2 text-sm font-semibold shadow-lg">
-                👆 CLIQUE PARA EXPLORAR
-              </Badge>
-            </div>
-            
-            {/* Mockup clicável */}
-            <a 
-              href="/futebol-fraterno" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border-2 border-emerald-200 transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl hover:shadow-emerald-300/50 cursor-pointer group"
-            >
-              <img 
-                src="/screenshots/home.webp" 
-                alt="Pelada Pro - Página inicial do campeonato"
-                className="w-full"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent group-hover:from-black/30" />
-              
-              {/* Overlay com texto ao hover */}
-              <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-all duration-300 flex items-center justify-center">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/95 px-6 py-3 rounded-lg shadow-xl">
-                  <p className="text-emerald-600 font-semibold flex items-center gap-2 text-base md:text-lg">
-                    <Play className="w-5 h-5" />
-                    Ver campeonato demo ao vivo
-                  </p>
-                </div>
-              </div>
-            </a>
-          </div>
-          
-          {/* Botão CTA */}
-          <div className="text-center">
-            <Button 
-              size="lg" 
-              onClick={() => window.open("/futebol-fraterno", "_blank")}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-base md:text-lg shadow-lg"
-            >
-              <Play className="mr-2 w-5 h-5" />
-              EXPLORAR CAMPEONATO DEMO
-            </Button>
-            <p className="text-sm text-gray-500 mt-4">
-              ✨ Campeonato real funcionando - Explore à vontade
-            </p>
-          </div>
-        </div>
-      </section>
+
 
       {/* Features Section with Screenshots */}
       <section id="features" className="py-20 px-4 bg-gradient-to-b from-gray-50 to-white">
@@ -518,7 +452,7 @@ export default function LandingPage() {
                   <div className="flex flex-col items-center text-center p-6 bg-teal-50 rounded-xl">
                     <CheckCircle2 className="w-12 h-12 text-teal-600 mb-3" />
                     <h3 className="font-bold text-gray-900 mb-2">Sem Compromisso</h3>
-                    <p className="text-sm text-gray-600">Cancele quando quiser</p>
+                    <p className="text-sm text-gray-600">Expira automaticamente</p>
                   </div>
                   <div className="flex flex-col items-center text-center p-6 bg-cyan-50 rounded-xl">
                     <CheckCircle2 className="w-12 h-12 text-cyan-600 mb-3" />
