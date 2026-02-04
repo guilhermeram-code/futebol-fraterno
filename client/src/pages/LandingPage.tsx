@@ -268,59 +268,62 @@ export default function LandingPage() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-28 pb-16 px-4">
-        <div className="container">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left side - Text */}
-            <div>
-              <Badge className="mb-6 bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-100">
-                <Sparkles className="w-3 h-3 mr-1" />
-                Novo: Chaves de mata-mata estilo Champions League
+      {/* Hero Section - Mobile-First Conversion Optimized */}
+      <section className="pt-24 pb-12 px-4 md:pt-28 md:pb-16">
+        <div className="container max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            {/* Left side - Simplified Text */}
+            <div className="text-center lg:text-left">
+              {/* Badge destaque trial */}
+              <Badge className="mb-6 bg-emerald-500 text-white border-0 hover:bg-emerald-500 text-base px-4 py-2 shadow-lg inline-flex items-center gap-2">
+                <Sparkles className="w-4 h-4" />
+                TESTE GRÁTIS POR 7 DIAS
               </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                Organize Seu
+              
+              {/* Título simplificado */}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                Organize Seu Campeonato
                 <span className="block text-emerald-600">
-                  Campeonato de Futebol
+                  de Futebol em Minutos
                 </span>
               </h1>
-              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Crie seu site de campeonato em minutos. Tabelas automáticas, estatísticas completas, 
-                galeria de fotos e muito mais. Tudo que você precisa para gerenciar sua pelada como um profissional!
-              </p>
               
-              {/* Benefits list */}
-              <div className="grid grid-cols-2 gap-3 mb-8">
-                {BENEFITS.slice(0, 6).map((benefit, index) => (
-                  <div key={index} className="flex items-center gap-2 text-gray-700">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-sm">{benefit}</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
+              {/* 2 CTAs principais - mesmo tamanho */}
+              <div className="flex flex-col gap-3 mb-6 mt-8">
                 <Button 
                   size="lg" 
-                  onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8 shadow-lg shadow-emerald-200"
+                  onClick={() => setShowTrialModal(true)}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8 py-6 shadow-lg shadow-emerald-200 w-full text-base md:text-lg"
                 >
-                  Criar Meu Campeonato
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <Zap className="mr-2 w-5 h-5" />
+                  COMEÇAR TESTE GRÁTIS
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="border-gray-300 text-gray-700 hover:bg-gray-50 text-lg px-8"
+                  className="border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-50 text-lg px-8 py-6 w-full text-base md:text-lg font-semibold"
                   onClick={() => window.open("/futebol-fraterno", "_blank")}
                 >
                   <Play className="mr-2 w-5 h-5" />
-                  Ver Demo
+                  VER CAMPEONATO DEMO
                 </Button>
               </div>
-              <p className="text-sm text-gray-500 mt-4">
-                <span className="font-semibold text-emerald-600">40% OFF</span> com cupom <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">LANCAMENTO40</span> • A partir de R$ 37,45/mês
-              </p>
+              
+              {/* Prova social - 3 itens */}
+              <div className="flex flex-col gap-2 text-sm md:text-base text-gray-700 mb-4">
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                  <span className="font-medium">Sem cartão de crédito</span>
+                </div>
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                  <span className="font-medium">Todas as funcionalidades liberadas</span>
+                </div>
+                <div className="flex items-center justify-center lg:justify-start gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                  <span className="font-medium">7 dias para testar tudo</span>
+                </div>
+              </div>
             </div>
 
             {/* Right side - Screenshot */}
@@ -362,6 +365,74 @@ export default function LandingPage() {
                 ✨ Campeonato real funcionando - Clique para explorar
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Demo Section - Em Destaque */}
+      <section className="py-16 px-4 bg-gradient-to-b from-emerald-50/50 to-white">
+        <div className="container max-w-5xl">
+          <div className="text-center mb-8">
+            <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 text-base px-4 py-2">
+              <Play className="w-4 h-4 mr-2" />
+              Veja na Prática
+            </Badge>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              👁️ Veja Como Funciona na Prática
+            </h2>
+            <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto mb-8">
+              Explore um campeonato real funcionando. Clique para ver tabelas, estatísticas, jogadores e muito mais!
+            </p>
+          </div>
+          
+          {/* Preview grande do demo */}
+          <div className="relative mb-8">
+            {/* Badge animado */}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+              <Badge className="bg-emerald-500 text-white px-4 py-2 text-sm font-semibold shadow-lg">
+                👆 CLIQUE PARA EXPLORAR
+              </Badge>
+            </div>
+            
+            {/* Mockup clicável */}
+            <a 
+              href="/futebol-fraterno" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border-2 border-emerald-200 transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl hover:shadow-emerald-300/50 cursor-pointer group"
+            >
+              <img 
+                src="/screenshots/home.webp" 
+                alt="Pelada Pro - Página inicial do campeonato"
+                className="w-full"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent group-hover:from-black/30" />
+              
+              {/* Overlay com texto ao hover */}
+              <div className="absolute inset-0 bg-emerald-500/0 group-hover:bg-emerald-500/10 transition-all duration-300 flex items-center justify-center">
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/95 px-6 py-3 rounded-lg shadow-xl">
+                  <p className="text-emerald-600 font-semibold flex items-center gap-2 text-base md:text-lg">
+                    <Play className="w-5 h-5" />
+                    Ver campeonato demo ao vivo
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+          
+          {/* Botão CTA */}
+          <div className="text-center">
+            <Button 
+              size="lg" 
+              onClick={() => window.open("/futebol-fraterno", "_blank")}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-6 text-base md:text-lg shadow-lg"
+            >
+              <Play className="mr-2 w-5 h-5" />
+              EXPLORAR CAMPEONATO DEMO
+            </Button>
+            <p className="text-sm text-gray-500 mt-4">
+              ✨ Campeonato real funcionando - Explore à vontade
+            </p>
           </div>
         </div>
       </section>
@@ -612,24 +683,115 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Final Section */}
       <section className="py-20 px-4">
         <div className="container">
-          <div className="max-w-4xl mx-auto bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-3xl p-12 text-center shadow-2xl shadow-emerald-200">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Pronto para Organizar Seu Campeonato?
+          <div className="max-w-4xl mx-auto bg-gradient-to-r from-emerald-600 to-emerald-700 rounded-3xl p-8 md:p-12 text-center shadow-2xl shadow-emerald-200">
+            <Badge className="mb-4 bg-white/20 text-white border-0 text-sm md:text-base px-4 py-2">
+              <Sparkles className="w-4 h-4 mr-2" />
+              TESTE GRÁTIS POR 7 DIAS
+            </Badge>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-4">
+              Pronto para Começar?
             </h2>
-            <p className="text-emerald-100 text-lg mb-8 max-w-2xl mx-auto">
-              Junte-se a centenas de organizadores que já usam o Pelada Pro para gerenciar seus campeonatos
+            <p className="text-emerald-100 text-base md:text-lg mb-8 max-w-2xl mx-auto">
+              Crie seu campeonato agora e teste gratuitamente por 7 dias. Sem cartão, sem compromisso!
             </p>
-            <Button 
-              size="lg" 
-              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-white text-emerald-700 hover:bg-emerald-50 text-lg px-10 shadow-lg"
-            >
-              Criar Meu Campeonato Agora
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                size="lg" 
+                onClick={() => setShowTrialModal(true)}
+                className="bg-white text-emerald-700 hover:bg-emerald-50 text-base md:text-lg px-8 md:px-10 py-6 shadow-lg font-bold"
+              >
+                <Zap className="mr-2 w-5 h-5" />
+                COMEÇAR TESTE GRÁTIS
+              </Button>
+              <a 
+                href="https://wa.me/551151981694?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20PeladaPro"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white hover:text-emerald-100 transition-colors text-sm md:text-base font-medium flex items-center gap-2"
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                </svg>
+                Falar no WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 px-4 bg-white">
+        <div className="container max-w-4xl">
+          <div className="text-center mb-12">
+            <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200">
+              Dúvidas Frequentes
+            </Badge>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              Perguntas Frequentes
+            </h2>
+            <p className="text-gray-600 text-base md:text-lg">
+              Tudo que você precisa saber sobre o trial gratuito e os planos
+            </p>
+          </div>
+          
+          <div className="space-y-4">
+            {/* FAQ 1 */}
+            <details className="group bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+              <summary className="font-semibold text-gray-900 cursor-pointer flex items-center justify-between">
+                <span className="text-base md:text-lg">Como funciona o trial grátis de 7 dias?</span>
+                <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
+              </summary>
+              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
+                Você cria seu campeonato gratuitamente e tem 7 dias para testar todas as funcionalidades da plataforma. Não pedimos cartão de crédito e não há cobranças automáticas. É 100% grátis para experimentar!
+              </p>
+            </details>
+            
+            {/* FAQ 2 */}
+            <details className="group bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+              <summary className="font-semibold text-gray-900 cursor-pointer flex items-center justify-between">
+                <span className="text-base md:text-lg">O que acontece após os 7 dias de trial?</span>
+                <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
+              </summary>
+              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
+                Após 7 dias, o campeonato trial expira automaticamente. Se você gostou da plataforma, pode criar um campeonato oficial escolhendo um dos nossos planos. Use o cupom <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">LANCAMENTO40</span> para 40% OFF!
+              </p>
+            </details>
+            
+            {/* FAQ 3 */}
+            <details className="group bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+              <summary className="font-semibold text-gray-900 cursor-pointer flex items-center justify-between">
+                <span className="text-base md:text-lg">Posso migrar os dados do trial para o campeonato oficial?</span>
+                <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
+              </summary>
+              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
+                O trial é apenas para testar a plataforma. Ao criar seu campeonato oficial, você começa do zero. Por isso recomendamos usar o trial para explorar as funcionalidades, e depois criar seu campeonato oficial com os dados reais.
+              </p>
+            </details>
+            
+            {/* FAQ 4 */}
+            <details className="group bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+              <summary className="font-semibold text-gray-900 cursor-pointer flex items-center justify-between">
+                <span className="text-base md:text-lg">Qual plano devo escolher?</span>
+                <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
+              </summary>
+              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
+                Depende da duração do seu campeonato! Para campeonatos curtos (2-3 meses), escolha o plano Iniciante ou Popular. Para campeonatos mais longos, os planos Semestral ou Anual oferecem melhor custo-benefício. Todos os planos têm as mesmas funcionalidades!
+              </p>
+            </details>
+            
+            {/* FAQ 5 */}
+            <details className="group bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
+              <summary className="font-semibold text-gray-900 cursor-pointer flex items-center justify-between">
+                <span className="text-base md:text-lg">Como funciona o cupom de desconto?</span>
+                <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
+              </summary>
+              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
+                Use o cupom <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">LANCAMENTO40</span> no checkout para ganhar 40% OFF em qualquer plano. É uma oferta de lançamento por tempo limitado!
+              </p>
+            </details>
           </div>
         </div>
       </section>
@@ -642,7 +804,7 @@ export default function LandingPage() {
               Contato
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Tire Suas Dúvidas
+              Ainda Tem Dúvidas?
             </h2>
             <p className="text-gray-600 text-lg mb-10">
               Entre em contato para tirar dúvidas ou conhecer melhor o PeladaPro

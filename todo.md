@@ -1725,3 +1725,116 @@ const [username, setUsername] = useState("");
 - [x] Integrar scheduler com trial.signup (agendar emails ao criar trial)
 - [x] Iniciar scheduler automaticamente quando servidor inicia
 - [x] Reescrever emails com abordagem correta (trial = teste, criar novo campeonato após expirar)
+
+
+## REDESIGN LANDING PAGE MOBILE-FIRST (03/02/2026 - 23:50)
+
+### Problema Identificado:
+- Google Ads funcionando bem (CPC R$ 0,42, CTR 4,12%, 90% mobile)
+- ZERO conversões (0 vendas + 0 trials gratuitos)
+- Landing page com excesso de informação confunde usuário
+- Falta foco claro no CTA principal (teste grátis)
+
+### Solução: Redesign Mobile-First Focado em Conversão
+
+#### Hero Section (primeira tela):
+- [ ] Simplificar título para 1-2 linhas
+- [ ] Badge destaque "🎁 TESTE GRÁTIS POR 7 DIAS" no topo
+- [ ] 2 CTAs principais (mesmo tamanho):
+  - [ ] Botão verde gigante: "🚀 COMEÇAR TESTE GRÁTIS"
+  - [ ] Botão branco outline: "▶ VER CAMPEONATO DEMO"
+- [ ] Prova social abaixo dos botões:
+  - [ ] ✅ Sem cartão de crédito
+  - [ ] ✅ Todas as funcionalidades liberadas
+  - [ ] ✅ 7 dias para testar tudo
+- [ ] Remover excesso de texto e ícones
+
+#### Seção 2 - Demo em Destaque:
+- [ ] Preview grande do campeonato demo (imagem/GIF)
+- [ ] Título: "👁️ Veja Como Funciona na Prática"
+- [ ] Botão: "EXPLORAR CAMPEONATO DEMO"
+
+#### Seção 3 - Funcionalidades:
+- [ ] Manter funcionalidades existentes
+- [ ] Reorganizar para mobile
+- [ ] Foco em benefícios (não técnicas)
+
+#### Seção 4 - Preços:
+- [ ] Manter planos existentes
+- [ ] Destaque para cupom LANCAMENTO40
+- [ ] Mostrar economia
+
+#### Seção 5 - FAQ:
+- [ ] Dúvidas comuns sobre trial
+- [ ] Como funciona após 7 dias
+
+#### Seção 6 - CTA Final:
+- [ ] Repetir botão "Começar Teste Grátis"
+- [ ] Contato WhatsApp + Email
+
+### Decisões Tomadas:
+- ❌ SEM números falsos de campeonatos ativos
+- ❌ SEM depoimentos falsos
+- ✅ Trial de 7 dias é prova suficiente
+- ✅ Apenas reorganizar (sem mudar funcionalidades)
+
+
+## REDESIGN LANDING PAGE MOBILE-FIRST (03/02/2026 - 23:45) ✅ CONCLUÍDO
+
+### Objetivo: Aumentar conversão do Google Ads (atualmente 0%)
+
+### Problemas Identificados e Resolvidos:
+- [x] Sobrecarga de informação na primeira tela
+- [x] Usuário fica perdido sem saber o que fazer
+- [x] Trial gratuito não está em destaque suficiente
+- [x] Demo não está visível o suficiente
+
+### Implementações Realizadas:
+
+#### 1. Hero Section Simplificada ✅
+- [x] Badge verde no topo: "🎁 TESTE GRÁTIS POR 7 DIAS"
+- [x] Título curto e direto: "Organize Seu Campeonato de Futebol em Minutos"
+- [x] 2 botões principais (mesmo tamanho visual):
+  - COMEÇAR TESTE GRÁTIS (verde, destaque)
+  - VER CAMPEONATO DEMO (branco outline)
+- [x] 3 checkmarks de prova social:
+  - ✅ Sem cartão de crédito
+  - ✅ Todas as funcionalidades liberadas
+  - ✅ 7 dias para testar tudo
+- [x] Preview do campeonato demo ao lado (desktop) / abaixo (mobile)
+
+#### 2. Seção de Demo em Destaque ✅
+- [x] Badge "Veja na Prática"
+- [x] Título: "👁️ Veja Como Funciona na Prática"
+- [x] Preview grande do campeonato demo
+- [x] Badge animado "👆 CLIQUE PARA EXPLORAR"
+- [x] Botão CTA: "EXPLORAR CAMPEONATO DEMO"
+- [x] Texto explicativo
+
+#### 3. Seção de FAQ ✅
+- [x] 5 perguntas frequentes sobre trial e planos:
+  1. Como funciona o trial grátis de 7 dias?
+  2. O que acontece após os 7 dias de trial?
+  3. Posso migrar os dados do trial para o campeonato oficial?
+  4. Qual plano devo escolher?
+  5. Como funciona o cupom de desconto?
+- [x] Formato accordion (details/summary)
+- [x] Respostas claras e objetivas
+
+#### 4. CTA Final Otimizado ✅
+- [x] Badge "TESTE GRÁTIS POR 7 DIAS"
+- [x] Título: "Pronto para Começar?"
+- [x] Texto: "Crie seu campeonato agora e teste gratuitamente por 7 dias. Sem cartão, sem compromisso!"
+- [x] Botão principal: "COMEÇAR TESTE GRÁTIS"
+- [x] Link WhatsApp visível
+
+### Resultados Esperados:
+- 📈 Aumento de conversão de 0% para 5-10% (meta inicial)
+- 🎯 Clareza imediata sobre a proposta de valor
+- 📱 Experiência mobile-first otimizada
+- 🚀 Foco em trial gratuito como principal CTA
+
+### Próximos Passos:
+- [ ] Monitorar métricas de conversão do Google Ads
+- [ ] A/B test de variações do título
+- [ ] Adicionar depoimentos reais após primeiras vendas
