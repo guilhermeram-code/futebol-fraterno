@@ -972,3 +972,171 @@ export async function sendTrialDay14Email(data: TrialNurturingEmailData): Promis
     return false;
   }
 }
+
+
+// ==================== NOTIFICAÇÃO PARA OWNER ====================
+
+interface OwnerNotificationEmailData {
+  name: string;
+  email: string;
+  whatsapp?: string;
+  campaignName: string;
+  campaignSlug: string;
+  expiresAt: Date;
+}
+
+/**
+ * Envia email de notificação para o owner quando alguém cria um trial
+ */
+export async function sendOwnerNotificationEmail(data: OwnerNotificationEmailData): Promise<boolean> {
+  try {
+    const campaignUrl = `https://peladapro.com.br/${data.campaignSlug}`;
+    const adminUrl = `https://peladapro.com.br/${data.campaignSlug}/admin`;
+    const expirationDate = new Date(data.expiresAt).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    // Configurar transporte Gmail SMTP
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: 'contato@meucontomagico.com.br',
+        pass: process.env.GMAIL_APP_PASSWORD,
+      },
+    });
+
+    const htmlContent = `
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Trial Criado - PeladaPro</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">🎉 Novo Trial Criado!</h1>
+              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Alguém acabou de criar um teste grátis</p>
+            </td>
+          </tr>
+
+          <!-- Conteúdo -->
+          <tr>
+            <td style="padding: 40px 30px;">
+              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
+                Um novo usuário criou um teste grátis de 7 dias no PeladaPro! 🚀
+              </p>
+
+              <h3 style="color: #2563eb; margin: 0 0 20px 0; font-size: 18px;">📋 Informações do Cadastro:</h3>
+              
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border-radius: 8px; margin-bottom: 30px;">
+                <tr>
+                  <td style="padding: 20px;">
+                    <table width="100%" cellpadding="8" cellspacing="0">
+                      <tr>
+                        <td style="color: #64748b; font-size: 14px; font-weight: bold; width: 140px;">👤 Nome:</td>
+                        <td style="color: #1e293b; font-size: 14px;">${data.name}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #64748b; font-size: 14px; font-weight: bold;">📧 Email:</td>
+                        <td style="color: #1e293b; font-size: 14px;"><a href="mailto:${data.email}" style="color: #3b82f6; text-decoration: none;">${data.email}</a></td>
+                      </tr>
+                      ${data.whatsapp ? `
+                      <tr>
+                        <td style="color: #64748b; font-size: 14px; font-weight: bold;">📱 WhatsApp:</td>
+                        <td style="color: #1e293b; font-size: 14px;"><a href="https://wa.me/${data.whatsapp.replace(/\D/g, '')}" style="color: #3b82f6; text-decoration: none;">${data.whatsapp}</a></td>
+                      </tr>
+                      ` : ''}
+                      <tr>
+                        <td style="color: #64748b; font-size: 14px; font-weight: bold;">🏆 Campeonato:</td>
+                        <td style="color: #1e293b; font-size: 14px; font-weight: bold;">${data.campaignName}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #64748b; font-size: 14px; font-weight: bold;">🔗 URL:</td>
+                        <td style="color: #1e293b; font-size: 14px;"><a href="${campaignUrl}" style="color: #3b82f6; text-decoration: none;">${campaignUrl}</a></td>
+                      </tr>
+                      <tr>
+                        <td style="color: #64748b; font-size: 14px; font-weight: bold;">⏰ Expira em:</td>
+                        <td style="color: #dc2626; font-size: 14px; font-weight: bold;">${expirationDate}</td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td align="center">
+                    <a href="${adminUrl}" style="display: inline-block; background-color: #3b82f6; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 16px; font-weight: bold; margin-right: 10px;">
+                      Ver Painel Admin
+                    </a>
+                    <a href="${campaignUrl}" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 16px; font-weight: bold;">
+                      Ver Campeonato
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 20px;">
+                <tr>
+                  <td>
+                    <p style="color: #92400e; margin: 0; font-size: 14px; line-height: 1.6;">
+                      💡 <strong>Próximos passos:</strong> O usuário receberá emails automáticos nos dias 2, 5 e 7 do trial para engajamento e conversão.
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 0;">
+                Este é um email automático de notificação. Você pode acompanhar todos os trials criados no painel administrativo.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 8px 8px;">
+              <p style="color: #6b7280; font-size: 12px; margin: 0 0 10px 0;">
+                © 2026 PeladaPro - Sistema de Gerenciamento de Campeonatos
+              </p>
+              <p style="color: #6b7280; font-size: 12px; margin: 0;">
+                <a href="https://peladapro.com.br" style="color: #3b82f6; text-decoration: none;">peladapro.com.br</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+    `;
+
+    await transporter.sendMail({
+      from: '"PeladaPro - Notificações" <contato@meucontomagico.com.br>',
+      to: 'contato@meucontomagico.com.br',
+      subject: `🎉 Novo Trial Criado: ${data.campaignName} (${data.name})`,
+      html: htmlContent,
+    });
+
+    console.log(`[Email] ✅ Notificação de trial enviada para owner`);
+    return true;
+  } catch (error) {
+    console.error('[Email] ❌ Erro ao enviar notificação para owner:', error);
+    return false;
+  }
+}

@@ -1864,3 +1864,10 @@ const [username, setUsername] = useState("");
 - [x] Modificar botão "COMEÇAR TESTE GRÁTIS" da landing page principal para redirecionar para /teste-gratis
 - [x] Remover abertura do modal popup ao clicar no botão
 - [x] Testar redirecionamento funcionando corretamente
+
+
+## Notificação por Email ao Criar Trial
+- [x] Implementar envio de email automático quando alguém criar teste grátis
+- [x] Email deve ser enviado para contato@meucontomagico.com.br
+- [x] Incluir informações: nome, email, whatsapp, nome do campeonato, URL do campeonato
+- [x] Testar envio de email funcionando corretamente

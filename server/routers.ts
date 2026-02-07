@@ -1628,6 +1628,22 @@ export const appRouter = router({
           // Não bloqueia o cadastro se o email falhar
         }
 
+        // Enviar notificação para o owner
+        try {
+          const { sendOwnerNotificationEmail } = await import('./email');
+          await sendOwnerNotificationEmail({
+            name: input.name,
+            email: input.email,
+            whatsapp: input.whatsapp,
+            campaignName: input.campaignName,
+            campaignSlug: input.campaignSlug,
+            expiresAt,
+          });
+        } catch (emailError) {
+          console.error('[Trial] Erro ao enviar notificação para owner:', emailError);
+          // Não bloqueia o cadastro se o email falhar
+        }
+
         // Agendar emails de nurturing (Day 2, 5, 7, 14)
         try {
           const { scheduleTrialEmails } = await import('./emailScheduler');
