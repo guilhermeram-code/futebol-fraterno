@@ -246,7 +246,7 @@ export default function LandingPage() {
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
             <img 
-              src="/pelada-pro-logo.png" 
+              src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663182032912/NEjcHqnGfkYSxBSn.png" 
               alt="Pelada Pro" 
               className="w-10 h-10 object-contain"
             />
@@ -787,7 +787,7 @@ export default function LandingPage() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
               <img 
-                src="/pelada-pro-logo.png" 
+                src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663182032912/NEjcHqnGfkYSxBSn.png" 
                 alt="Pelada Pro" 
                 className="w-8 h-8 object-contain"
               />

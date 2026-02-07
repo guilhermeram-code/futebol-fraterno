@@ -1844,3 +1844,17 @@ const [username, setUsername] = useState("");
 
 - [x] Remover seção duplicada "Veja Como Funciona na Prática" (estava logo abaixo do preview de demo da hero)
 - [x] Corrigir texto do card "Sem Compromisso": trocar "Cancele quando quiser" por "Expira automaticamente" (trial grátis não precisa cancelar)
+
+
+## Landing Page Dedicada /teste-gratis (Google Ads - Conversão)
+- [x] Criar página /teste-gratis com formulário visível (sem popup)
+- [x] Criar página /teste-gratis-sucesso com confirmação
+- [x] Configurar rotas no App.tsx
+- [x] Remover menu e links externos da página /teste-gratis
+- [x] Adicionar headline focada em organizadores de campeonatos
+- [x] Adicionar subheadline "Teste grátis por 7 dias – sem cartão"
+- [x] Formulário já visível (sem clique)
+- [x] CTA único e destacado
+- [x] Redirecionar para /teste-gratis-sucesso após cadastro
+- [x] Testar fluxo completo de conversão
+- [x] Criar documentação GOOGLE_ADS_CONFIG.md

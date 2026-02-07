@@ -27,6 +27,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminUsers from "./pages/AdminUsers";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import TesteGratis from "./pages/TesteGratis";
+import TesteGratisSucesso from "./pages/TesteGratisSucesso";
 import { createContext, useContext, useState, useEffect } from "react";
 import { trpc } from "./lib/trpc";
 
@@ -172,7 +174,7 @@ function MainRouter() {
   const reservedRoutes = [
     'admin', 'classificacao', 'jogos', 'times', 'estatisticas', 'jogadores',
     'mata-mata', 'galeria', 'patrocinadores', '404', 'landing', 'checkout', 'checkout-success', 'login', 'admin-dashboard', 'admin-users',
-    'privacidade', 'termos'
+    'privacidade', 'termos', 'teste-gratis', 'teste-gratis-sucesso'
   ];
   
   // Verificar se é a landing page (raiz) - PRIORIDADE MÁXIMA
@@ -204,6 +206,16 @@ function MainRouter() {
   // Termos de Uso
   if (location === '/termos') {
     return <TermsOfService />;
+  }
+  
+  // Teste Grátis (landing page dedicada para Google Ads)
+  if (location === '/teste-gratis') {
+    return <TesteGratis />;
+  }
+  
+  // Página de Sucesso do Teste Grátis
+  if (location.startsWith('/teste-gratis-sucesso')) {
+    return <TesteGratisSucesso />;
   }
   
   
