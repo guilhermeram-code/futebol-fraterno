@@ -1858,3 +1858,9 @@ const [username, setUsername] = useState("");
 - [x] Redirecionar para /teste-gratis-sucesso após cadastro
 - [x] Testar fluxo completo de conversão
 - [x] Criar documentação GOOGLE_ADS_CONFIG.md
+
+
+## Redirecionamento Botão Teste Grátis (Landing Page Principal)
+- [x] Modificar botão "COMEÇAR TESTE GRÁTIS" da landing page principal para redirecionar para /teste-gratis
+- [x] Remover abertura do modal popup ao clicar no botão
+- [x] Testar redirecionamento funcionando corretamente

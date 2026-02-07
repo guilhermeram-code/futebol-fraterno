@@ -292,7 +292,7 @@ export default function LandingPage() {
               <div className="flex flex-col gap-3 mb-6 mt-8">
                 <Button 
                   size="lg" 
-                  onClick={() => setShowTrialModal(true)}
+                  onClick={() => window.location.href = '/teste-gratis'}
                   className="bg-emerald-600 hover:bg-emerald-700 text-white text-lg px-8 py-6 shadow-lg shadow-emerald-200 w-full text-base md:text-lg"
                 >
                   <Zap className="mr-2 w-5 h-5" />
@@ -464,7 +464,7 @@ export default function LandingPage() {
                   <Button 
                     size="lg"
                     className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-12 py-7 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105"
-                    onClick={() => setShowTrialModal(true)}
+                    onClick={() => window.location.href = '/teste-gratis'}
                   >
                     <Play className="w-6 h-6 mr-3" />
                     COMEÇAR TESTE GRÁTIS AGORA
@@ -634,7 +634,7 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
                 size="lg" 
-                onClick={() => setShowTrialModal(true)}
+                onClick={() => window.location.href = '/teste-gratis'}
                 className="bg-white text-emerald-700 hover:bg-emerald-50 text-base md:text-lg px-8 md:px-10 py-6 shadow-lg font-bold"
               >
                 <Zap className="mr-2 w-5 h-5" />
