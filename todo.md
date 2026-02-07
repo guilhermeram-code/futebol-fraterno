@@ -1871,3 +1871,10 @@ const [username, setUsername] = useState("");
 - [x] Email deve ser enviado para contato@meucontomagico.com.br
 - [x] Incluir informações: nome, email, whatsapp, nome do campeonato, URL do campeonato
 - [x] Testar envio de email funcionando corretamente
+
+
+## Confirmação de Email no Formulário de Teste Grátis
+- [x] Adicionar campo "Confirme seu Email" no formulário /teste-gratis
+- [x] Adicionar validação para verificar se os emails são iguais
+- [x] Mostrar mensagem de erro se emails não coincidirem
+- [x] Testar fluxo completo de validação

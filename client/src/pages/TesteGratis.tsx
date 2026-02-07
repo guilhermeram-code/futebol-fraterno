@@ -18,6 +18,7 @@ export default function TesteGratis() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    emailConfirm: "",
     whatsapp: "",
     campaignName: "",
     campaignSlug: "",
@@ -48,6 +49,12 @@ export default function TesteGratis() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       showToast("Email inválido", "Digite um email válido");
+      return;
+    }
+
+    // Validar confirmação de email
+    if (formData.email !== formData.emailConfirm) {
+      showToast("Emails não coincidem", "Os emails digitados não são iguais. Verifique e tente novamente.");
       return;
     }
 
@@ -172,6 +179,32 @@ export default function TesteGratis() {
               <p className="text-xs text-gray-500 mt-1">
                 Enviaremos suas credenciais de acesso
               </p>
+            </div>
+
+            {/* Confirmar Email */}
+            <div>
+              <Label htmlFor="emailConfirm" className="text-gray-700 font-semibold">
+                Confirme seu Email <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="emailConfirm"
+                type="email"
+                placeholder="Digite o email novamente"
+                value={formData.emailConfirm}
+                onChange={(e) => setFormData({ ...formData, emailConfirm: e.target.value })}
+                className="mt-1.5 h-12 text-base"
+                required
+              />
+              {formData.emailConfirm && formData.email !== formData.emailConfirm && (
+                <p className="text-xs text-red-500 mt-1 font-medium">
+                  ⚠️ Os emails não coincidem
+                </p>
+              )}
+              {formData.emailConfirm && formData.email === formData.emailConfirm && (
+                <p className="text-xs text-emerald-600 mt-1 font-medium">
+                  ✅ Emails coincidem
+                </p>
+              )}
             </div>
 
             {/* WhatsApp */}
