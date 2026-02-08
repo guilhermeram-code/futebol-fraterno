@@ -1906,3 +1906,13 @@ const [username, setUsername] = useState("");
 - [x] Mover box de benefícios para baixo do botão
 - [x] Garantir que formulário completo apareça sem scroll em mobile
 - [x] Testar em diferentes tamanhos de tela
+
+
+## Otimização Zero-Scroll + Correção Logo
+- [x] Corrigir logo PeladaPro quebrado (aparecendo "Enrinho")
+- [x] Reduzir header para 2 linhas: título + subtítulo curto
+- [x] Remover padding excessivo do card
+- [x] Campos de email mais compactos (menos espaçamento)
+- [x] Texto pós-botão: 1 linha explicando o que vai receber
+- [x] Garantir que título + subtítulo + 2 campos + botão apareçam SEM SCROLL
+- [x] Testar em mobile (iPhone SE, Android compacto)
