@@ -130,18 +130,15 @@ export default function TesteGratis() {
 
         {/* Formulário */}
         <div className="bg-white rounded-2xl shadow-xl border-2 border-emerald-100 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-3 text-center">
             Crie Seu Campeonato Grátis
           </h2>
+          
+          <p className="text-center text-gray-600 mb-6">
+            Digite seu email e receba acesso instantâneo por 7 dias
+          </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Texto explicativo */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <p className="text-sm text-blue-900 leading-relaxed">
-                🎉 <strong>Vamos criar seu campeonato automaticamente!</strong><br/>
-                Digite seu email e em segundos você receberá o link do campeonato, login e senha para começar a usar.
-              </p>
-            </div>
 
             {/* Email */}
             <div>
@@ -188,32 +185,6 @@ export default function TesteGratis() {
               )}
             </div>
 
-            {/* Box informativo */}
-            <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-5">
-              <h3 className="font-semibold text-emerald-900 mb-3 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5" />
-                O que você vai receber:
-              </h3>
-              <ul className="space-y-2 text-sm text-emerald-800">
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>Acesso completo por 7 dias a todas as funcionalidades</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>Senha de acesso enviada por email em segundos</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>Sem cartão de crédito, sem cobranças automáticas</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                  <span>Suporte via WhatsApp durante todo o teste</span>
-                </li>
-              </ul>
-            </div>
-
             {/* Botão de envio */}
             <Button
               type="submit"
@@ -230,12 +201,39 @@ export default function TesteGratis() {
               )}
             </Button>
 
-            {/* Aviso transparente */}
-            <p className="text-center text-xs text-gray-500 mt-4">
-              Após 7 dias, o campeonato expira automaticamente.<br />
-              Sem cobranças automáticas. Sem compromisso.
-            </p>
           </form>
+          
+          {/* Box informativo - Abaixo do botão */}
+          <div className="mt-6 bg-emerald-50 border border-emerald-200 rounded-lg p-5">
+            <h3 className="font-semibold text-emerald-900 mb-3 flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5" />
+              O que você vai receber:
+            </h3>
+            <ul className="space-y-2 text-sm text-emerald-800">
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>Acesso completo por 7 dias a todas as funcionalidades</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>Senha de acesso enviada por email em segundos</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>Sem cartão de crédito, sem cobranças automáticas</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <CheckCircle2 className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>Suporte via WhatsApp durante todo o teste</span>
+              </li>
+            </ul>
+          </div>
+          
+          {/* Aviso transparente */}
+          <p className="text-center text-xs text-gray-500 mt-4">
+            Após 7 dias, o campeonato expira automaticamente.<br />
+            Sem cobranças automáticas. Sem compromisso.
+          </p>
         </div>
 
         {/* Garantia adicional */}

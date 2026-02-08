@@ -1898,3 +1898,11 @@ const [username, setUsername] = useState("");
 - [x] Remover menção de "personalizar URL" do email (URL é fixa)
 - [x] Limpar trials dos emails: contato@meucontomagico.com.br e guilhermeran@gmail.com
 - [x] Testar fluxo completo de criação simplificada
+
+
+## Reorganização Layout /teste-gratis (Above the Fold)
+- [x] Reduzir texto explicativo para 1 linha curta
+- [x] Mover formulário para o topo (logo após subtítulo)
+- [x] Mover box de benefícios para baixo do botão
+- [x] Garantir que formulário completo apareça sem scroll em mobile
+- [x] Testar em diferentes tamanhos de tela
