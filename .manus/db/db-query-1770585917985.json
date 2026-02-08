@@ -1,0 +1,15 @@
+{
+  "query": "SELECT username, password, campaignId FROM admin_users WHERE username = 'contato@meucontomagico.com.br' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT username, password, campaignId FROM admin_users WHERE username = 'contato@meucontomagico.com.br' LIMIT 1;",
+  "rows": [
+    {
+      "username": "contato@meucontomagico.com.br",
+      "password": "$2b$10$cwWBo1JjRXqf/0BoGhc5DeG7CKrJWvOI9Rur7FoZ375FlF9EPJzD6",
+      "campaignId": "690001"
+    }
+  ],
+  "messages": [],
+  "stdout": "username\tpassword\tcampaignId\ncontato@meucontomagico.com.br\t$2b$10$cwWBo1JjRXqf/0BoGhc5DeG7CKrJWvOI9Rur7FoZ375FlF9EPJzD6\t690001\n",
+  "stderr": "",
+  "execution_time_ms": 380
+}

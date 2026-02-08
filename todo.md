@@ -1922,3 +1922,12 @@ const [username, setUsername] = useState("");
 - [x] Substituir emoji ⚽ por logo real do PeladaPro na página /teste-gratis
 - [x] Usar logo do CDN (https://files.manuscdn.com/...)
 - [x] Testar carregamento do logo
+
+
+## Correção de Bugs Críticos
+- [x] Corrigir bug de logout ao navegar entre painel admin e página pública do campeonato
+- [x] Investigar causa raiz do logout (sessão sendo perdida)
+- [x] Descomentar domínio em cookies.ts para compartilhar sessão entre paths
+- [ ] Corrigir validação de senha atual na página "Alterar Senha" (NÃO CRÍTICO - só afeta trial)
+- [ ] Garantir que senha gerada automaticamente funcione em "Alterar Senha" (NÃO CRÍTICO - só afeta trial)
+- [x] Testar fluxo completo: login → navegar (CORRIGIDO)
