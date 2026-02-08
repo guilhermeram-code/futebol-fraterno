@@ -63,9 +63,11 @@ export default function TesteGratis() {
       {/* Logo no topo */}
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-lg">⚽</span>
-          </div>
+          <img 
+            src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663182032912/NEjcHqnGfkYSxBSn.png" 
+            alt="PeladaPro" 
+            className="w-10 h-10 rounded-full object-cover shadow-lg"
+          />
           <span className="text-xl font-bold">
             Pelada<span className="text-emerald-600">Pro</span>
           </span>

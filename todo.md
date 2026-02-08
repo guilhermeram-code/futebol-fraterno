@@ -1916,3 +1916,9 @@ const [username, setUsername] = useState("");
 - [x] Texto pós-botão: 1 linha explicando o que vai receber
 - [x] Garantir que título + subtítulo + 2 campos + botão apareçam SEM SCROLL
 - [x] Testar em mobile (iPhone SE, Android compacto)
+
+
+## Substituir Emoji por Logo Real
+- [x] Substituir emoji ⚽ por logo real do PeladaPro na página /teste-gratis
+- [x] Usar logo do CDN (https://files.manuscdn.com/...)
+- [x] Testar carregamento do logo
