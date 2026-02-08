@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, username, password, campaignId, name, isOwner FROM admin_users WHERE username = 'gui_ramos_@hotmail.com' LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, username, password, campaignId, name, isOwner FROM admin_users WHERE username = 'gui_ramos_@hotmail.com' LIMIT 1;",
+  "rows": [
+    {
+      "id": "120010",
+      "username": "gui_ramos_@hotmail.com",
+      "password": "$2b$10$vlk8EsMwmLZugmG7ztiN5esNxC6y3iTX.uk/2x8PBA9WjaMEM76sq",
+      "campaignId": "10",
+      "name": "magico",
+      "isOwner": "1"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tusername\tpassword\tcampaignId\tname\tisOwner\n120010\tgui_ramos_@hotmail.com\t$2b$10$vlk8EsMwmLZugmG7ztiN5esNxC6y3iTX.uk/2x8PBA9WjaMEM76sq\t10\tmagico\t1\n",
+  "stderr": "",
+  "execution_time_ms": 361
+}

@@ -1322,7 +1322,7 @@ export const appRouter = router({
         }
       }),
 
-    changePassword: publicProcedure
+    changePasswordWithUsername: publicProcedure
       .input(z.object({
         username: z.string(),
         currentPassword: z.string(),
@@ -1332,15 +1332,29 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
 
+        // DEBUG: Log dos dados recebidos
+        console.log('[changePassword] Dados recebidos:');
+        console.log('  - username:', JSON.stringify(input.username));
+        console.log('  - currentPassword length:', input.currentPassword.length);
+        console.log('  - newPassword length:', input.newPassword.length);
+
         // Buscar admin_user por username (qualquer campaignId)
         const adminUser = await db.getAdminUserByUsernameGlobal(input.username);
         if (!adminUser) {
+          console.log('[changePassword] ❌ Usuário não encontrado');
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Usuário não encontrado' });
         }
 
+        console.log('[changePassword] ✅ Usuário encontrado:');
+        console.log('  - id:', adminUser.id);
+        console.log('  - username:', adminUser.username);
+        console.log('  - hash (30 chars):', adminUser.password.substring(0, 30) + '...');
+
         // Verificar senha atual usando bcrypt (compatível com senhas temporárias)
         const bcrypt = await import('bcrypt');
+        console.log('[changePassword] 🔐 Validando senha...');
         const isValid = await bcrypt.compare(input.currentPassword, adminUser.password);
+        console.log('[changePassword] Resultado:', isValid ? '✅ VÁLIDA' : '❌ INVÁLIDA');
         if (!isValid) {
           throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Senha atual incorreta' });
         }

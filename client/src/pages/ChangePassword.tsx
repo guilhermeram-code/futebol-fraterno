@@ -18,7 +18,7 @@ export default function ChangePassword() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [, setLocation] = useLocation();
 
-  const changePasswordMutation = trpc.adminUsers.changePassword.useMutation({
+  const changePasswordMutation = trpc.adminUsers.changePasswordWithUsername.useMutation({
     onSuccess: () => {
       toast.success("✅ Senha alterada!", {
         description: "Sua senha foi alterada com sucesso!",

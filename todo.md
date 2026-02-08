@@ -1931,3 +1931,12 @@ const [username, setUsername] = useState("");
 - [ ] Corrigir validação de senha atual na página "Alterar Senha" (NÃO CRÍTICO - só afeta trial)
 - [ ] Garantir que senha gerada automaticamente funcione em "Alterar Senha" (NÃO CRÍTICO - só afeta trial)
 - [x] Testar fluxo completo: login → navegar (CORRIGIDO)
+
+
+## BUG CRÍTICO: Alteração de Senha Não Funciona (TODOS os Campeonatos)
+- [x] Investigar causa raiz do erro "Senha atual incorreta" ao tentar alterar senha
+- [x] Verificar hash de senha no banco vs validação no código
+- [x] Testar com usuário gui_ramos_@hotmail.com do campeonato "magico"
+- [x] Corrigir conflito de nomes: renomear publicProcedure para changePasswordWithUsername
+- [x] Atualizar frontend para usar endpoint correto (changePasswordWithUsername)
+- [ ] Testar fluxo completo: login → alterar senha → login com nova senha
