@@ -244,7 +244,7 @@ export default function TesteGratis() {
                 URL do Seu Site <span className="text-red-500">*</span>
               </Label>
               <div className="flex items-center mt-1.5">
-                <span className="bg-gray-100 text-gray-600 px-4 h-12 flex items-center rounded-l-md border border-r-0 border-gray-300 text-sm">
+                <span className="bg-gray-100 text-gray-600 px-2 sm:px-3 h-12 flex items-center rounded-l-md border border-r-0 border-gray-300 text-xs sm:text-sm whitespace-nowrap">
                   peladapro.com.br/
                 </span>
                 <Input
@@ -253,7 +253,7 @@ export default function TesteGratis() {
                   placeholder="meu-campeonato"
                   value={formData.campaignSlug}
                   onChange={(e) => setFormData({ ...formData, campaignSlug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
-                  className="rounded-l-none h-12 text-base"
+                  className="rounded-l-none h-12 text-base flex-1 min-w-0"
                   required
                 />
               </div>

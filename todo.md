@@ -1878,3 +1878,10 @@ const [username, setUsername] = useState("");
 - [x] Adicionar validação para verificar se os emails são iguais
 - [x] Mostrar mensagem de erro se emails não coincidirem
 - [x] Testar fluxo completo de validação
+
+
+## Correção Campo URL (Texto Cortado em Mobile)
+- [x] Remover prefixo "peladapro.com.br/" de dentro do input
+- [x] Mostrar prefixo como label visual fora do input
+- [x] Garantir que todo o texto digitado seja visível
+- [x] Testar em mobile para confirmar que não corta mais
