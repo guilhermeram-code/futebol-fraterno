@@ -1885,3 +1885,16 @@ const [username, setUsername] = useState("");
 - [x] Mostrar prefixo como label visual fora do input
 - [x] Garantir que todo o texto digitado seja visível
 - [x] Testar em mobile para confirmar que não corta mais
+
+
+## Simplificação Formulário Teste Grátis (Reduzir Fricção)
+- [x] Remover campos: Nome Completo, WhatsApp, Nome do Campeonato, URL do Site
+- [x] Manter apenas: Email + Confirmar Email
+- [x] Adicionar texto explicativo sobre geração automática
+- [x] Implementar geração automática de URL aleatória (trial-2026-xxxxx)
+- [x] Implementar geração automática de nome do campeonato ("Meu Campeonato Trial 2026")
+- [x] Implementar geração automática de senha segura
+- [x] Atualizar email de boas-vindas com URL, login e senha
+- [x] Remover menção de "personalizar URL" do email (URL é fixa)
+- [x] Limpar trials dos emails: contato@meucontomagico.com.br e guilhermeran@gmail.com
+- [x] Testar fluxo completo de criação simplificada

@@ -16,12 +16,8 @@ export default function TesteGratis() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: "",
     email: "",
     emailConfirm: "",
-    whatsapp: "",
-    campaignName: "",
-    campaignSlug: "",
   });
 
   const createTrialMutation = trpc.trial.signup.useMutation({
@@ -40,8 +36,8 @@ export default function TesteGratis() {
     e.preventDefault();
     
     // Validações
-    if (!formData.name || !formData.email || !formData.campaignName || !formData.campaignSlug) {
-      showToast("Campos obrigatórios", "Preencha todos os campos obrigatórios");
+    if (!formData.email) {
+      showToast("Campo obrigatório", "Preencha seu email");
       return;
     }
 
@@ -55,13 +51,6 @@ export default function TesteGratis() {
     // Validar confirmação de email
     if (formData.email !== formData.emailConfirm) {
       showToast("Emails não coincidem", "Os emails digitados não são iguais. Verifique e tente novamente.");
-      return;
-    }
-
-    // Validar slug (apenas letras minúsculas, números e hífen)
-    const slugRegex = /^[a-z0-9-]+$/;
-    if (!slugRegex.test(formData.campaignSlug)) {
-      showToast("URL inválida", "Use apenas letras minúsculas, números e hífen");
       return;
     }
 
@@ -146,20 +135,12 @@ export default function TesteGratis() {
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Nome Completo */}
-            <div>
-              <Label htmlFor="name" className="text-gray-700 font-semibold">
-                Nome Completo <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Ex: João Silva"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="mt-1.5 h-12 text-base"
-                required
-              />
+            {/* Texto explicativo */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <p className="text-sm text-blue-900 leading-relaxed">
+                🎉 <strong>Vamos criar seu campeonato automaticamente!</strong><br/>
+                Digite seu email e em segundos você receberá o link do campeonato, login e senha para começar a usar.
+              </p>
             </div>
 
             {/* Email */}
@@ -205,61 +186,6 @@ export default function TesteGratis() {
                   ✅ Emails coincidem
                 </p>
               )}
-            </div>
-
-            {/* WhatsApp */}
-            <div>
-              <Label htmlFor="whatsapp" className="text-gray-700 font-semibold">
-                WhatsApp (opcional)
-              </Label>
-              <Input
-                id="whatsapp"
-                type="tel"
-                placeholder="(11) 98765-4321"
-                value={formData.whatsapp}
-                onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
-                className="mt-1.5 h-12 text-base"
-              />
-            </div>
-
-            {/* Nome do Campeonato */}
-            <div>
-              <Label htmlFor="campaignName" className="text-gray-700 font-semibold">
-                Nome do Campeonato <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="campaignName"
-                type="text"
-                placeholder="Ex: Copa Amigos 2026"
-                value={formData.campaignName}
-                onChange={(e) => setFormData({ ...formData, campaignName: e.target.value })}
-                className="mt-1.5 h-12 text-base"
-                required
-              />
-            </div>
-
-            {/* URL do Site */}
-            <div>
-              <Label htmlFor="campaignSlug" className="text-gray-700 font-semibold">
-                URL do Seu Site <span className="text-red-500">*</span>
-              </Label>
-              <div className="flex items-center mt-1.5">
-                <span className="bg-gray-100 text-gray-600 px-2 sm:px-3 h-12 flex items-center rounded-l-md border border-r-0 border-gray-300 text-xs sm:text-sm whitespace-nowrap">
-                  peladapro.com.br/
-                </span>
-                <Input
-                  id="campaignSlug"
-                  type="text"
-                  placeholder="meu-campeonato"
-                  value={formData.campaignSlug}
-                  onChange={(e) => setFormData({ ...formData, campaignSlug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
-                  className="rounded-l-none h-12 text-base flex-1 min-w-0"
-                  required
-                />
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Use apenas letras minúsculas, números e hífen
-              </p>
             </div>
 
             {/* Box informativo */}

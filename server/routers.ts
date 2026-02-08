@@ -1526,13 +1526,15 @@ export const appRouter = router({
   trial: router({
     signup: publicProcedure
       .input(z.object({
-        name: z.string().min(1),
         email: z.string().email(),
-        whatsapp: z.string().optional(),
-        campaignName: z.string().min(1),
-        campaignSlug: z.string().min(3).max(30),
       }))
       .mutation(async ({ input }) => {
+        // Gerar dados automáticos
+        const currentYear = new Date().getFullYear();
+        const randomSuffix = nanoid(6).toLowerCase();
+        const campaignSlug = `trial-${currentYear}-${randomSuffix}`;
+        const campaignName = `Meu Campeonato Trial ${currentYear}`;
+        const name = input.email.split('@')[0]; // Usar parte do email como nome temporário
         // Verificar se email já existe
         const existing = await db.getTrialSignupByEmail(input.email);
         if (existing) {
@@ -1542,14 +1544,7 @@ export const appRouter = router({
           });
         }
 
-        // Verificar se slug já existe
-        const existingSlug = await db.getTrialSignupBySlug(input.campaignSlug);
-        if (existingSlug) {
-          throw new TRPCError({ 
-            code: 'BAD_REQUEST', 
-            message: 'Este nome de campeonato já está em uso. Escolha outro.' 
-          });
-        }
+        // Slug é gerado automaticamente com nanoid, não precisa verificar duplicação
 
         // Gerar senha aleatória
         const password = nanoid(8);
@@ -1560,11 +1555,11 @@ export const appRouter = router({
 
         // Criar trial signup
         const { id } = await db.createTrialSignup({
-          name: input.name,
+          name,
           email: input.email,
-          whatsapp: input.whatsapp,
-          campaignName: input.campaignName,
-          campaignSlug: input.campaignSlug,
+          whatsapp: undefined,
+          campaignName,
+          campaignSlug,
           plainPassword: password,
           expiresAt,
           status: 'active',
@@ -1572,22 +1567,22 @@ export const appRouter = router({
 
         // Criar campeonato trial
         const campaign = await db.createCampaign({
-          name: input.campaignName,
-          slug: input.campaignSlug,
-          organizerName: input.name,
+          name: campaignName,
+          slug: campaignSlug,
+          organizerName: name,
           organizerEmail: input.email,
-          organizerPhone: input.whatsapp,
+          organizerPhone: undefined,
           isActive: true,
           isDemo: false,
         });
 
         // Criar purchase trial (para aparecer no painel admin)
         const purchase = await db.createPurchase({
-          customerName: input.name,
+          customerName: name,
           customerEmail: input.email,
-          customerPhone: input.whatsapp,
-          campaignName: input.campaignName,
-          campaignSlug: input.campaignSlug,
+          customerPhone: undefined,
+          campaignName,
+          campaignSlug,
           planType: '2_months', // Placeholder (trial não tem plano real)
           amountPaid: 0, // Trial é grátis
           currency: 'BRL',
@@ -1602,7 +1597,7 @@ export const appRouter = router({
         await db.createAdminUser(campaign.id, {
           username: input.email,
           password: password,
-          name: input.name,
+          name,
           isOwner: true,
         });
 
@@ -1616,10 +1611,10 @@ export const appRouter = router({
         try {
           const { sendTrialWelcomeEmail } = await import('./email');
           await sendTrialWelcomeEmail({
-            name: input.name,
+            name,
             email: input.email,
-            campaignName: input.campaignName,
-            campaignSlug: input.campaignSlug,
+            campaignName,
+            campaignSlug,
             password,
             expiresAt,
           });
@@ -1632,11 +1627,11 @@ export const appRouter = router({
         try {
           const { sendOwnerNotificationEmail } = await import('./email');
           await sendOwnerNotificationEmail({
-            name: input.name,
+            name,
             email: input.email,
-            whatsapp: input.whatsapp,
-            campaignName: input.campaignName,
-            campaignSlug: input.campaignSlug,
+            whatsapp: undefined,
+            campaignName,
+            campaignSlug,
             expiresAt,
           });
         } catch (emailError) {
@@ -1655,7 +1650,7 @@ export const appRouter = router({
 
         return {
           success: true,
-          campaignSlug: input.campaignSlug,
+          campaignSlug,
           password,
           expiresAt,
         };

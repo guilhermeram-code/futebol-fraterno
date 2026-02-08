@@ -182,11 +182,7 @@ export default function LandingPage() {
 
   const handleTrialSignup = () => {
     trialSignupMutation.mutate({
-      name: trialFormData.name,
       email: trialFormData.email,
-      whatsapp: trialFormData.whatsapp || undefined,
-      campaignName: trialFormData.campaignName,
-      campaignSlug: trialFormData.campaignSlug,
     });
   };
 

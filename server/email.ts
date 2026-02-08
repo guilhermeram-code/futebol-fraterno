@@ -328,15 +328,15 @@ export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promis
           <tr>
             <td style="padding: 40px 30px;">
               <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Olá <strong>${data.name}</strong>,
+                Olá! 👋
               </p>
               
               <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Seu campeonato <strong>"${data.campaignName}"</strong> foi criado com sucesso! 🎊
+                Seu campeonato <strong>"${data.campaignName}"</strong> foi criado automaticamente com sucesso! 🎊
               </p>
 
               <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
-                Você tem <strong>7 dias de acesso gratuito</strong> a todas as funcionalidades da plataforma. Aproveite para testar tudo!
+                Você tem <strong>7 dias de acesso gratuito</strong> a todas as funcionalidades da plataforma. Aproveite para testar tudo e personalizar seu campeonato dentro do painel administrativo!
               </p>
 
               <!-- Box de Credenciais -->
@@ -394,7 +394,7 @@ export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promis
               <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px;">📋 Próximos Passos:</h3>
               <ol style="color: #333333; font-size: 14px; line-height: 1.8; margin: 0 0 30px 0; padding-left: 20px;">
                 <li>Acesse o painel administrativo com suas credenciais</li>
-                <li>Personalize o logo e cores do seu campeonato</li>
+                <li>Personalize o nome, logo e cores do seu campeonato</li>
                 <li>Cadastre os times e jogadores</li>
                 <li>Comece a registrar os jogos e resultados</li>
                 <li>Compartilhe o link do campeonato com os participantes</li>

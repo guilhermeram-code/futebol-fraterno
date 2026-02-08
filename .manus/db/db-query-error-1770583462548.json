@@ -1,0 +1,8 @@
+{
+  "query": "-- Deletar trials dos emails do owner para permitir teste\nDELETE FROM trial_signups WHERE email IN ('contato@meucontomagico.com.br', 'guilhermeran@gmail.com');\n\n-- Verificar se foram deletados\nSELECT email, campaign_name, status FROM trial_signups WHERE email IN ('contato@meucontomagico.com.br', 'guilhermeran@gmail.com');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute -- Deletar trials dos emails do owner para permitir teste\nDELETE FROM trial_signups WHERE email IN ('contato@meucontomagico.com.br', 'guilhermeran@gmail.com');\n\n-- Verificar se foram deletados\nSELECT email, campaign_name, status FROM trial_signups WHERE email IN ('contato@meucontomagico.com.br', 'guilhermeran@gmail.com');",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 5: Unknown column 'campaign_name' in 'field list'"
+  ]
+}
