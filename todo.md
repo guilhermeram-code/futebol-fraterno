@@ -1949,3 +1949,12 @@ const [username, setUsername] = useState("");
 - [x] Corrigir backend forgotPassword para buscar por campaignId quando fornecido
 - [x] Criar campeonato de teste com senha real (teste-senha-1770628877107)
 - [ ] Testar fluxo completo: esqueci senha → receber email → login → alterar senha (AGUARDANDO TESTE DO USUÁRIO)
+
+
+## BUG CRÍTICO: Alteração de Senha continua falhando após correção anterior
+- [x] Adicionar logs de debug detalhados no endpoint changePasswordWithUsername
+- [x] Testar com senha temporária recebida por email (senha válida no banco)
+- [x] Verificar se hash está sendo comparado corretamente (bcrypt funciona)
+- [x] Identificar diferença: frontend NÃO passava campaignId, backend buscava usuário errado
+- [x] Implementar correção: adicionar campaignId ao input e usar getAdminUserByUsername
+- [ ] Testar fluxo completo (AGUARDANDO TESTE DO USUÁRIO)

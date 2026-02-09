@@ -66,7 +66,8 @@ export default function ChangePassword() {
     changePasswordMutation.mutate({ 
       username,
       currentPassword, 
-      newPassword 
+      newPassword,
+      campaignId
     });
   };
 

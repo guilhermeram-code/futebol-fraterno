@@ -1327,6 +1327,7 @@ export const appRouter = router({
         username: z.string(),
         currentPassword: z.string(),
         newPassword: z.string().min(6),
+        campaignId: z.number(),
       }))
       .mutation(async ({ input }) => {
         const database = await getDb();
@@ -1338,8 +1339,8 @@ export const appRouter = router({
         console.log('  - currentPassword length:', input.currentPassword.length);
         console.log('  - newPassword length:', input.newPassword.length);
 
-        // Buscar admin_user por username (qualquer campaignId)
-        const adminUser = await db.getAdminUserByUsernameGlobal(input.username);
+        // Buscar admin_user por username E campaignId específico
+        const adminUser = await db.getAdminUserByUsername(input.campaignId, input.username);
         if (!adminUser) {
           console.log('[changePassword] ❌ Usuário não encontrado');
           throw new TRPCError({ code: 'NOT_FOUND', message: 'Usuário não encontrado' });
