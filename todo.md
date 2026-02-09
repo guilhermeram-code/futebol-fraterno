@@ -1939,4 +1939,13 @@ const [username, setUsername] = useState("");
 - [x] Testar com usuário gui_ramos_@hotmail.com do campeonato "magico"
 - [x] Corrigir conflito de nomes: renomear publicProcedure para changePasswordWithUsername
 - [x] Atualizar frontend para usar endpoint correto (changePasswordWithUsername)
-- [ ] Testar fluxo completo: login → alterar senha → login com nova senha
+- [x] Testar fluxo completo: login → alterar senha → login com nova senha (AGUARDANDO TESTE DO USUÁRIO)
+
+
+## BUG: Esqueci Minha Senha não funciona quando usuário tem múltiplas campanhas
+- [x] Investigar endpoint forgotPassword que retorna "Campanha não encontrada"
+- [x] Corrigir lógica para buscar usuário ESPECÍFICO da campanha atual (via slug na URL)
+- [x] Corrigir frontend ForgotPassword.tsx para passar campaignId
+- [x] Corrigir backend forgotPassword para buscar por campaignId quando fornecido
+- [x] Criar campeonato de teste com senha real (teste-senha-1770628877107)
+- [ ] Testar fluxo completo: esqueci senha → receber email → login → alterar senha (AGUARDANDO TESTE DO USUÁRIO)

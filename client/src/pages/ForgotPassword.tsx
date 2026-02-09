@@ -8,10 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { ArrowLeft, Mail, Shield } from "lucide-react";
 import { toast } from "sonner";
 import { useSlug } from "../hooks/useSlug";
+import { useCampaign } from "../App";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const slug = useSlug();
+  const { campaignId } = useCampaign();
 
   const forgotPasswordMutation = trpc.adminUsers.forgotPassword.useMutation({
     onSuccess: (data) => {
@@ -29,7 +31,7 @@ export default function ForgotPassword() {
       toast.error("Digite seu email");
       return;
     }
-    forgotPasswordMutation.mutate({ email });
+    forgotPasswordMutation.mutate({ email, campaignId });
   };
 
   return (

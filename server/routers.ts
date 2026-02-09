@@ -1376,8 +1376,16 @@ export const appRouter = router({
         const database = await getDb();
         if (!database) throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database connection failed' });
 
-        // Buscar admin_user por email
-        const adminUser = await db.getAdminUserByUsernameGlobal(input.email);
+        // Buscar admin_user por email E campaignId (se fornecido)
+        let adminUser;
+        if (input.campaignId) {
+          // Buscar usuário ESPECÍFICO da campanha atual
+          adminUser = await db.getAdminUserByUsername(input.campaignId, input.email);
+        } else {
+          // Fallback: buscar globalmente (compatibilidade com código antigo)
+          adminUser = await db.getAdminUserByUsernameGlobal(input.email);
+        }
+        
         if (!adminUser) {
           // Não revelar se o email existe ou não (segurança)
           return { success: true, message: 'Se o email estiver cadastrado, você receberá uma senha temporária.' };
