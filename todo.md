@@ -1958,3 +1958,11 @@ const [username, setUsername] = useState("");
 - [x] Identificar diferença: frontend NÃO passava campaignId, backend buscava usuário errado
 - [x] Implementar correção: adicionar campaignId ao input e usar getAdminUserByUsername
 - [ ] Testar fluxo completo (AGUARDANDO TESTE DO USUÁRIO)
+
+
+## FEATURE: Branding PeladaPro nos Campeonatos
+- [x] Adicionar badge "Powered by PeladaPro" no header dos campeonatos (discreto, ao lado do logo)
+- [x] Tornar logo PeladaPro clicável na página de teste grátis (redireciona para /landing)
+- [x] Adicionar rodapé com badge "Criado com PeladaPro" em todos os campeonatos
+- [x] Design discreto e profissional que não interfere na experiência
+- [ ] Testar navegação e links (AGUARDANDO TESTE DO USUÁRIO)

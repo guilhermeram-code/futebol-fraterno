@@ -60,9 +60,9 @@ export default function TesteGratis() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-50">
-      {/* Logo no topo */}
+      {/* Logo no topo - Clicável */}
       <div className="container mx-auto px-4 py-4">
-        <div className="flex items-center gap-2">
+        <a href="/landing" className="flex items-center gap-2 hover:opacity-80 transition-opacity w-fit">
           <img 
             src="https://files.manuscdn.com/user_upload_by_module/session_file/310519663182032912/NEjcHqnGfkYSxBSn.png" 
             alt="PeladaPro" 
@@ -71,7 +71,7 @@ export default function TesteGratis() {
           <span className="text-xl font-bold">
             Pelada<span className="text-emerald-600">Pro</span>
           </span>
-        </div>
+        </a>
       </div>
 
       {/* Conteúdo principal */}

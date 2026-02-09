@@ -29,8 +29,9 @@ export function Header() {
       <div className="container py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href={slug ? `/${slug}` : "/"}>
-            <div className="flex items-center gap-4 cursor-pointer">
+          <div className="flex items-center gap-3">
+            <Link href={slug ? `/${slug}` : "/"}>
+              <div className="flex items-center gap-4 cursor-pointer">
               {isLoading ? (
                 <>
                   <div className="h-12 w-12 md:h-16 md:w-16 rounded-full bg-muted animate-pulse border-2 border-primary" />
@@ -52,8 +53,19 @@ export function Header() {
                   </div>
                 </>
               )}
-            </div>
-          </Link>
+              </div>
+            </Link>
+            
+            {/* Badge "Powered by PeladaPro" - Discreto */}
+            <a 
+              href="/landing" 
+              className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-xs text-muted-foreground hover:text-gold group"
+              title="Conheça o PeladaPro"
+            >
+              <span className="text-[10px] font-medium">Powered by</span>
+              <span className="font-bold text-gold group-hover:text-gold">PeladaPro</span>
+            </a>
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-2">
