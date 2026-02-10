@@ -1,0 +1,9 @@
+{
+  "query": "INSERT INTO coupons (code, discountPercent, maxUses, usedCount, active, expiresAt, createdAt) VALUES\n('PROMO96-001', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW()),\n('PROMO96-002', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW()),\n('PROMO96-003', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW()),\n('PROMO96-004', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW());",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute INSERT INTO coupons (code, discountPercent, maxUses, usedCount, active, expiresAt, createdAt) VALUES\n('PROMO96-001', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW()),\n('PROMO96-002', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW()),\n('PROMO96-003', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW()),\n('PROMO96-004', 96, 1, 0, true, DATE_ADD(NOW(), INTERVAL 6 MONTH), NOW());",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 415
+}

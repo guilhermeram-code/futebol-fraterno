@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/Header";
 import { Link } from "wouter";
 import { useCampaign } from "@/App";
-import { Target, AlertTriangle, Shield, Flame, Search } from "lucide-react";
+import { Target, AlertTriangle, Shield, Search } from "lucide-react";
 import { useTournament } from "@/contexts/TournamentContext";
 
 export default function Estatisticas() {
@@ -82,7 +82,7 @@ export default function Estatisticas() {
         </div>
 
         <Tabs defaultValue="scorers" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="scorers" className="gap-1 text-xs md:text-sm">
               <Target className="h-4 w-4 hidden md:block" />
               Artilheiros
@@ -94,10 +94,6 @@ export default function Estatisticas() {
             <TabsTrigger value="best" className="gap-1 text-xs md:text-sm">
               <Shield className="h-4 w-4 hidden md:block" />
               Melhor Defesa
-            </TabsTrigger>
-            <TabsTrigger value="worst" className="gap-1 text-xs md:text-sm">
-              <Flame className="h-4 w-4 hidden md:block" />
-              Frangueiro
             </TabsTrigger>
           </TabsList>
 
@@ -164,7 +160,7 @@ export default function Estatisticas() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-destructive">
                   <AlertTriangle className="h-5 w-5" />
-                  Ranking de Cartões (Maior Quebrador)
+                  Ranking de Cartões
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -278,64 +274,7 @@ export default function Estatisticas() {
             </Card>
           </TabsContent>
 
-          {/* Frangueiro */}
-          <TabsContent value="worst">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-orange-600">
-                  <Flame className="h-5 w-5" />
-                  Ranking Frangueiro (Pior Defesa)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loadingWorst ? (
-                  <div className="space-y-2">
-                    {[1, 2, 3, 4, 5].map(i => (
-                      <Skeleton key={i} className="h-12 w-full" />
-                    ))}
-                  </div>
-                ) : filteredWorstDefenses && filteredWorstDefenses.length > 0 ? (
-                  <div className="space-y-2">
-                    {filteredWorstDefenses.map((team, index) => (
-                      <div 
-                        key={team.team.id} 
-                        className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
-                          index < 3 ? "bg-orange-50" : "hover:bg-muted"
-                        }`}
-                      >
-                        <div className="flex items-center gap-4">
-                          <div className={`h-10 w-10 rounded-full flex items-center justify-center font-bold ${
-                            index === 0 ? "bg-orange-500 text-white" :
-                            index === 1 ? "bg-orange-400 text-orange-900" :
-                            index === 2 ? "bg-orange-300 text-orange-800" :
-                            "bg-muted text-muted-foreground"
-                          }`}>
-                            {index + 1}º
-                          </div>
-                          <div>
-                            <Link href={`/${slug}/times/${team.team.id}`}>
-                              <p className="font-bold hover:text-primary cursor-pointer">{team.team.name}</p>
-                            </Link>
-                            <p className="text-sm text-muted-foreground">
-                              {team.played} jogos | {team.wins}V {team.draws}E {team.losses}D
-                            </p>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-orange-600">{team.goalsAgainst}</p>
-                          <p className="text-xs text-muted-foreground">gols sofridos</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-center text-muted-foreground py-8">
-                    Nenhum jogo realizado ainda
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+
         </Tabs>
       </main>
 

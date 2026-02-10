@@ -1966,3 +1966,23 @@ const [username, setUsername] = useState("");
 - [x] Adicionar rodapé com badge "Criado com PeladaPro" em todos os campeonatos
 - [x] Design discreto e profissional que não interfere na experiência
 - [ ] Testar navegação e links (AGUARDANDO TESTE DO USUÁRIO)
+
+
+## FEATURE: Cupons de Desconto 96% (Uso Único)
+- [x] Verificar estrutura da tabela de cupons no banco de dados
+- [x] Criar 4 cupons com 96% de desconto, uso único, validade 6 meses
+  - PROMO96-001
+  - PROMO96-002
+  - PROMO96-003
+  - PROMO96-004
+- [x] Verificar criação dos cupons no banco (4 cupons criados com sucesso)
+
+
+## FEATURE: Tornar Plataforma Adequada para Escolinhas Infantis
+- [x] Remover card "Maior Quebrador" da página principal (Home.tsx)
+- [x] Remover card "Frangueiro (Pior Defesa)" da página principal
+- [x] Remover mensagens provocativas (ex: "tá tomando de todo lado!")
+- [x] Ajustar página Estatísticas: remover título "Maior Quebrador" -> "Ranking de Cartões"
+- [x] Remover completamente seção "Frangueiro" da página Estatísticas
+- [x] Layout da página principal já está balanceado (grid 2:1 mantido)
+- [x] Adicionar cache-busting na imagem do campeonato demo (?v=timestamp)

@@ -1,0 +1,50 @@
+{
+  "query": "SELECT * FROM coupons WHERE code LIKE 'PROMO96%' ORDER BY id DESC;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM coupons WHERE code LIKE 'PROMO96%' ORDER BY id DESC;",
+  "rows": [
+    {
+      "id": "30004",
+      "code": "PROMO96-004",
+      "discountPercent": "96",
+      "maxUses": "1",
+      "usedCount": "0",
+      "active": "1",
+      "expiresAt": "2026-08-10 10:38:09",
+      "createdAt": "2026-02-10 10:38:09"
+    },
+    {
+      "id": "30003",
+      "code": "PROMO96-003",
+      "discountPercent": "96",
+      "maxUses": "1",
+      "usedCount": "0",
+      "active": "1",
+      "expiresAt": "2026-08-10 10:38:09",
+      "createdAt": "2026-02-10 10:38:09"
+    },
+    {
+      "id": "30002",
+      "code": "PROMO96-002",
+      "discountPercent": "96",
+      "maxUses": "1",
+      "usedCount": "0",
+      "active": "1",
+      "expiresAt": "2026-08-10 10:38:09",
+      "createdAt": "2026-02-10 10:38:09"
+    },
+    {
+      "id": "30001",
+      "code": "PROMO96-001",
+      "discountPercent": "96",
+      "maxUses": "1",
+      "usedCount": "0",
+      "active": "1",
+      "expiresAt": "2026-08-10 10:38:09",
+      "createdAt": "2026-02-10 10:38:09"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tcode\tdiscountPercent\tmaxUses\tusedCount\tactive\texpiresAt\tcreatedAt\n30004\tPROMO96-004\t96\t1\t0\t1\t2026-08-10 10:38:09\t2026-02-10 10:38:09\n30003\tPROMO96-003\t96\t1\t0\t1\t2026-08-10 10:38:09\t2026-02-10 10:38:09\n30002\tPROMO96-002\t96\t1\t0\t1\t2026-08-10 10:38:09\t2026-02-10 10:38:09\n30001\tPROMO96-001\t96\t1\t0\t1\t2026-08-10 10:38:09\t2026-02-10 10:38:09\n",
+  "stderr": "",
+  "execution_time_ms": 356
+}

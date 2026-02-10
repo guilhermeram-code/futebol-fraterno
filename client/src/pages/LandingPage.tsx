@@ -339,7 +339,7 @@ export default function LandingPage() {
                 className="block relative rounded-2xl overflow-hidden shadow-2xl shadow-emerald-200/50 border border-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-3xl hover:shadow-emerald-300/50 cursor-pointer group"
               >
                 <img 
-                  src="/screenshots/home.webp" 
+                  src={`/screenshots/home.webp?v=${Date.now()}`}
                   alt="Pelada Pro - Página inicial do campeonato"
                   className="w-full"
                 />

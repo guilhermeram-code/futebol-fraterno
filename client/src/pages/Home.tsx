@@ -20,7 +20,6 @@ import {
   AlertTriangle,
   ChevronRight,
   Star,
-  Flame,
   Clock
 } from "lucide-react";
 import { format } from "date-fns";
@@ -369,126 +368,6 @@ export default function Home() {
                     Ver ranking completo <ChevronRight className="h-4 w-4" />
                   </Button>
                 </Link>
-              </CardContent>
-            </Card>
-
-            {/* Maior Quebrador */}
-            <Card className="card-hover border-destructive/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-destructive">
-                  <AlertTriangle className="h-5 w-5" />
-                  Maior Quebrador
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loadingCarded ? (
-                  <div className="space-y-2">
-                    {[1, 2, 3].map(i => (
-                      <Skeleton key={i} className="h-10 w-full" />
-                    ))}
-                  </div>
-                ) : topCarded && topCarded.length > 0 ? (
-                  <>
-                    {/* Mensagem brincalhona para o líder */}
-                    {topCarded[0] && (topCarded[0].redCards >= 2 || topCarded[0].yellowCards >= 4) && (
-                      <p className="text-xs text-center text-destructive italic mb-3">
-                        ⚠️ {getPlayerName(topCarded[0].playerId)} precisa se acalmar! Vai quebrar alguém!
-                      </p>
-                    )}
-                    <div className="space-y-2">
-                      {topCarded.slice(0, 3).map((player, index) => (
-                        <div 
-                          key={player.playerId} 
-                          className={`flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors ${index === 0 ? 'bg-destructive/10 border border-destructive/30' : ''}`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-lg w-6 text-destructive">
-                              {index + 1}º
-                            </span>
-                            <div>
-                              <p className="font-medium">
-                                {getPlayerName(player.playerId)}
-                                {index === 0 && " 💢"}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
-                                {getTeamName(player.teamId)}
-                                {getTeamLodge(player.teamId) && ` - ${getTeamLodge(player.teamId)}`}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex gap-1">
-                            <Badge variant="outline" className="bg-red-100 text-red-800 border-red-300">
-                              {player.redCards} 🟥
-                            </Badge>
-                            <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
-                              {player.yellowCards} 🟨
-                            </Badge>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-center text-muted-foreground py-4">
-                    Nenhum cartão registrado
-                  </p>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Frangueiro */}
-            <Card className="card-hover border-warning/30">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-warning">
-                  <Flame className="h-5 w-5" />
-                  Frangueiro (Pior Defesa)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {loadingDefenses ? (
-                  <div className="space-y-2">
-                    {[1, 2, 3].map(i => (
-                      <Skeleton key={i} className="h-10 w-full" />
-                    ))}
-                  </div>
-                ) : worstDefenses && worstDefenses.length > 0 ? (
-                  <>
-                    {/* Mensagem brincalhona para o líder */}
-                    {worstDefenses[0] && worstDefenses[0].goalsAgainst >= 5 && (
-                      <p className="text-xs text-center text-warning italic mb-3">
-                        🐔 {worstDefenses[0].team.name} tá tomando de todo lado! Fecha o gol!
-                      </p>
-                    )}
-                    <div className="space-y-2">
-                      {worstDefenses.map((team, index) => (
-                        <div 
-                          key={team.team.id} 
-                          className={`flex items-center justify-between p-2 rounded-lg hover:bg-muted transition-colors ${index === 0 ? 'bg-warning/10 border border-warning/30' : ''}`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className="font-bold text-lg w-6 text-warning">
-                              {index + 1}º
-                            </span>
-                            <div>
-                              <p className="font-medium">
-                                {team.team.name}
-                                {index === 0 && " 🐔"}
-                              </p>
-                              <p className="text-xs text-muted-foreground">{team.team.lodge}</p>
-                            </div>
-                          </div>
-                          <Badge variant="outline" className="bg-orange-100 text-orange-800 border-orange-300">
-                            {team.goalsAgainst} gols sofridos
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-center text-muted-foreground py-4">
-                    Nenhum jogo realizado
-                  </p>
-                )}
               </CardContent>
             </Card>
 
