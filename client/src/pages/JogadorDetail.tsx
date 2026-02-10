@@ -206,16 +206,7 @@ export default function JogadorDetail() {
                   </div>
                 )}
               </div>
-              {cardRank !== undefined && cardRank >= 0 && cardRank < 3 && (
-                <div className="mt-4 p-3 rounded-lg bg-red-50">
-                  <p className="text-sm font-medium text-red-800 flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4" />
-                    {cardRank === 0 ? "💢 Maior Quebrador do Campeonato!" :
-                     cardRank === 1 ? "2º mais cartões" :
-                     "3º mais cartões"}
-                  </p>
-                </div>
-              )}
+
               {(cardStats?.totalCards || 0) === 0 && (
                 <div className="mt-4 p-3 rounded-lg bg-green-50">
                   <p className="text-sm font-medium text-green-800 flex items-center gap-2">

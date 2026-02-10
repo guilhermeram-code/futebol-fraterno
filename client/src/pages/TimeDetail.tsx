@@ -326,22 +326,7 @@ export default function TimeDetail() {
                     </div>
                   )}
 
-                  {/* Pior Defesa (Frangueiro) */}
-                  {isWorstDefense && (
-                    <div className="p-4 rounded-lg bg-gradient-to-r from-red-50 to-orange-50 border border-red-200">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-full bg-red-400">
-                          <ShieldX className="h-5 w-5 text-white" />
-                        </div>
-                        <div>
-                          <p className="font-bold text-red-700">🥅 Frangueiro</p>
-                          <p className="text-sm text-red-600">
-                            {getWorstDefenseMessage()}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               </CardContent>
             </Card>

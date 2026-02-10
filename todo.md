@@ -1986,3 +1986,8 @@ const [username, setUsername] = useState("");
 - [x] Remover completamente seção "Frangueiro" da página Estatísticas
 - [x] Layout da página principal já está balanceado (grid 2:1 mantido)
 - [x] Adicionar cache-busting na imagem do campeonato demo (?v=timestamp)
+
+
+## BUG: Mensagens negativas ainda aparecem nos perfis
+- [x] Remover mensagem "⚠️ ⚔️ Maior Quebrador do Campeonato!" da página de perfil do jogador
+- [x] Remover mensagem "Frangueiro" da página de perfil do time
