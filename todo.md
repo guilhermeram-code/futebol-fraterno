@@ -2009,3 +2009,19 @@ const [username, setUsername] = useState("");
 - [x] Buscar onde os preços estão definidos no backend (server/mercadopago/products.ts)
 - [x] Atualizar preços no backend para refletir 50% OFF
 - [ ] Testar checkout com plano de 3 meses (deve mostrar R$ 134,00 no Mercado Pago) - AGUARDANDO TESTE DO USUÁRIO
+
+
+## BUG: Evento form_start do Google Analytics não está sendo disparado
+- [ ] Buscar onde form_start deveria ser disparado (página de teste grátis)
+- [ ] Verificar se o código de tracking está presente e correto
+- [ ] Corrigir evento form_start para rastrear início de preenchimento de formulário
+- [ ] Testar evento manualmente
+
+
+## BUG CRÍTICO: Emails automáticos com cupom LANCAMENTO40 desativado e preços antigos
+- [x] Buscar templates de emails automáticos no código (server/email.ts)
+- [x] Atualizar email de boas-vindas removendo cupom LANCAMENTO40
+- [x] Atualizar email "Trial expira em 2 dias" (Day 5) removendo cupom e atualizando preços
+- [x] Atualizar email "Trial expirado" (Day 7) removendo cupom
+- [x] Atualizar email "Última chance" (Day 10/14) removendo cupom
+- [x] Verificar que NENHUMA menção a LANCAMENTO40 ou 40% OFF permanece

@@ -378,13 +378,13 @@ export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promis
               </table>
 
               <!-- Informações do Trial -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #d1fae5; border-left: 4px solid #10b981; padding: 20px; margin-bottom: 30px;">
                 <tr>
                   <td>
-                    <p style="color: #92400e; margin: 0; font-size: 14px; line-height: 1.6;">
+                    <p style="color: #065f46; margin: 0; font-size: 14px; line-height: 1.6;">
                       ⏰ <strong>Seu trial expira em:</strong> ${expirationDate}<br>
                       💳 <strong>Sem cobranças automáticas</strong> - você decide se quer continuar<br>
-                      🎁 <strong>Cupom especial:</strong> Use <strong>LANCAMENTO40</strong> para 40% OFF em qualquer plano
+                      💚 <strong>Preços transparentes:</strong> Planos a partir de R$ 31,21/mês
                     </p>
                   </td>
                 </tr>
@@ -543,7 +543,7 @@ export async function sendTrialDay2Email(data: TrialNurturingEmailData): Promise
               </table>
 
               <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 0;">
-                <strong>Lembre-se:</strong> Seu trial expira em ${expirationDate}. Use o cupom <strong>LANCAMENTO40</strong> para 40% OFF em qualquer plano!
+                <strong>Lembre-se:</strong> Seu trial expira em ${expirationDate}. Aproveite nossos preços especiais para continuar organizando seu campeonato!
               </p>
             </td>
           </tr>
@@ -618,7 +618,7 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
           <tr>
             <td style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0;">
               <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">⏰ Seu trial expira em 2 dias!</h1>
-              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Não perca acesso ao seu campeonato</p>
+              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Continue organizando seu campeonato como um profissional</p>
             </td>
           </tr>
 
@@ -636,18 +636,15 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
                 Gostou da experiência? Crie seu campeonato oficial agora e organize sua pelada como um profissional!
               </p>
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #d1fae5; border: 2px solid #10b981; border-radius: 8px; margin-bottom: 30px;">
                 <tr>
                   <td style="padding: 25px; text-align: center;">
-                    <h2 style="color: #92400e; margin: 0 0 15px 0; font-size: 24px;">🎁 OFERTA ESPECIAL</h2>
-                    <p style="color: #92400e; margin: 0 0 20px 0; font-size: 18px; font-weight: bold;">
-                      40% OFF em qualquer plano
+                    <h2 style="color: #065f46; margin: 0 0 15px 0; font-size: 24px;">💚 PREÇOS ESPECIAIS</h2>
+                    <p style="color: #065f46; margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">
+                      Planos a partir de R$ 31,21/mês
                     </p>
-                    <p style="color: #92400e; margin: 0 0 10px 0; font-size: 16px;">
-                      Use o cupom: <span style="background-color: #ffffff; padding: 8px 16px; border-radius: 4px; font-family: monospace; font-size: 20px; font-weight: bold; color: #d97706;">LANCAMENTO40</span>
-                    </p>
-                    <p style="color: #92400e; margin: 0; font-size: 14px;">
-                      Válido para planos de 2 meses, 6 meses ou 1 ano
+                    <p style="color: #065f46; margin: 0; font-size: 14px;">
+                      Sem cupons, sem truques. Preços justos e transparentes.
                     </p>
                   </td>
                 </tr>
@@ -668,9 +665,10 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
                 <tr>
                   <td style="padding: 15px; background-color: #f0fdf4; border-left: 4px solid #10b981; margin-bottom: 10px;">
                     <p style="margin: 0; color: #333333; font-size: 14px; line-height: 1.6;">
-                      📅 <strong>2 meses:</strong> R$ 37,45/mês (com desconto)<br>
-                      📅 <strong>6 meses:</strong> R$ 29,96/mês (com desconto) - <strong>20% OFF</strong><br>
-                      📅 <strong>1 ano:</strong> R$ 24,97/mês (com desconto) - <strong>33% OFF</strong>
+                      📅 <strong>2 meses:</strong> R$ 97,50 total (R$ 48,75/mês)<br>
+                      📅 <strong>3 meses:</strong> R$ 134,00 total (R$ 44,67/mês) - <strong>Mais Popular</strong><br>
+                      📅 <strong>6 meses:</strong> R$ 224,00 total (R$ 37,33/mês) - <strong>Economia de 23%</strong><br>
+                      📅 <strong>1 ano:</strong> R$ 374,50 total (R$ 31,21/mês) - <strong>Melhor Custo-Benefício</strong>
                     </p>
                   </td>
                 </tr>
@@ -704,7 +702,7 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
     await transporter.sendMail({
       from: '"PeladaPro" <contato@meucontomagico.com.br>',
       to: data.email,
-      subject: `⏰ Seu trial expira em 2 dias - 40% OFF para continuar!`,
+      subject: `⏰ Seu trial expira em 2 dias - Continue organizando seu campeonato!`,
       html: htmlContent,
     });
 
@@ -765,21 +763,18 @@ export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise
               </p>
 
               <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
-                Gostou da plataforma? Crie seu campeonato oficial agora com <strong>40% OFF</strong> e organize sua pelada de forma profissional!
+                Gostou da plataforma? Crie seu campeonato oficial agora com nossos <strong>preços especiais</strong> e organize sua pelada de forma profissional!
               </p>
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #d1fae5; border: 2px solid #10b981; border-radius: 8px; margin-bottom: 30px;">
                 <tr>
                   <td style="padding: 25px; text-align: center;">
-                    <h2 style="color: #92400e; margin: 0 0 15px 0; font-size: 24px;">🎁 ÚLTIMA CHANCE</h2>
-                    <p style="color: #92400e; margin: 0 0 20px 0; font-size: 18px; font-weight: bold;">
-                      40% OFF ainda disponível!
+                    <h2 style="color: #065f46; margin: 0 0 15px 0; font-size: 24px;">💚 PREÇOS ESPECIAIS</h2>
+                    <p style="color: #065f46; margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">
+                      A partir de R$ 31,21/mês
                     </p>
-                    <p style="color: #92400e; margin: 0 0 10px 0; font-size: 16px;">
-                      Use o cupom: <span style="background-color: #ffffff; padding: 8px 16px; border-radius: 4px; font-family: monospace; font-size: 20px; font-weight: bold; color: #d97706;">LANCAMENTO40</span>
-                    </p>
-                    <p style="color: #92400e; margin: 0; font-size: 14px;">
-                      Oferta válida por tempo limitado
+                    <p style="color: #065f46; margin: 0; font-size: 14px;">
+                      Planos de 2, 3, 6 ou 12 meses disponíveis
                     </p>
                   </td>
                 </tr>
@@ -838,7 +833,7 @@ export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise
     await transporter.sendMail({
       from: '"PeladaPro" <contato@meucontomagico.com.br>',
       to: data.email,
-      subject: `😢 Seu trial expirou - Reative com 40% OFF!`,
+      subject: `😢 Seu trial expirou - Reative seu campeonato agora!`,
       html: htmlContent,
     });
 
@@ -902,18 +897,15 @@ export async function sendTrialDay14Email(data: TrialNurturingEmailData): Promis
                 Este é nosso último email. Se você gostou da experiência e quer criar seu campeonato oficial, esta é sua última chance de aproveitar nossa oferta especial! 🎁
               </p>
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border: 2px solid #f59e0b; border-radius: 8px; margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #d1fae5; border: 2px solid #10b981; border-radius: 8px; margin-bottom: 30px;">
                 <tr>
                   <td style="padding: 25px; text-align: center;">
-                    <h2 style="color: #92400e; margin: 0 0 15px 0; font-size: 24px;">🎁 OFERTA FINAL</h2>
-                    <p style="color: #92400e; margin: 0 0 20px 0; font-size: 18px; font-weight: bold;">
-                      40% OFF + Bônus Exclusivo
+                    <h2 style="color: #065f46; margin: 0 0 15px 0; font-size: 24px;">💚 ORGANIZE SEU CAMPEONATO</h2>
+                    <p style="color: #065f46; margin: 0 0 10px 0; font-size: 18px; font-weight: bold;">
+                      Planos a partir de R$ 31,21/mês
                     </p>
-                    <p style="color: #92400e; margin: 0 0 10px 0; font-size: 16px;">
-                      Cupom: <span style="background-color: #ffffff; padding: 8px 16px; border-radius: 4px; font-family: monospace; font-size: 20px; font-weight: bold; color: #d97706;">LANCAMENTO40</span>
-                    </p>
-                    <p style="color: #92400e; margin: 0; font-size: 14px;">
-                      + Suporte prioritário por 30 dias
+                    <p style="color: #065f46; margin: 0; font-size: 14px;">
+                      Preços transparentes + Suporte via WhatsApp
                     </p>
                   </td>
                 </tr>
@@ -961,7 +953,7 @@ export async function sendTrialDay14Email(data: TrialNurturingEmailData): Promis
     await transporter.sendMail({
       from: '"PeladaPro" <contato@meucontomagico.com.br>',
       to: data.email,
-      subject: `🔔 Última chance - 40% OFF + Bônus Exclusivo`,
+      subject: `🔔 Sentiremos sua falta - Organize seu campeonato com o PeladaPro`,
       html: htmlContent,
     });
 
