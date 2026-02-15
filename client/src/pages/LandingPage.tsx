@@ -27,12 +27,12 @@ import {
   CheckCircle2
 } from "lucide-react";
 
-// Planos disponíveis (preços CHEIOS - use cupom LANCAMENTO40 para 40% OFF)
+// Planos disponíveis (preços com 50% OFF permanente)
 const PLANS = [
-  { id: "basic", name: "Iniciante", duration: "2 meses", price: 195.00, originalPrice: 195.00, pricePerMonth: 97.50, pricePerMonthWithDiscount: 58.50 },
-  { id: "popular", name: "Popular", duration: "3 meses", price: 268.00, originalPrice: 268.00, pricePerMonth: 89.33, pricePerMonthWithDiscount: 53.60, popular: true },
-  { id: "extended", name: "Semestral", duration: "6 meses", price: 448.00, originalPrice: 448.00, pricePerMonth: 74.67, pricePerMonthWithDiscount: 44.80 },
-  { id: "annual", name: "Anual", duration: "12 meses", price: 749.00, originalPrice: 749.00, pricePerMonth: 62.42, pricePerMonthWithDiscount: 37.45, bestValue: true },
+  { id: "basic", name: "Iniciante", duration: "2 meses", price: 97.50, originalPrice: 97.50, pricePerMonth: 48.75, pricePerMonthWithDiscount: 48.75 },
+  { id: "popular", name: "Popular", duration: "3 meses", price: 134.00, originalPrice: 134.00, pricePerMonth: 44.67, pricePerMonthWithDiscount: 44.67, popular: true },
+  { id: "extended", name: "Semestral", duration: "6 meses", price: 224.00, originalPrice: 224.00, pricePerMonth: 37.33, pricePerMonthWithDiscount: 37.33 },
+  { id: "annual", name: "Anual", duration: "12 meses", price: 374.50, originalPrice: 374.50, pricePerMonth: 31.21, pricePerMonthWithDiscount: 31.21, bestValue: true },
 ];
 
 // Funcionalidades do produto
@@ -490,17 +490,7 @@ export default function LandingPage() {
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
               Preços acessíveis para campeonatos de todos os tamanhos. Sem taxas escondidas.
             </p>
-            <div className="mt-6 inline-flex flex-col items-center gap-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-2xl animate-pulse">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-6 h-6" />
-                <span className="text-lg">🎉 100 PRIMEIROS CLIENTES - 40% OFF 🎉</span>
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-lg">
-                <span className="text-sm">USE O CUPOM:</span>
-                <span className="text-2xl font-black tracking-wider bg-white text-red-600 px-4 py-1 rounded-lg shadow-lg">LANCAMENTO40</span>
-              </div>
-            </div>
+
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {PLANS.map((plan) => (
@@ -686,7 +676,7 @@ export default function LandingPage() {
                 <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
               </summary>
               <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-                Após 7 dias, o campeonato trial expira automaticamente. Se você gostou da plataforma, pode criar um campeonato oficial escolhendo um dos nossos planos. Use o cupom <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">LANCAMENTO40</span> para 40% OFF!
+                Após 7 dias, o campeonato trial expira automaticamente. Se você gostou da plataforma, pode criar um campeonato oficial escolhendo um dos nossos planos com preços acessíveis e sem surpresas.
               </p>
             </details>
             
@@ -713,15 +703,7 @@ export default function LandingPage() {
             </details>
             
             {/* FAQ 5 */}
-            <details className="group bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors">
-              <summary className="font-semibold text-gray-900 cursor-pointer flex items-center justify-between">
-                <span className="text-base md:text-lg">Como funciona o cupom de desconto?</span>
-                <ChevronRight className="w-5 h-5 text-emerald-600 group-open:rotate-90 transition-transform" />
-              </summary>
-              <p className="mt-4 text-gray-600 text-sm md:text-base leading-relaxed">
-                Use o cupom <span className="font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">LANCAMENTO40</span> no checkout para ganhar 40% OFF em qualquer plano. É uma oferta de lançamento por tempo limitado!
-              </p>
-            </details>
+
           </div>
         </div>
       </section>

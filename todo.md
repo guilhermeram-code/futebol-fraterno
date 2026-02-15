@@ -1991,3 +1991,15 @@ const [username, setUsername] = useState("");
 ## BUG: Mensagens negativas ainda aparecem nos perfis
 - [x] Remover mensagem "⚠️ ⚔️ Maior Quebrador do Campeonato!" da página de perfil do jogador
 - [x] Remover mensagem "Frangueiro" da página de perfil do time
+
+
+## FEATURE: Redução de Preços (50% OFF Permanente)
+- [x] Identificar onde os preços estão definidos no código (LandingPage.tsx)
+- [x] Reduzir preço do plano 2 meses: R$ 195,00 → R$ 97,50 (R$ 48,75/mês)
+- [x] Reduzir preço do plano 3 meses: R$ 268,00 → R$ 134,00 (R$ 44,67/mês)
+- [x] Reduzir preço do plano 6 meses: R$ 448,00 → R$ 224,00 (R$ 37,33/mês)
+- [x] Reduzir preço do plano 12 meses: R$ 749,00 → R$ 374,50 (R$ 31,21/mês)
+- [x] Atualizar textos "Equivale a R$ XX,XX/mês" em todos os planos (automático via pricePerMonth)
+- [x] Desativar cupom LANCAMENTO40 no banco de dados (UPDATE coupons SET active = 0)
+- [x] Remover banner "🎉 100 PRIMEIROS CLIENTES - 40% OFF 🎉" da landing page
+- [x] Remover referências ao cupom LANCAMENTO40 das FAQs
