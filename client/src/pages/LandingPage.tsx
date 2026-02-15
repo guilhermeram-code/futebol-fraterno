@@ -656,126 +656,131 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Comparison Table */}
-          <div className="max-w-5xl mx-auto mb-12">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Header */}
-              <div className="hidden md:block"></div>
-              <div className="text-center p-4 bg-emerald-600 text-white rounded-t-xl font-bold">
-                <div className="text-2xl mb-2">⚽</div>
-                PeladaPro
-              </div>
-              <div className="text-center p-4 bg-gray-200 text-gray-700 rounded-t-xl font-semibold">
-                <div className="text-2xl mb-2">📱</div>
-                Apps Grátis
-              </div>
-              <div className="text-center p-4 bg-gray-200 text-gray-700 rounded-t-xl font-semibold">
-                <div className="text-2xl mb-2">💬</div>
-                WhatsApp
-              </div>
-
-              {/* URL Exclusiva */}
-              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
-                URL Exclusiva
-              </div>
-              <div className="p-4 bg-emerald-50 text-center">
-                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p className="text-xs text-gray-600 mt-1">peladapro.com.br/seu-time</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">URL genérica do app</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Sem site próprio</p>
-              </div>
-
-              {/* Sem Baixar APP */}
-              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
-                Sem Baixar APP
-              </div>
-              <div className="p-4 bg-emerald-50 text-center">
-                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p className="text-xs text-gray-600 mt-1">Acesso direto pelo link</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Precisa instalar</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <Check className="w-6 h-6 text-gray-400 mx-auto" />
-                <p className="text-xs text-gray-500 mt-1">Mas é bagunçado</p>
-              </div>
-
-              {/* Personalização Visual */}
-              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
-                Personalização Total
-              </div>
-              <div className="p-4 bg-emerald-50 text-center">
-                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p className="text-xs text-gray-600 mt-1">Logo, cores, fundo hero</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Visual genérico</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Sem personalização</p>
-              </div>
-
-              {/* Área de Patrocinadores */}
-              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
-                Área Patrocinadores
-              </div>
-              <div className="p-4 bg-emerald-50 text-center">
-                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p className="text-xs text-gray-600 mt-1">Níveis A, B e C</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Não disponível</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Impossível</p>
-              </div>
-
-              {/* Interação Torcida */}
-              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
-                Interação Torcida
-              </div>
-              <div className="p-4 bg-emerald-50 text-center">
-                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p className="text-xs text-gray-600 mt-1">Comentários públicos</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-amber-500">~</span>
-                <p className="text-xs text-gray-500 mt-1">Limitado</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <Check className="w-6 h-6 text-gray-400 mx-auto" />
-                <p className="text-xs text-gray-500 mt-1">Mas desorganizado</p>
-              </div>
-
-              {/* Fácil Uso */}
-              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
-                Fácil de Usar
-              </div>
-              <div className="p-4 bg-emerald-50 text-center">
-                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
-                <p className="text-xs text-gray-600 mt-1">Configuração rápida</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-amber-500">~</span>
-                <p className="text-xs text-gray-500 mt-1">Curva de aprendizado</p>
-              </div>
-              <div className="p-4 bg-gray-50 text-center">
-                <span className="text-2xl text-red-500">✗</span>
-                <p className="text-xs text-gray-500 mt-1">Bagunça total</p>
-              </div>
+          {/* Compact Comparison Table */}
+          <div className="max-w-4xl mx-auto mb-12 overflow-x-auto">
+            <div className="bg-white rounded-xl shadow-lg border-2 border-emerald-100 overflow-hidden min-w-[600px]">
+              <table className="w-full">
+                {/* Header */}
+                <thead>
+                  <tr className="border-b-2 border-gray-200">
+                    <th className="p-3 text-left bg-gray-50 font-bold text-gray-700 text-sm"></th>
+                    <th className="p-3 text-center bg-emerald-600 text-white font-bold">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl">⚽</span>
+                        <span className="text-sm">PeladaPro</span>
+                      </div>
+                    </th>
+                    <th className="p-3 text-center bg-gray-200 text-gray-700 font-semibold">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl">📱</span>
+                        <span className="text-xs">Apps Grátis</span>
+                      </div>
+                    </th>
+                    <th className="p-3 text-center bg-gray-200 text-gray-700 font-semibold">
+                      <div className="flex flex-col items-center gap-1">
+                        <span className="text-2xl">💬</span>
+                        <span className="text-xs">WhatsApp</span>
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {/* URL Exclusiva */}
+                  <tr className="border-b border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                    <td className="p-3 font-semibold text-gray-800 text-sm border-l-4 border-emerald-500">
+                      URL Exclusiva
+                    </td>
+                    <td className="p-3 text-center bg-emerald-50">
+                      <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                  </tr>
+                  {/* Sem Baixar APP */}
+                  <tr className="border-b border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                    <td className="p-3 font-semibold text-gray-800 text-sm border-l-4 border-emerald-500">
+                      Sem Baixar APP
+                    </td>
+                    <td className="p-3 text-center bg-emerald-50">
+                      <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                    <td className="p-3 text-center">
+                      <Check className="w-6 h-6 text-gray-400 mx-auto" />
+                    </td>
+                  </tr>
+                  {/* Personalização Total */}
+                  <tr className="border-b border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                    <td className="p-3 font-semibold text-gray-800 text-sm border-l-4 border-emerald-500">
+                      Personalização Total
+                    </td>
+                    <td className="p-3 text-center bg-emerald-50">
+                      <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                  </tr>
+                  {/* Área Patrocinadores */}
+                  <tr className="border-b border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                    <td className="p-3 font-semibold text-gray-800 text-sm border-l-4 border-emerald-500">
+                      Área Patrocinadores
+                    </td>
+                    <td className="p-3 text-center bg-emerald-50">
+                      <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                  </tr>
+                  {/* Interação Torcida */}
+                  <tr className="border-b border-gray-100 hover:bg-emerald-50/30 transition-colors">
+                    <td className="p-3 font-semibold text-gray-800 text-sm border-l-4 border-emerald-500">
+                      Interação Torcida
+                    </td>
+                    <td className="p-3 text-center bg-emerald-50">
+                      <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-amber-500">~</span>
+                    </td>
+                    <td className="p-3 text-center">
+                      <Check className="w-6 h-6 text-gray-400 mx-auto" />
+                    </td>
+                  </tr>
+                  {/* Estatísticas Automáticas */}
+                  <tr className="hover:bg-emerald-50/30 transition-colors">
+                    <td className="p-3 font-semibold text-gray-800 text-sm border-l-4 border-emerald-500">
+                      Estatísticas Automáticas
+                    </td>
+                    <td className="p-3 text-center bg-emerald-50">
+                      <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-amber-500">~</span>
+                    </td>
+                    <td className="p-3 text-center">
+                      <span className="text-2xl text-red-500">✗</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
+            <p className="text-center text-sm text-gray-500 mt-4">
+              <Check className="w-4 h-4 inline text-emerald-600" /> Tem | <span className="text-amber-500 font-bold">~</span> Parcial | <span className="text-red-500 font-bold">✗</span> Não tem
+            </p>
           </div>
 
           {/* Key Differentials */}

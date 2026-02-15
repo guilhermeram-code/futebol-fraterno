@@ -2034,3 +2034,9 @@ const [username, setUsername] = useState("");
 - [x] Adicionar seção "Diferenciais" visual na landing page com 6 diferenciais principais
 - [x] Destacar diferenciais: URL exclusiva, sem APP, patrocinadores, personalização, interação, estatísticas
 - [ ] Testar conversão após mudanças
+
+
+## UX: Compactar tabela de comparação (ocupa muito espaço em mobile)
+- [x] Transformar grid vertical de comparação em tabela horizontal compacta
+- [x] Reduzir altura total da seção "Por que PeladaPro?" para evitar scroll excessivo
+- [x] Manter todas as informações mas em formato mais denso
