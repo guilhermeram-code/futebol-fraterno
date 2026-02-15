@@ -2025,3 +2025,12 @@ const [username, setUsername] = useState("");
 - [x] Atualizar email "Trial expirado" (Day 7) removendo cupom
 - [x] Atualizar email "Última chance" (Day 10/14) removendo cupom
 - [x] Verificar que NENHUMA menção a LANCAMENTO40 ou 40% OFF permanece
+
+
+## 🎯 MELHORIAS CRÍTICAS DE CONVERSÃO (Tráfego bom mas zero vendas)
+- [x] Mudar texto "campeonato expira" → "licença válida por X meses" na página de preços
+- [x] Adicionar seção "Por que PeladaPro?" ANTES dos planos na página de preços
+- [x] Criar comparação visual: PeladaPro vs WhatsApp vs Apps vs Planilhas
+- [x] Adicionar seção "Diferenciais" visual na landing page com 6 diferenciais principais
+- [x] Destacar diferenciais: URL exclusiva, sem APP, patrocinadores, personalização, interação, estatísticas
+- [ ] Testar conversão após mudanças

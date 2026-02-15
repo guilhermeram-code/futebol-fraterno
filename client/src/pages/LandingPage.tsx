@@ -421,6 +421,170 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Key Differentials Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200">
+              Diferenciais
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Por Que PeladaPro é Diferente?
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Veja o que torna o PeladaPro a melhor escolha para organizar seu campeonato
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* URL Exclusiva */}
+            <Card className="border-2 border-emerald-200 hover:border-emerald-400 hover:shadow-xl transition-all duration-300 group">
+              <CardHeader>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">🌐</span>
+                </div>
+                <CardTitle className="text-xl mb-2">URL Exclusiva</CardTitle>
+                <p className="text-sm text-emerald-600 font-semibold">peladapro.com.br/seu-time</p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Compartilhe um link profissional. Sem precisar baixar app, sem complicação. Qualquer pessoa acessa direto do celular.
+                </p>
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-xs text-red-700">
+                    <strong>Concorrentes:</strong> URLs genéricas ou precisam baixar app
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Personalização Total */}
+            <Card className="border-2 border-purple-200 hover:border-purple-400 hover:shadow-xl transition-all duration-300 group">
+              <CardHeader>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">🎨</span>
+                </div>
+                <CardTitle className="text-xl mb-2">Personalização Total</CardTitle>
+                <p className="text-sm text-purple-600 font-semibold">Logo + Cores + Fundo Hero</p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Seu campeonato com a cara do seu time. Logo próprio, cores personalizadas, fundo hero customizado. Visual profissional.
+                </p>
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-xs text-red-700">
+                    <strong>Concorrentes:</strong> Visual genérico igual para todos
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Área de Patrocinadores */}
+            <Card className="border-2 border-amber-200 hover:border-amber-400 hover:shadow-xl transition-all duration-300 group">
+              <CardHeader>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">💰</span>
+                </div>
+                <CardTitle className="text-xl mb-2">Área de Patrocinadores</CardTitle>
+                <p className="text-sm text-amber-600 font-semibold">Níveis A, B e C</p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Monetize seu campeonato! Espaço exclusivo para logos e links de patrocinadores. Pague o campeonato com patrocínios.
+                </p>
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-xs text-red-700">
+                    <strong>Concorrentes:</strong> Não possuem essa funcionalidade
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Interação Torcida */}
+            <Card className="border-2 border-blue-200 hover:border-blue-400 hover:shadow-xl transition-all duration-300 group">
+              <CardHeader>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">💬</span>
+                </div>
+                <CardTitle className="text-xl mb-2">Interação da Torcida</CardTitle>
+                <p className="text-sm text-blue-600 font-semibold">Comentários Públicos</p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Torcedores comentam nos jogos, times e jogadores. Aumenta engajamento e cria comunidade em torno do campeonato.
+                </p>
+                <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                  <p className="text-xs text-amber-700">
+                    <strong>WhatsApp:</strong> Funciona mas fica bagunçado e desorganizado
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Estatísticas Automáticas */}
+            <Card className="border-2 border-indigo-200 hover:border-indigo-400 hover:shadow-xl transition-all duration-300 group">
+              <CardHeader>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">📊</span>
+                </div>
+                <CardTitle className="text-xl mb-2">Estatísticas Automáticas</CardTitle>
+                <p className="text-sm text-indigo-600 font-semibold">Tudo Calculado Sozinho</p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Classificação, artilheiros, cartões, melhores defesas. Tudo atualizado automaticamente após cada jogo.
+                </p>
+                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-xs text-red-700">
+                    <strong>Planilhas:</strong> Precisa calcular manualmente tudo
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Sem Complicação */}
+            <Card className="border-2 border-teal-200 hover:border-teal-400 hover:shadow-xl transition-all duration-300 group">
+              <CardHeader>
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <span className="text-3xl">⚡</span>
+                </div>
+                <CardTitle className="text-xl mb-2">Sem Complicação</CardTitle>
+                <p className="text-sm text-teal-600 font-semibold">Configura em 5 Minutos</p>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600">
+                  Interface intuitiva e fácil de usar. Cadastra times, jogadores e jogos rapidamente. Suporte via WhatsApp se precisar.
+                </p>
+                <div className="mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                  <p className="text-xs text-emerald-700">
+                    <strong>Vantagem:</strong> Aprenda em minutos, não em horas
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* CTA Final da Seção */}
+          <div className="text-center mt-16">
+            <p className="text-xl text-gray-700 mb-6 font-semibold">
+              Pronto para organizar seu campeonato como um profissional?
+            </p>
+            <Button 
+              size="lg"
+              onClick={() => window.location.href = '/teste-gratis'}
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-12 py-7 text-xl font-bold rounded-2xl shadow-2xl hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-105"
+            >
+              <Zap className="w-6 h-6 mr-3" />
+              TESTAR GRÁTIS POR 7 DIAS
+              <ArrowRight className="w-6 h-6 ml-3" />
+            </Button>
+            <p className="text-sm text-gray-500 mt-4">
+              Sem cartão de crédito. Sem cobranças automáticas.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Trial Section */}
       <section id="trial" className="py-20 px-4 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
         <div className="container">
@@ -471,6 +635,190 @@ export default function LandingPage() {
                     Crie seu campeonato em menos de 2 minutos
                   </p>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Why PeladaPro Section */}
+      <section className="py-20 px-4 bg-gradient-to-b from-white to-emerald-50">
+        <div className="container">
+          <div className="text-center mb-16">
+            <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200">
+              Por que PeladaPro?
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Melhor que WhatsApp, Apps e Planilhas
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Veja por que organizadores escolhem PeladaPro ao invés de soluções gratuitas
+            </p>
+          </div>
+
+          {/* Comparison Table */}
+          <div className="max-w-5xl mx-auto mb-12">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Header */}
+              <div className="hidden md:block"></div>
+              <div className="text-center p-4 bg-emerald-600 text-white rounded-t-xl font-bold">
+                <div className="text-2xl mb-2">⚽</div>
+                PeladaPro
+              </div>
+              <div className="text-center p-4 bg-gray-200 text-gray-700 rounded-t-xl font-semibold">
+                <div className="text-2xl mb-2">📱</div>
+                Apps Grátis
+              </div>
+              <div className="text-center p-4 bg-gray-200 text-gray-700 rounded-t-xl font-semibold">
+                <div className="text-2xl mb-2">💬</div>
+                WhatsApp
+              </div>
+
+              {/* URL Exclusiva */}
+              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
+                URL Exclusiva
+              </div>
+              <div className="p-4 bg-emerald-50 text-center">
+                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                <p className="text-xs text-gray-600 mt-1">peladapro.com.br/seu-time</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">URL genérica do app</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Sem site próprio</p>
+              </div>
+
+              {/* Sem Baixar APP */}
+              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
+                Sem Baixar APP
+              </div>
+              <div className="p-4 bg-emerald-50 text-center">
+                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                <p className="text-xs text-gray-600 mt-1">Acesso direto pelo link</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Precisa instalar</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <Check className="w-6 h-6 text-gray-400 mx-auto" />
+                <p className="text-xs text-gray-500 mt-1">Mas é bagunçado</p>
+              </div>
+
+              {/* Personalização Visual */}
+              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
+                Personalização Total
+              </div>
+              <div className="p-4 bg-emerald-50 text-center">
+                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                <p className="text-xs text-gray-600 mt-1">Logo, cores, fundo hero</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Visual genérico</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Sem personalização</p>
+              </div>
+
+              {/* Área de Patrocinadores */}
+              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
+                Área Patrocinadores
+              </div>
+              <div className="p-4 bg-emerald-50 text-center">
+                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                <p className="text-xs text-gray-600 mt-1">Níveis A, B e C</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Não disponível</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Impossível</p>
+              </div>
+
+              {/* Interação Torcida */}
+              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
+                Interação Torcida
+              </div>
+              <div className="p-4 bg-emerald-50 text-center">
+                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                <p className="text-xs text-gray-600 mt-1">Comentários públicos</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-amber-500">~</span>
+                <p className="text-xs text-gray-500 mt-1">Limitado</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <Check className="w-6 h-6 text-gray-400 mx-auto" />
+                <p className="text-xs text-gray-500 mt-1">Mas desorganizado</p>
+              </div>
+
+              {/* Fácil Uso */}
+              <div className="p-4 bg-white border-l-4 border-emerald-500 font-semibold text-gray-900">
+                Fácil de Usar
+              </div>
+              <div className="p-4 bg-emerald-50 text-center">
+                <Check className="w-6 h-6 text-emerald-600 mx-auto" />
+                <p className="text-xs text-gray-600 mt-1">Configuração rápida</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-amber-500">~</span>
+                <p className="text-xs text-gray-500 mt-1">Curva de aprendizado</p>
+              </div>
+              <div className="p-4 bg-gray-50 text-center">
+                <span className="text-2xl text-red-500">✗</span>
+                <p className="text-xs text-gray-500 mt-1">Bagunça total</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Key Differentials */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <Card className="border-2 border-emerald-200 hover:border-emerald-400 transition-all">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
+                  <Sparkles className="w-6 h-6 text-emerald-600" />
+                </div>
+                <CardTitle className="text-lg">Profissional</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm">
+                  Site com cara de campeonato oficial. Logo, cores e fundo personalizados. Impressione jogadores e patrocinadores.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-emerald-200 hover:border-emerald-400 transition-all">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-emerald-600" />
+                </div>
+                <CardTitle className="text-lg">Engajamento</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm">
+                  Compartilhe o link no WhatsApp e pronto! Todos acessam sem baixar nada. Comentários da torcida aumentam interação.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-emerald-200 hover:border-emerald-400 transition-all">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
+                  <Target className="w-6 h-6 text-emerald-600" />
+                </div>
+                <CardTitle className="text-lg">Monetização</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-sm">
+                  Área exclusiva para patrocinadores (A, B, C). Mostre logos e links. Pague o campeonato com patrocínios!
+                </p>
               </CardContent>
             </Card>
           </div>
@@ -534,7 +882,7 @@ export default function LandingPage() {
                   <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-6">
                     <p className="text-xs text-amber-800 flex items-start gap-2">
                       <span className="text-amber-600">⚠️</span>
-                      <span>Após o período de {plan.duration}, o campeonato expira</span>
+                      <span>Licença de acesso válida por {plan.duration}</span>
                     </p>
                   </div>
                   <ul className="space-y-3 mb-6">

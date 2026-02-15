@@ -181,7 +181,7 @@ export default function TesteGratis() {
           
           {/* Aviso transparente */}
           <p className="text-center text-xs text-gray-500 mt-4">
-            Após 7 dias, o campeonato expira automaticamente.<br />
+            Licença de teste válida por 7 dias.<br />
             Sem cobranças automáticas. Sem compromisso.
           </p>
         </div>
