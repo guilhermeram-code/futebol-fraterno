@@ -15,32 +15,32 @@ export const PLANS = {
     id: "basic",
     name: "Iniciante",
     description: "Acesso ao sistema por 2 meses",
-    price: 195.00, // Preço CHEIO (sem desconto)
-    originalPrice: 195.00,
+    price: 97.50, // Preço com 50% OFF permanente
+    originalPrice: 97.50,
     months: 2,
   },
   POPULAR: {
     id: "popular",
     name: "Popular",
     description: "Acesso ao sistema por 3 meses",
-    price: 268.00, // Preço CHEIO (sem desconto)
-    originalPrice: 268.00,
+    price: 134.00, // Preço com 50% OFF permanente
+    originalPrice: 134.00,
     months: 3,
   },
   EXTENDED: {
     id: "extended",
     name: "Semestral",
     description: "Acesso ao sistema por 6 meses",
-    price: 448.00, // Preço CHEIO (sem desconto)
-    originalPrice: 448.00,
+    price: 224.00, // Preço com 50% OFF permanente
+    originalPrice: 224.00,
     months: 6,
   },
   ANNUAL: {
     id: "annual",
     name: "Anual",
     description: "Acesso ao sistema por 12 meses",
-    price: 749.00, // Preço CHEIO (sem desconto)
-    originalPrice: 749.00,
+    price: 374.50, // Preço com 50% OFF permanente
+    originalPrice: 374.50,
     months: 12,
   },
 } as const;

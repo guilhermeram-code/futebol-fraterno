@@ -2003,3 +2003,9 @@ const [username, setUsername] = useState("");
 - [x] Desativar cupom LANCAMENTO40 no banco de dados (UPDATE coupons SET active = 0)
 - [x] Remover banner "🎉 100 PRIMEIROS CLIENTES - 40% OFF 🎉" da landing page
 - [x] Remover referências ao cupom LANCAMENTO40 das FAQs
+
+
+## BUG CRÍTICO: Preços no checkout Mercado Pago estão desatualizados
+- [x] Buscar onde os preços estão definidos no backend (server/mercadopago/products.ts)
+- [x] Atualizar preços no backend para refletir 50% OFF
+- [ ] Testar checkout com plano de 3 meses (deve mostrar R$ 134,00 no Mercado Pago) - AGUARDANDO TESTE DO USUÁRIO
