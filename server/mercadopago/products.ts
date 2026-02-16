@@ -57,31 +57,12 @@ export function calculateExpirationDate(months: number): Date {
   return now;
 }
 
-// Cupom de desconto para promoção de lançamento
-export const PROMO_COUPONS = {
-  LANCAMENTO40: {
-    code: "LANCAMENTO40",
-    discount: 0.4, // 40%
-    description: "🎉 PROMOÇÃO - 100 PRIMEIROS CLIENTES DO ANO - 40% OFF",
-    validUntil: new Date("2026-12-31"),
-    maxUses: 100,
-  },
-} as const;
+// Cupons promocionais (nenhum ativo no momento)
+// Para adicionar novos cupons, defina aqui e adicione lógica em checkout.ts
+export const PROMO_COUPONS = {} as const;
 
+// Função desativada - nenhum cupom ativo no momento
 export function applyCoupon(price: number, couponCode: string): { finalPrice: number; discount: number; valid: boolean } {
-  const coupon = PROMO_COUPONS[couponCode as keyof typeof PROMO_COUPONS];
-  
-  if (!coupon) {
-    return { finalPrice: price, discount: 0, valid: false };
-  }
-  
-  // Verificar se o cupom ainda é válido
-  if (new Date() > coupon.validUntil) {
-    return { finalPrice: price, discount: 0, valid: false };
-  }
-  
-  const discount = price * coupon.discount;
-  const finalPrice = price - discount;
-  
-  return { finalPrice, discount, valid: true };
+  // Nenhum cupom ativo, sempre retorna inválido
+  return { finalPrice: price, discount: 0, valid: false };
 }

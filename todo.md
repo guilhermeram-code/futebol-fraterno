@@ -2040,3 +2040,10 @@ const [username, setUsername] = useState("");
 - [x] Transformar grid vertical de comparação em tabela horizontal compacta
 - [x] Reduzir altura total da seção "Por que PeladaPro?" para evitar scroll excessivo
 - [x] Manter todas as informações mas em formato mais denso
+
+
+## 🚨 CRÍTICO: Cupom LANCAMENTO40 ainda ativo no Mercado Pago
+- [x] Investigar onde cupom LANCAMENTO40 está configurado (código backend ou painel Mercado Pago)
+- [x] Desativar cupom LANCAMENTO40 completamente (removido de checkout.ts e products.ts)
+- [x] Testar checkout para confirmar que cupom não funciona mais (4 testes passando)
+- [x] Verificar se outros cupons antigos (TRIAL20, etc) também precisam ser desativados (nenhum outro encontrado)

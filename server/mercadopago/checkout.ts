@@ -63,16 +63,12 @@ export async function createCheckoutSession(input: CreateCheckoutInput) {
   if (input.couponCode) {
     const couponCode = input.couponCode.toUpperCase();
     
-    // Cupom de lançamento: 40% OFF para os 100 primeiros
-    if (couponCode === "LANCAMENTO40") {
-      discount = plan.price * 0.40; // 40% de desconto
-      finalPrice = plan.price - discount;
-    }
-    // Cupom de teste para desenvolvimento
-    else if (couponCode === "TEST90") {
+    // Cupom de teste para desenvolvimento (INTERNO)
+    if (couponCode === "TEST90") {
       discount = plan.price * 0.90;
       finalPrice = plan.price - discount;
     }
+    // Nenhum outro cupom ativo no momento
   }
 
   // Criar preferência de pagamento
