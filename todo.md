@@ -2047,3 +2047,10 @@ const [username, setUsername] = useState("");
 - [x] Desativar cupom LANCAMENTO40 completamente (removido de checkout.ts e products.ts)
 - [x] Testar checkout para confirmar que cupom não funciona mais (4 testes passando)
 - [x] Verificar se outros cupons antigos (TRIAL20, etc) também precisam ser desativados (nenhum outro encontrado)
+
+
+## 🚨 CRÍTICO: Link de email quebrado (404)
+- [x] Investigar onde link `/checkout` está configurado nos emails automáticos
+- [x] Corrigir botão "Criar Campeonato Oficial" para apontar para `https://peladapro.com.br` (landing page)
+- [x] Verificar se existem outros links quebrados nos 5 emails automáticos (3 links corrigidos: Day 5, Day 7, Day 14)
+- [x] Remover variáveis checkoutUrl não utilizadas para manter código limpo

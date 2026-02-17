@@ -589,7 +589,6 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
   try {
     const campaignUrl = `https://peladapro.com.br/${data.campaignSlug}`;
     const adminUrl = `https://peladapro.com.br/${data.campaignSlug}/admin`;
-    const checkoutUrl = `https://peladapro.com.br/checkout?slug=${data.campaignSlug}`;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -653,7 +652,7 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td align="center">
-                    <a href="https://peladapro.com.br/checkout" style="display: inline-block; background-color: #f59e0b; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #f59e0b; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
                       Criar Meu Campeonato Oficial
                     </a>
                   </td>
@@ -719,7 +718,6 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
  */
 export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise<boolean> {
   try {
-    const checkoutUrl = `https://peladapro.com.br/checkout?slug=${data.campaignSlug}`;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -783,7 +781,7 @@ export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td align="center">
-                    <a href="https://peladapro.com.br/checkout" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
                       Criar Campeonato Oficial
                     </a>
                   </td>
@@ -850,7 +848,6 @@ export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise
  */
 export async function sendTrialDay14Email(data: TrialNurturingEmailData): Promise<boolean> {
   try {
-    const checkoutUrl = `https://peladapro.com.br/checkout?slug=${data.campaignSlug}`;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -914,7 +911,7 @@ export async function sendTrialDay14Email(data: TrialNurturingEmailData): Promis
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td align="center">
-                    <a href="https://peladapro.com.br/checkout" style="display: inline-block; background-color: #8b5cf6; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
+                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #8b5cf6; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);">
                       Criar Campeonato Oficial
                     </a>
                   </td>
