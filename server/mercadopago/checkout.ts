@@ -1,6 +1,6 @@
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import { getDb, createAdminUser } from "../db";
-import { campaigns, purchases, reservedSlugs, adminUsers, users } from "../../drizzle/schema";
+import { campaigns, purchases, reservedSlugs, adminUsers, users, coupons } from "../../drizzle/schema";
 import { eq, and } from "drizzle-orm";
 import { getPlanById, calculateExpirationDate } from "./products";
 import { notifyOwner } from "../_core/notification";
@@ -56,19 +56,39 @@ export async function createCheckoutSession(input: CreateCheckoutInput) {
     throw new Error("Slug reservado pelo sistema");
   }
 
-  // Calcular preço (aplicar cupom se houver)
+  // Calcular preço (aplicar cupom se houver - consulta banco de dados)
   let finalPrice = plan.price;
   let discount = 0;
+  let appliedCoupon: typeof coupons.$inferSelect | null = null;
 
   if (input.couponCode) {
     const couponCode = input.couponCode.toUpperCase();
     
-    // Cupom de teste para desenvolvimento (INTERNO)
-    if (couponCode === "TEST90") {
-      discount = plan.price * 0.90;
-      finalPrice = plan.price - discount;
+    // Buscar cupom no banco de dados
+    const [dbCoupon] = await db
+      .select()
+      .from(coupons)
+      .where(eq(coupons.code, couponCode))
+      .limit(1);
+
+    if (dbCoupon && dbCoupon.active) {
+      // Verificar validade
+      const now = new Date();
+      const isExpired = dbCoupon.expiresAt && dbCoupon.expiresAt < now;
+      // Verificar limite de uso
+      const isExhausted = dbCoupon.maxUses !== null && (dbCoupon.usedCount ?? 0) >= dbCoupon.maxUses;
+
+      if (!isExpired && !isExhausted) {
+        discount = plan.price * (dbCoupon.discountPercent / 100);
+        finalPrice = Math.max(0.01, plan.price - discount) as typeof plan.price; // mínimo R$ 0,01
+        appliedCoupon = dbCoupon;
+        console.log(`[Checkout] Cupom ${couponCode} aplicado: ${dbCoupon.discountPercent}% OFF`);
+      } else {
+        console.log(`[Checkout] Cupom ${couponCode} inválido: expirado=${isExpired}, esgotado=${isExhausted}`);
+      }
+    } else {
+      console.log(`[Checkout] Cupom ${couponCode} não encontrado ou inativo`);
     }
-    // Nenhum outro cupom ativo no momento
   }
 
   // Criar preferência de pagamento
@@ -110,6 +130,15 @@ export async function createCheckoutSession(input: CreateCheckoutInput) {
   };
 
   const response = await preference.create({ body: preferenceData });
+
+  // Incrementar usedCount do cupom ao criar a preferência (reserva o uso)
+  if (appliedCoupon) {
+    await db
+      .update(coupons)
+      .set({ usedCount: (appliedCoupon.usedCount ?? 0) + 1 })
+      .where(eq(coupons.id, appliedCoupon.id));
+    console.log(`[Checkout] usedCount do cupom ${appliedCoupon.code} incrementado para ${(appliedCoupon.usedCount ?? 0) + 1}`);
+  }
 
   return {
     checkoutUrl: response.init_point!, // URL do checkout do Mercado Pago

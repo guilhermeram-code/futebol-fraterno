@@ -1,0 +1,9 @@
+{
+  "query": "\nINSERT INTO admin_users (\n  username, password, name, active, isOwner, campaignId, needsPasswordChange, createdAt\n) VALUES (\n  'guilhermeram@gmail.com',\n  '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',\n  'Guilherme',\n  true,\n  true,\n  1830002,\n  false,\n  NOW()\n);\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nINSERT INTO admin_users (\n  username, password, name, active, isOwner, campaignId, needsPasswordChange, createdAt\n) VALUES (\n  'guilhermeram@gmail.com',\n  '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',\n  'Guilherme',\n  true,\n  true,\n  1830002,\n  false,\n  NOW()\n);\n",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 61
+}

@@ -1,0 +1,31 @@
+{
+  "query": "SELECT * FROM campaigns LIMIT 1;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT * FROM campaigns LIMIT 1;",
+  "rows": [
+    {
+      "id": "1",
+      "name": "Copa Amigos 2026",
+      "slug": "futebol-fraterno",
+      "organizerName": "José Moreira",
+      "organizerEmail": "admin@futebolfraterno.com",
+      "organizerPhone": "NULL",
+      "logoUrl": "NULL",
+      "musicUrl": "NULL",
+      "backgroundUrl": "NULL",
+      "heroBackgroundUrl": "NULL",
+      "subtitle": "Campeonato de Futebol 2026",
+      "tournamentType": "groups_and_knockout",
+      "teamsPerGroupAdvancing": "2",
+      "knockoutSize": "4",
+      "isActive": "1",
+      "isDemo": "0",
+      "purchaseId": "NULL",
+      "createdAt": "2026-01-22 04:46:25",
+      "updatedAt": "2026-01-28 21:05:11"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\tslug\torganizerName\torganizerEmail\torganizerPhone\tlogoUrl\tmusicUrl\tbackgroundUrl\theroBackgroundUrl\tsubtitle\ttournamentType\tteamsPerGroupAdvancing\tknockoutSize\tisActive\tisDemo\tpurchaseId\tcreatedAt\tupdatedAt\n1\tCopa Amigos 2026\tfutebol-fraterno\tJosé Moreira\tadmin@futebolfraterno.com\tNULL\tNULL\tNULL\tNULL\tNULL\tCampeonato de Futebol 2026\tgroups_and_knockout\t2\t4\t1\t0\tNULL\t2026-01-22 04:46:25\t2026-01-28 21:05:11\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

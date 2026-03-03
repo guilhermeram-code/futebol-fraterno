@@ -1,0 +1,79 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "admin_emails"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "admin_users"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "announcements"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "campaigns"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "cards"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "comments"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "coupons"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "email_queue"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "goals"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "groups"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "matches"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "password_reset_tokens"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "photos"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "players"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "purchases"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "reserved_slugs"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "sponsors"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "support_messages"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "teams"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "tournament_settings"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "trial_signups"
+    },
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_EvJULGQoHRNqTu98ru5T2m\n__drizzle_migrations\nadmin_emails\nadmin_users\nannouncements\ncampaigns\ncards\ncomments\ncoupons\nemail_queue\ngoals\ngroups\nmatches\npassword_reset_tokens\nphotos\nplayers\npurchases\nreserved_slugs\nsponsors\nsupport_messages\nteams\ntournament_settings\ntrial_signups\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 120
+}

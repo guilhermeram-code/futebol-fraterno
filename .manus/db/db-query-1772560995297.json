@@ -1,0 +1,73 @@
+{
+  "query": "\nSELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'admin_users' ORDER BY ORDINAL_POSITION;\n\nSELECT * FROM admin_users LIMIT 1;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE, COLUMN_DEFAULT \nFROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'admin_users' ORDER BY ORDINAL_POSITION;\n\nSELECT * FROM admin_users LIMIT 1;\n",
+  "rows": [
+    {
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "password",
+      "DATA_TYPE": "varchar",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "name",
+      "DATA_TYPE": "varchar",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "active",
+      "DATA_TYPE": "tinyint",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "1"
+    },
+    {
+      "COLUMN_NAME": "createdAt",
+      "DATA_TYPE": "timestamp",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "CURRENT_TIMESTAMP"
+    },
+    {
+      "COLUMN_NAME": "lastLogin",
+      "DATA_TYPE": "timestamp",
+      "IS_NULLABLE": "YES",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "username",
+      "DATA_TYPE": "varchar",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "isOwner",
+      "DATA_TYPE": "tinyint",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "0"
+    },
+    {
+      "COLUMN_NAME": "campaignId",
+      "DATA_TYPE": "int",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "NULL"
+    },
+    {
+      "COLUMN_NAME": "needsPasswordChange",
+      "DATA_TYPE": "tinyint",
+      "IS_NULLABLE": "NO",
+      "COLUMN_DEFAULT": "0"
+    }
+  ],
+  "messages": [
+    "id\tpassword\tname\tactive\tcreatedAt\tlastLogin\tusername\tisOwner\tcampaignId\tneedsPasswordChange",
+    "1\t07f9e866ed44544aa52b256c4ea5856afaa01fe4c61bb5e71b0bd02cb058f185\tGuilherme Ramos\t1\t2026-01-20 15:20:53\t2026-01-24 17:36:16\tguilhermeram@gmail.com\t1\t1\t1"
+  ],
+  "stdout": "COLUMN_NAME\tDATA_TYPE\tIS_NULLABLE\tCOLUMN_DEFAULT\nid\tint\tNO\tNULL\npassword\tvarchar\tNO\tNULL\nname\tvarchar\tYES\tNULL\nactive\ttinyint\tNO\t1\ncreatedAt\ttimestamp\tNO\tCURRENT_TIMESTAMP\nlastLogin\ttimestamp\tYES\tNULL\nusername\tvarchar\tNO\tNULL\nisOwner\ttinyint\tNO\t0\ncampaignId\tint\tNO\tNULL\nneedsPasswordChange\ttinyint\tNO\t0\nid\tpassword\tname\tactive\tcreatedAt\tlastLogin\tusername\tisOwner\tcampaignId\tneedsPasswordChange\n1\t07f9e866ed44544aa52b256c4ea5856afaa01fe4c61bb5e71b0bd02cb058f185\tGuilherme Ramos\t1\t2026-01-20 15:20:53\t2026-01-24 17:36:16\tguilhermeram@gmail.com\t1\t1\t1\n",
+  "stderr": "",
+  "execution_time_ms": 55
+}

@@ -1,0 +1,13 @@
+{
+  "query": "SHOW TABLES LIKE '%coupon%';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SHOW TABLES LIKE '%coupon%';",
+  "rows": [
+    {
+      "Tables_in_EvJULGQoHRNqTu98ru5T2m (%coupon%)": "coupons"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_EvJULGQoHRNqTu98ru5T2m (%coupon%)\ncoupons\n",
+  "stderr": "",
+  "execution_time_ms": 46
+}

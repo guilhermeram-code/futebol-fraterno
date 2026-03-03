@@ -1,0 +1,23 @@
+{
+  "query": "\nSELECT p.id as purchase_id, p.customerName, p.customerEmail, p.campaignSlug, p.planType, p.status, p.expiresAt, p.plainPassword\nFROM purchases p WHERE p.campaignSlug = 'fraterno2026';\n\nSELECT c.id as campaign_id, c.name, c.slug, c.organizerEmail, c.isActive, c.purchaseId\nFROM campaigns c WHERE c.slug = 'fraterno2026';\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT p.id as purchase_id, p.customerName, p.customerEmail, p.campaignSlug, p.planType, p.status, p.expiresAt, p.plainPassword\nFROM purchases p WHERE p.campaignSlug = 'fraterno2026';\n\nSELECT c.id as campaign_id, c.name, c.slug, c.organizerEmail, c.isActive, c.purchaseId\nFROM campaigns c WHERE c.slug = 'fraterno2026';\n",
+  "rows": [
+    {
+      "purchase_id": "1740002",
+      "customerName": "Guilherme",
+      "customerEmail": "guilhermeram@gmail.com",
+      "campaignSlug": "fraterno2026",
+      "planType": "1_year",
+      "status": "completed",
+      "expiresAt": "2027-03-03 18:02:58",
+      "plainPassword": "admin123"
+    }
+  ],
+  "messages": [
+    "campaign_id\tname\tslug\torganizerEmail\tisActive\tpurchaseId",
+    "1830002\tFutebol Fraterno 2026\tfraterno2026\tguilhermeram@gmail.com\t1\t1740002"
+  ],
+  "stdout": "purchase_id\tcustomerName\tcustomerEmail\tcampaignSlug\tplanType\tstatus\texpiresAt\tplainPassword\n1740002\tGuilherme\tguilhermeram@gmail.com\tfraterno2026\t1_year\tcompleted\t2027-03-03 18:02:58\tadmin123\ncampaign_id\tname\tslug\torganizerEmail\tisActive\tpurchaseId\n1830002\tFutebol Fraterno 2026\tfraterno2026\tguilhermeram@gmail.com\t1\t1740002\n",
+  "stderr": "",
+  "execution_time_ms": 57
+}

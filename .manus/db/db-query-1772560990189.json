@@ -1,0 +1,50 @@
+{
+  "query": "\nSELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'admin_users' ORDER BY ORDINAL_POSITION;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS \nWHERE TABLE_NAME = 'admin_users' ORDER BY ORDINAL_POSITION;\n",
+  "rows": [
+    {
+      "COLUMN_NAME": "id",
+      "DATA_TYPE": "int"
+    },
+    {
+      "COLUMN_NAME": "password",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "COLUMN_NAME": "name",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "COLUMN_NAME": "active",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "COLUMN_NAME": "createdAt",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "COLUMN_NAME": "lastLogin",
+      "DATA_TYPE": "timestamp"
+    },
+    {
+      "COLUMN_NAME": "username",
+      "DATA_TYPE": "varchar"
+    },
+    {
+      "COLUMN_NAME": "isOwner",
+      "DATA_TYPE": "tinyint"
+    },
+    {
+      "COLUMN_NAME": "campaignId",
+      "DATA_TYPE": "int"
+    },
+    {
+      "COLUMN_NAME": "needsPasswordChange",
+      "DATA_TYPE": "tinyint"
+    }
+  ],
+  "messages": [],
+  "stdout": "COLUMN_NAME\tDATA_TYPE\nid\tint\npassword\tvarchar\nname\tvarchar\nactive\ttinyint\ncreatedAt\ttimestamp\nlastLogin\ttimestamp\nusername\tvarchar\nisOwner\ttinyint\ncampaignId\tint\nneedsPasswordChange\ttinyint\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}

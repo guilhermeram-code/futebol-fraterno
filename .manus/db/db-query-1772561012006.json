@@ -1,0 +1,25 @@
+{
+  "query": "\nSELECT p.id, p.customerName, p.customerEmail, p.campaignSlug, p.planType, p.status, \n       DATE_FORMAT(p.expiresAt, '%d/%m/%Y') as expira_em, p.plainPassword\nFROM purchases p WHERE p.campaignSlug = 'fraterno2026';\n\nSELECT c.id, c.name, c.slug, c.isActive FROM campaigns c WHERE c.slug = 'fraterno2026';\n\nSELECT au.id, au.username, au.name, au.isOwner, au.active FROM admin_users au WHERE au.campaignId = 1830002;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT p.id, p.customerName, p.customerEmail, p.campaignSlug, p.planType, p.status, \n       DATE_FORMAT(p.expiresAt, '%d/%m/%Y') as expira_em, p.plainPassword\nFROM purchases p WHERE p.campaignSlug = 'fraterno2026';\n\nSELECT c.id, c.name, c.slug, c.isActive FROM campaigns c WHERE c.slug = 'fraterno2026';\n\nSELECT au.id, au.username, au.name, au.isOwner, au.active FROM admin_users au WHERE au.campaignId = 1830002;\n",
+  "rows": [
+    {
+      "id": "1740002",
+      "customerName": "Guilherme",
+      "customerEmail": "guilhermeram@gmail.com",
+      "campaignSlug": "fraterno2026",
+      "planType": "1_year",
+      "status": "completed",
+      "expira_em": "03/03/2027",
+      "plainPassword": "admin123"
+    }
+  ],
+  "messages": [
+    "id\tname\tslug\tisActive",
+    "1830002\tFutebol Fraterno 2026\tfraterno2026\t1",
+    "id\tusername\tname\tisOwner\tactive",
+    "1740002\tguilhermeram@gmail.com\tGuilherme\t1\t1"
+  ],
+  "stdout": "id\tcustomerName\tcustomerEmail\tcampaignSlug\tplanType\tstatus\texpira_em\tplainPassword\n1740002\tGuilherme\tguilhermeram@gmail.com\tfraterno2026\t1_year\tcompleted\t03/03/2027\tadmin123\nid\tname\tslug\tisActive\n1830002\tFutebol Fraterno 2026\tfraterno2026\t1\nid\tusername\tname\tisOwner\tactive\n1740002\tguilhermeram@gmail.com\tGuilherme\t1\t1\n",
+  "stderr": "",
+  "execution_time_ms": 64
+}

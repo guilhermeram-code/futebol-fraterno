@@ -2054,3 +2054,10 @@ const [username, setUsername] = useState("");
 - [x] Corrigir botão "Criar Campeonato Oficial" para apontar para `https://peladapro.com.br` (landing page)
 - [x] Verificar se existem outros links quebrados nos 5 emails automáticos (3 links corrigidos: Day 5, Day 7, Day 14)
 - [x] Remover variáveis checkoutUrl não utilizadas para manter código limpo
+
+
+## Cupom OWNER95 (95% desconto, uso único)
+- [x] Criar cupom OWNER95 com 95% de desconto e uso único no banco de dados
+- [x] Implementar controle de uso único (maxUses=1, usedCount incrementa ao usar)
+- [x] Integrar com checkout Mercado Pago (checkout.ts consulta banco de dados)
+- [x] Criar 9 testes automatizados (todos passando)
