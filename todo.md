@@ -2072,3 +2072,8 @@ const [username, setUsername] = useState("");
 - [x] Botão de edição (lápis) para Times no painel admin - editar nome, subtítulo e grupo
 - [x] Botão de edição (lápis) para Grupos no painel admin - editar nome do grupo
 - [x] Mutation groups.update no backend (db.ts + routers.ts)
+
+## Melhorias Jogos - 11/03/2026
+- [x] Corrigir ordem dos próximos jogos: exibir do mais próximo (primeiro) ao mais distante (ASC por data)
+- [x] Adicionar fase "Disputa 3º e 4º Lugar" no cadastro de jogos
+- [x] Exibir jogo de Disputa 3º e 4º Lugar no mata-mata (abaixo da Final)

@@ -161,7 +161,7 @@ export const matches = mysqlTable("matches", {
   awayTeamId: int("awayTeamId").notNull(),
   homeScore: int("homeScore"),
   awayScore: int("awayScore"),
-  phase: mysqlEnum("phase", ["groups", "round16", "quarters", "semis", "final"]).default("groups").notNull(),
+  phase: mysqlEnum("phase", ["groups", "round16", "quarters", "semis", "final", "third_place"]).default("groups").notNull(),
   groupId: int("groupId"), // Apenas para fase de grupos
   round: int("round"), // Rodada (1, 2, 3, etc.)
   bracketSide: mysqlEnum("bracketSide", ["left", "right"]), // Lado da chave no mata-mata

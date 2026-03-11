@@ -1,0 +1,1 @@
+ALTER TABLE `matches` MODIFY COLUMN `phase` enum('groups','round16','quarters','semis','final','third_place') NOT NULL DEFAULT 'groups';

@@ -60,7 +60,8 @@ export default function Jogos() {
     round16: "Oitavas de Final",
     quarters: "Quartas de Final",
     semis: "Semifinal",
-    final: "Final"
+    final: "Final",
+    third_place: "Disputa 3º e 4º Lugar"
   };
 
   // Filter matches
@@ -149,11 +150,12 @@ export default function Jogos() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as Fases</SelectItem>
-              <SelectItem value="groups">Fase de Grupos</SelectItem>
-              <SelectItem value="round16">Oitavas de Final</SelectItem>
-              <SelectItem value="quarters">Quartas de Final</SelectItem>
-              <SelectItem value="semis">Semifinal</SelectItem>
-              <SelectItem value="final">Final</SelectItem>
+               <SelectItem value="groups">Fase de Grupos</SelectItem>
+               <SelectItem value="round16">Oitavas de Final</SelectItem>
+               <SelectItem value="quarters">Quartas de Final</SelectItem>
+               <SelectItem value="semis">Semifinal</SelectItem>
+               <SelectItem value="final">Final</SelectItem>
+               <SelectItem value="third_place">Disputa 3º e 4º Lugar</SelectItem>
             </SelectContent>
           </Select>
           

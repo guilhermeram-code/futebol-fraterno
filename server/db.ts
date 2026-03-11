@@ -462,7 +462,7 @@ export async function getMatchById(id: number) {
 export async function getAllMatches(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  return db.select().from(matches).where(eq(matches.campaignId, campaignId)).orderBy(desc(matches.matchDate));
+  return db.select().from(matches).where(eq(matches.campaignId, campaignId)).orderBy(asc(matches.matchDate));
 }
 
 export async function getMatchesByPhase(campaignId: number, phase: string) {

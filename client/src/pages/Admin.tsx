@@ -1568,7 +1568,8 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
     round16: "Oitavas de Final",
     quarters: "Quartas de Final",
     semis: "Semifinal",
-    final: "Final"
+    final: "Final",
+    third_place: "Disputa 3º e 4º Lugar"
   };
 
   return (
@@ -1628,6 +1629,7 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
                       <SelectItem value="quarters">Quartas de Final</SelectItem>
                       <SelectItem value="semis">Semifinal</SelectItem>
                       <SelectItem value="final">Final</SelectItem>
+                      <SelectItem value="third_place">Disputa 3º e 4º Lugar</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1860,7 +1862,7 @@ function ResultsTabOld({ campaignId }: { campaignId: number }) {
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-xs opacity-70 mb-1">
-                        {match.phase === 'groups' ? 'Fase de Grupos' : match.phase === 'round16' ? 'Oitavas' : match.phase === 'quarters' ? 'Quartas' : match.phase === 'semis' ? 'Semi' : 'Final'}
+                        {match.phase === 'groups' ? 'Fase de Grupos' : match.phase === 'round16' ? 'Oitavas' : match.phase === 'quarters' ? 'Quartas' : match.phase === 'semis' ? 'Semi' : match.phase === 'third_place' ? '3º/4º' : 'Final'}
                         {match.round && ` - R${match.round}`}
                       </p>
                       <p className="font-medium">

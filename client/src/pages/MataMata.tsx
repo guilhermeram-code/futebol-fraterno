@@ -12,6 +12,7 @@ export default function MataMata() {
   const { data: quarterMatches } = trpc.matches.byPhase.useQuery({ phase: "quarters", campaignId });
   const { data: semiMatches } = trpc.matches.byPhase.useQuery({ phase: "semis", campaignId });
   const { data: finalMatch } = trpc.matches.byPhase.useQuery({ phase: "final", campaignId });
+  const { data: thirdPlaceMatch } = trpc.matches.byPhase.useQuery({ phase: "third_place", campaignId });
   const { data: teams } = trpc.teams.list.useQuery({ campaignId });
   
   // Buscar configurações de settings (mesma fonte que Admin-Configurações)
@@ -54,7 +55,8 @@ export default function MataMata() {
   const hasKnockoutMatches = (round16Matches?.length || 0) > 0 || 
     (quarterMatches?.length || 0) > 0 || 
     (semiMatches?.length || 0) > 0 || 
-    (finalMatch?.length || 0) > 0;
+    (finalMatch?.length || 0) > 0 ||
+    (thirdPlaceMatch?.length || 0) > 0;
 
   return (
     <div className="min-h-screen bg-background masonic-pattern">
@@ -276,6 +278,29 @@ export default function MataMata() {
                           match={match} 
                           getTeamName={getTeamName}
                           isFinal
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Disputa 3º e 4º Lugar */}
+              {thirdPlaceMatch && thirdPlaceMatch.length > 0 && (
+                <Card className="border-2 border-amber-400">
+                  <CardHeader className="bg-amber-50">
+                    <CardTitle className="text-amber-700 flex items-center gap-2">
+                      <Target className="h-5 w-5" />
+                      Disputa 3º e 4º Lugar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <div className="space-y-3">
+                      {thirdPlaceMatch.map(match => (
+                        <MatchCard 
+                          key={match.id} 
+                          match={match} 
+                          getTeamName={getTeamName}
                         />
                       ))}
                     </div>
