@@ -120,6 +120,20 @@
       "when": 1770092887955,
       "tag": "0016_blushing_demogoblin",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1773195407800,
+      "tag": "0017_fancy_paladin",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1773195477073,
+      "tag": "0018_dazzling_ozymandias",
+      "breakpoints": true
     }
   ]
 }

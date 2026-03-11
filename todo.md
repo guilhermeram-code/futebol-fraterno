@@ -2061,3 +2061,14 @@ const [username, setUsername] = useState("");
 - [x] Implementar controle de uso único (maxUses=1, usedCount incrementa ao usar)
 - [x] Integrar com checkout Mercado Pago (checkout.ts consulta banco de dados)
 - [x] Criar 9 testes automatizados (todos passando)
+
+## Admin: Botão Editar em Times e Grupos
+- [ ] Adicionar botão editar (lápis) na lista de Times no painel admin
+- [ ] Implementar modal/inline edit para editar nome e loja do time
+- [ ] Adicionar botão editar (lápis) no header de cada Grupo no painel admin
+- [ ] Implementar modal/inline edit para editar nome do grupo
+
+## Melhorias Admin - Botões de Edição (10/03/2026)
+- [x] Botão de edição (lápis) para Times no painel admin - editar nome, subtítulo e grupo
+- [x] Botão de edição (lápis) para Grupos no painel admin - editar nome do grupo
+- [x] Mutation groups.update no backend (db.ts + routers.ts)

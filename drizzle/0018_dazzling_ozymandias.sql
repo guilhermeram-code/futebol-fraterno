@@ -1,0 +1,1 @@
+ALTER TABLE `email_queue` MODIFY COLUMN `emailType` enum('day_0','day_2','day_5','day_7','day_14') NOT NULL;

@@ -309,9 +309,35 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
   });
 
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingTeam, setEditingTeam] = useState<any>(null);
+  const [editName, setEditName] = useState("");
+  const [editLodge, setEditLodge] = useState("");
+  const [editGroupId, setEditGroupId] = useState<string>("");
   const [name, setName] = useState("");
   const [lodge, setLodge] = useState("");
   const [groupId, setGroupId] = useState<string>("");
+
+  const openEditTeamDialog = (team: any) => {
+    setEditingTeam(team);
+    setEditName(team.name);
+    setEditLodge(team.lodge || "");
+    setEditGroupId(team.groupId ? team.groupId.toString() : "none");
+    setEditOpen(true);
+  };
+
+  const handleEditTeamSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTeam) return;
+    updateTeam.mutate({
+      id: editingTeam.id,
+      name: editName,
+      lodge: editLodge || undefined,
+      groupId: editGroupId && editGroupId !== "none" ? parseInt(editGroupId) : null,
+    });
+    setEditOpen(false);
+    setEditingTeam(null);
+  };
 
   const resetForm = () => {
     setName("");
@@ -411,6 +437,14 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
                       {groups.find(g => g.id === team.groupId)?.name}
                     </Badge>
                   )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    title={`Editar ${team.name}`}
+                    onClick={() => openEditTeamDialog(team)}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
                   <AddPlayerToTeamButton teamId={team.id} teamName={team.name} campaignId={campaignId} />
                   <TeamSupportMessageButton teamId={team.id} teamName={team.name} currentMessage={team.supportMessage} />
                   <TeamLogoUpload teamId={team.id} />
@@ -429,6 +463,52 @@ function TeamsTab({ campaignId }: { campaignId: number }) {
           <p className="text-center text-muted-foreground py-8">Nenhum time cadastrado</p>
         )}
       </CardContent>
+
+      {/* Dialog de Edição de Time */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Time</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditTeamSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="editTeamName">Nome do Time *</Label>
+              <Input
+                id="editTeamName"
+                value={editName}
+                onChange={(e) => setEditName(e.target.value)}
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="editTeamLodge">Subtítulo (opcional)</Label>
+              <Input
+                id="editTeamLodge"
+                value={editLodge}
+                onChange={(e) => setEditLodge(e.target.value)}
+                placeholder="Ex: Loja Maçônica Esperança"
+              />
+            </div>
+            <div>
+              <Label htmlFor="editTeamGroup">Grupo</Label>
+              <Select value={editGroupId} onValueChange={setEditGroupId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione um grupo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Sem grupo</SelectItem>
+                  {groups?.map(g => (
+                    <SelectItem key={g.id} value={g.id.toString()}>{g.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button type="submit" className="w-full" disabled={updateTeam.isPending}>
+              {updateTeam.isPending ? "Salvando..." : "Salvar Alterações"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
@@ -1219,9 +1299,33 @@ function GroupsTab({ campaignId }: { campaignId: number }) {
     },
     onError: (error) => toast.error(error.message)
   });
+  const updateGroup = trpc.groups.update.useMutation({
+    onSuccess: () => {
+      utils.groups.list.invalidate();
+      toast.success("Grupo atualizado!");
+      setEditGroupOpen(false);
+      setEditingGroup(null);
+    },
+    onError: (error) => toast.error(error.message)
+  });
 
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const [editGroupOpen, setEditGroupOpen] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<any>(null);
+  const [editGroupName, setEditGroupName] = useState("");
+
+  const openEditGroupDialog = (group: any) => {
+    setEditingGroup(group);
+    setEditGroupName(group.name);
+    setEditGroupOpen(true);
+  };
+
+  const handleEditGroupSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingGroup) return;
+    updateGroup.mutate({ id: editingGroup.id, name: editGroupName, campaignId });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -1309,13 +1413,24 @@ function GroupsTab({ campaignId }: { campaignId: number }) {
                   <div key={group.id} className="p-4 bg-muted rounded-lg">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="font-bold text-gold-dark">{group.name}</h3>
-                      <ConfirmDeleteDialog
-                        title="Excluir Grupo"
-                        description={`Você está prestes a excluir o grupo "${group.name}". Todos os times serão removidos do grupo e os jogos relacionados poderão ser afetados.`}
-                        requireTyping={true}
-                        onConfirm={() => deleteGroup.mutate({ id: group.id })}
-                        isDeleting={deleteGroup.isPending}
-                      />
+                      <div className="flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7"
+                          title={`Editar ${group.name}`}
+                          onClick={() => openEditGroupDialog(group)}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <ConfirmDeleteDialog
+                          title="Excluir Grupo"
+                          description={`Você está prestes a excluir o grupo "${group.name}". Todos os times serão removidos do grupo e os jogos relacionados poderão ser afetados.`}
+                          requireTyping={true}
+                          onConfirm={() => deleteGroup.mutate({ id: group.id })}
+                          isDeleting={deleteGroup.isPending}
+                        />
+                      </div>
                     </div>
                     <div className="space-y-1">
                       {getTeamsInGroup(group.id).length > 0 ? (
@@ -1350,6 +1465,30 @@ function GroupsTab({ campaignId }: { campaignId: number }) {
           </div>
         )}
       </CardContent>
+
+      {/* Dialog de Edição de Grupo */}
+      <Dialog open={editGroupOpen} onOpenChange={setEditGroupOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Grupo</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditGroupSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="editGroupName">Nome do Grupo *</Label>
+              <Input
+                id="editGroupName"
+                value={editGroupName}
+                onChange={(e) => setEditGroupName(e.target.value)}
+                placeholder="Ex: Grupo A"
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full" disabled={updateGroup.isPending}>
+              {updateGroup.isPending ? "Salvando..." : "Salvar Alterações"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

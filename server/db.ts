@@ -364,6 +364,14 @@ export async function deleteGroup(campaignId: number, id: number) {
   await db.delete(groups).where(eq(groups.id, id));
 }
 
+export async function updateGroup(campaignId: number, id: number, data: { name?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(groups).set(data).where(
+    and(eq(groups.campaignId, campaignId), eq(groups.id, id))
+  );
+}
+
 export async function getAllGroups(campaignId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

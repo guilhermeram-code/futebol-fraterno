@@ -539,6 +539,18 @@ export const appRouter = router({
         return db.createGroup(getCampaignId(input), groupData);
       }),
     
+    update: campaignAdminProcedure
+      .input(z.object({
+        id: z.number(),
+        name: z.string().min(1),
+        campaignId: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, campaignId, name } = input;
+        await db.updateGroup(getCampaignId(input), id, { name });
+        return { success: true };
+      }),
+    
     delete: campaignAdminProcedure
       .input(z.object({ id: z.number(), campaignId: z.number().optional() }))
       .mutation(async ({ input }) => {
