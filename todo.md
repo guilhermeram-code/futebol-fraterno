@@ -2077,3 +2077,7 @@ const [username, setUsername] = useState("");
 - [x] Corrigir ordem dos próximos jogos: exibir do mais próximo (primeiro) ao mais distante (ASC por data)
 - [x] Adicionar fase "Disputa 3º e 4º Lugar" no cadastro de jogos
 - [x] Exibir jogo de Disputa 3º e 4º Lugar no mata-mata (abaixo da Final)
+
+## Correções Disputa 3º e 4º Lugar - 11/03/2026
+- [x] Corrigir validação Zod no backend para aceitar "third_place" como fase válida
+- [x] Ocultar campo "Lado da Chave" quando fase for "third_place" no cadastro de jogo

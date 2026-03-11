@@ -1647,7 +1647,7 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
                       </SelectContent>
                     </Select>
                   </div>
-                ) : phase !== "final" ? (
+                ) : phase !== "final" && phase !== "third_place" ? (
                   <div>
                     <Label>Lado da Chave</Label>
                     <Select value={bracketSide} onValueChange={setBracketSide}>

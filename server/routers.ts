@@ -688,7 +688,7 @@ export const appRouter = router({
       .input(z.object({
         homeTeamId: z.number(),
         awayTeamId: z.number(),
-        phase: z.enum(['groups', 'round16', 'quarters', 'semis', 'final']),
+        phase: z.enum(['groups', 'round16', 'quarters', 'semis', 'final', 'third_place']),
         groupId: z.number().optional(),
         round: z.number().optional(),
         matchDate: z.string().optional(),
@@ -715,7 +715,7 @@ export const appRouter = router({
         awayTeamId: z.number().optional(),
         homeScore: z.number().optional(),
         awayScore: z.number().optional(),
-        phase: z.enum(['groups', 'round16', 'quarters', 'semis', 'final']).optional(),
+        phase: z.enum(['groups', 'round16', 'quarters', 'semis', 'final', 'third_place']).optional(),
         groupId: z.number().nullable().optional(),
         round: z.number().optional(),
         matchDate: z.string().optional(),
