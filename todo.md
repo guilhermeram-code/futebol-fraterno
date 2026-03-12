@@ -2081,3 +2081,6 @@ const [username, setUsername] = useState("");
 ## Correções Disputa 3º e 4º Lugar - 11/03/2026
 - [x] Corrigir validação Zod no backend para aceitar "third_place" como fase válida
 - [x] Ocultar campo "Lado da Chave" quando fase for "third_place" no cadastro de jogo
+
+## Melhoria Layout - 12/03/2026
+- [x] Reformular card de próximos jogos na Home.tsx: layout igual à página Jogos (time esq | VS | time dir, data/local abaixo)

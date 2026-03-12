@@ -173,30 +173,44 @@ export default function Home() {
                     {upcomingMatches.map(match => (
                       <div 
                         key={match.id} 
-                        className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
+                        className="p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
                       >
-                        <div className="flex flex-col gap-2 flex-1">
-                          <Badge variant="outline" className="text-xs w-fit">
-                            {match.phase === "groups" ? (getGroupName(match.groupId) ? `Fase de Grupos - ${getGroupName(match.groupId)}` : "Fase de Grupos") : 
-                             match.phase === "round16" ? "Oitavas" :
-                             match.phase === "quarters" ? "Quartas" :
-                             match.phase === "semis" ? "Semi" :
-                             match.phase === "final" ? "Final" : match.phase}
-                          </Badge>
-                          <div className="flex items-center gap-3">
-                            <div className="flex-1 text-right">
-                              <div className="font-medium">{getTeamName(match.homeTeamId)}</div>
-                              <div className="text-xs text-muted-foreground">{getTeamLodge(match.homeTeamId)}</div>
-                            </div>
-                            <span className="text-muted-foreground">vs</span>
-                            <div className="flex-1">
-                              <div className="font-medium">{getTeamName(match.awayTeamId)}</div>
-                              <div className="text-xs text-muted-foreground">{getTeamLodge(match.awayTeamId)}</div>
-                            </div>
+                        {/* Badge de fase/grupo no topo */}
+                        <Badge variant="outline" className="text-xs mb-3">
+                          {match.phase === "groups" ? (getGroupName(match.groupId) ? `Fase de Grupos - ${getGroupName(match.groupId)}` : "Fase de Grupos") : 
+                           match.phase === "round16" ? "Oitavas de Final" :
+                           match.phase === "quarters" ? "Quartas de Final" :
+                           match.phase === "semis" ? "Semifinal" :
+                           match.phase === "final" ? "Final" :
+                           match.phase === "third_place" ? "3º e 4º Lugar" : match.phase}
+                        </Badge>
+                        {/* Times em linha: casa | VS | visitante */}
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 text-right">
+                            <div className="font-semibold text-sm leading-tight">{getTeamName(match.homeTeamId)}</div>
+                            {getTeamLodge(match.homeTeamId) && (
+                              <div className="text-xs text-muted-foreground leading-tight">{getTeamLodge(match.homeTeamId)}</div>
+                            )}
+                          </div>
+                          <div className="flex-shrink-0 px-2 text-center">
+                            <span className="text-xs font-bold text-muted-foreground">VS</span>
+                          </div>
+                          <div className="flex-1">
+                            <div className="font-semibold text-sm leading-tight">{getTeamName(match.awayTeamId)}</div>
+                            {getTeamLodge(match.awayTeamId) && (
+                              <div className="text-xs text-muted-foreground leading-tight">{getTeamLodge(match.awayTeamId)}</div>
+                            )}
                           </div>
                         </div>
-                        <div className="text-sm text-muted-foreground">
-                          {formatMatchDate(match.matchDate)}
+                        {/* Data e local abaixo */}
+                        <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            {formatMatchDate(match.matchDate)}
+                          </span>
+                          {match.location && (
+                            <span className="truncate">• {match.location}</span>
+                          )}
                         </div>
                       </div>
                     ))}
