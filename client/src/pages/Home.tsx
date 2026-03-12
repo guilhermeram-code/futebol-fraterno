@@ -175,15 +175,22 @@ export default function Home() {
                         key={match.id} 
                         className="p-4 bg-muted rounded-lg hover:bg-muted/80 transition-colors"
                       >
-                        {/* Badge de fase/grupo no topo */}
-                        <Badge variant="outline" className="text-xs mb-3">
-                          {match.phase === "groups" ? (getGroupName(match.groupId) ? `Fase de Grupos - ${getGroupName(match.groupId)}` : "Fase de Grupos") : 
-                           match.phase === "round16" ? "Oitavas de Final" :
-                           match.phase === "quarters" ? "Quartas de Final" :
-                           match.phase === "semis" ? "Semifinal" :
-                           match.phase === "final" ? "Final" :
-                           match.phase === "third_place" ? "3º e 4º Lugar" : match.phase}
-                        </Badge>
+                        {/* Badge de fase/grupo + rodada no topo */}
+                        <div className="flex items-center gap-2 mb-3 flex-wrap">
+                          <Badge variant="outline" className="text-xs">
+                            {match.phase === "groups" ? (getGroupName(match.groupId) ? `Fase de Grupos - ${getGroupName(match.groupId)}` : "Fase de Grupos") : 
+                             match.phase === "round16" ? "Oitavas de Final" :
+                             match.phase === "quarters" ? "Quartas de Final" :
+                             match.phase === "semis" ? "Semifinal" :
+                             match.phase === "final" ? "Final" :
+                             match.phase === "third_place" ? "3º e 4º Lugar" : match.phase}
+                          </Badge>
+                          {match.round && (
+                            <Badge className="text-xs bg-foreground text-background">
+                              Rodada {match.round}
+                            </Badge>
+                          )}
+                        </div>
                         {/* Times em linha: casa | VS | visitante */}
                         <div className="flex items-center gap-2">
                           <div className="flex-1 text-right">
