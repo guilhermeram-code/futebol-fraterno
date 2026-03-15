@@ -242,9 +242,6 @@ export default function TimeDetail() {
                     <div className="bg-white/10 rounded-lg p-3">
                       <p className="text-2xl md:text-3xl font-bold text-gold score-display">
                         {statsGroupOnly.points + (team?.bonusPoints ?? 0)}
-                        {(team?.bonusPoints ?? 0) > 0 && (
-                          <span className="ml-1 text-xs font-normal bg-amber-500/30 text-amber-300 px-1 rounded">+{team.bonusPoints}</span>
-                        )}
                       </p>
                       <p className="text-xs text-white/60">Pontos</p>
                     </div>
@@ -262,9 +259,6 @@ export default function TimeDetail() {
                     <div className="bg-white/10 rounded-lg p-3">
                       <p className="text-2xl md:text-3xl font-bold text-gold score-display">
                         {stats.points + (team?.bonusPoints ?? 0)}
-                        {(team?.bonusPoints ?? 0) > 0 && (
-                          <span className="ml-1 text-xs font-normal bg-amber-500/30 text-amber-300 px-1 rounded">+{team.bonusPoints}</span>
-                        )}
                       </p>
                       <p className="text-xs text-white/60">Pontos</p>
                     </div>
@@ -360,9 +354,6 @@ export default function TimeDetail() {
                     <div className="text-center p-2 bg-gold-gradient-light rounded-lg">
                       <p className="text-2xl font-bold text-gold-dark score-display">
                         {statsGroupOnly.points + (team?.bonusPoints ?? 0)}
-                        {(team?.bonusPoints ?? 0) > 0 && (
-                          <span className="ml-1 text-xs font-normal bg-amber-500/20 text-amber-700 px-1 rounded">+{team.bonusPoints}</span>
-                        )}
                       </p>
                       <p className="text-xs text-muted-foreground">PTS</p>
                     </div>
