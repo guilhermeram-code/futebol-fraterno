@@ -2098,3 +2098,8 @@ const [username, setUsername] = useState("");
 - [x] Atualizar template do email de boas-vindas com botão de acesso direto + senha para outros dispositivos
 - [x] Atualizar frontend (Admin.tsx) para processar ?token= na URL e autenticar automaticamente
 - [x] Criar trial de teste para contato@meucontomagico.com.br para validar fluxo completo
+
+## Magic Link nos Emails de Nurturing (15/03/2026)
+- [x] Adicionar magic link (botão acesso direto) no email Day 2
+- [x] Adicionar magic link (botão acesso direto) no email Day 5
+- [ ] Email Day 7 e Day 14: sem magic link (trial já expirado, foco em venda)

@@ -1,5 +1,5 @@
 import { getDb } from "./db";
-import { emailQueue, trialSignups } from "../drizzle/schema";
+import { emailQueue, trialSignups, adminUsers, campaigns } from "../drizzle/schema";
 import { eq, and, lte } from "drizzle-orm";
 import {
   sendTrialDay2Email,
@@ -109,12 +109,33 @@ export async function processEmailQueue() {
         }
 
         const trialData = trial[0];
+
+        // Buscar campaignId e adminUserId para gerar magic link nos emails Day 2 e Day 5
+        let campaignId: number | undefined;
+        let adminUserId: number | undefined;
+        if (email.emailType === 'day_2' || email.emailType === 'day_5') {
+          // Buscar campaign pelo slug
+          const campaignRows = await db.select().from(campaigns).where(eq(campaigns.slug, trialData.campaignSlug)).limit(1);
+          if (campaignRows.length > 0) {
+            campaignId = campaignRows[0].id;
+            // Buscar admin user pelo email
+            const adminRows = await db.select().from(adminUsers).where(
+              and(eq(adminUsers.campaignId, campaignId), eq(adminUsers.username, trialData.email))
+            ).limit(1);
+            if (adminRows.length > 0) {
+              adminUserId = adminRows[0].id;
+            }
+          }
+        }
+
         const emailData = {
           name: trialData.name,
           email: trialData.email,
           campaignName: trialData.campaignName,
           campaignSlug: trialData.campaignSlug,
           expiresAt: trialData.expiresAt,
+          campaignId,
+          adminUserId,
         };
 
         // Enviar email baseado no tipo

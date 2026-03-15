@@ -496,6 +496,8 @@ interface TrialNurturingEmailData {
   campaignName: string;
   campaignSlug: string;
   expiresAt: Date;
+  campaignId?: number;
+  adminUserId?: number;
 }
 
 /**
@@ -506,6 +508,21 @@ export async function sendTrialDay2Email(data: TrialNurturingEmailData): Promise
     const campaignUrl = `https://peladapro.com.br/${data.campaignSlug}`;
     const adminUrl = `https://peladapro.com.br/${data.campaignSlug}/admin`;
     const expirationDate = new Date(data.expiresAt).toLocaleDateString('pt-BR');
+
+    // Gerar magic link JWT (válido por 30 dias)
+    const magicToken = jwt.sign(
+      {
+        adminUserId: data.adminUserId ?? -99,
+        username: data.email,
+        name: data.name,
+        isOwner: true,
+        campaignId: data.campaignId ?? 0,
+        needsPasswordChange: false,
+      },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '30d' }
+    );
+    const magicLinkUrl = `${adminUrl}?token=${magicToken}`;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -567,15 +584,16 @@ export async function sendTrialDay2Email(data: TrialNurturingEmailData): Promise
                 </tr>
               </table>
 
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 8px;">
                 <tr>
                   <td align="center">
-                    <a href="${adminUrl}" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                      Continuar Testando
+                    <a href="${magicLinkUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 18px 48px; border-radius: 8px; font-size: 17px; font-weight: bold; box-shadow: 0 4px 12px rgba(16,185,129,0.4);">
+                      ▶ ACESSAR MEU PAINEL AGORA
                     </a>
                   </td>
                 </tr>
               </table>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 0 0 30px 0;">1 clique — sem precisar digitar senha</p>
 
               <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin-bottom: 30px;">
                 <tr>
@@ -634,6 +652,21 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
   try {
     const campaignUrl = `https://peladapro.com.br/${data.campaignSlug}`;
     const adminUrl = `https://peladapro.com.br/${data.campaignSlug}/admin`;
+
+    // Gerar magic link JWT (válido por 30 dias)
+    const magicToken = jwt.sign(
+      {
+        adminUserId: data.adminUserId ?? -99,
+        username: data.email,
+        name: data.name,
+        isOwner: true,
+        campaignId: data.campaignId ?? 0,
+        needsPasswordChange: false,
+      },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '30d' }
+    );
+    const magicLinkUrl = `${adminUrl}?token=${magicToken}`;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -694,10 +727,23 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
                 </tr>
               </table>
 
+              <!-- Botão 1: Voltar ao painel (magic link) -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 8px;">
+                <tr>
+                  <td align="center">
+                    <a href="${magicLinkUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 12px rgba(16,185,129,0.4);">
+                      ▶ Voltar ao Meu Painel Agora
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 0 0 16px 0;">1 clique — sem precisar digitar senha</p>
+
+              <!-- Botão 2: Criar campeonato oficial (compra) -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td align="center">
-                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #f59e0b; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #f59e0b; color: #ffffff; text-decoration: none; padding: 14px 36px; border-radius: 6px; font-size: 15px; font-weight: bold; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
                       Criar Meu Campeonato Oficial
                     </a>
                   </td>
