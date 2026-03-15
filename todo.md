@@ -2089,3 +2089,6 @@ const [username, setUsername] = useState("");
 - [x] Inverter ordem do histórico de jogos na página do time (ASC por data - mais próximo primeiro)
 - [x] Mensagem editável de classificação no admin (campo texto editável abaixo do seletor, persiste no banco, aparece na classificação, mata-mata e página do time)
 - [x] Pontos avulsos por time em Configurações (seção no admin, indicador "3+" na classificação, não conta como jogo)
+
+## Correção - 15/03/2026
+- [x] Exibir bonusPoints somados na página do time (TimeDetail.tsx) - pontos avulsos não aparecem no card de pontos do time

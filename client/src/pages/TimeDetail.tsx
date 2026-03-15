@@ -240,7 +240,12 @@ export default function TimeDetail() {
                 {statsGroupOnly && statsGroupOnly.played > 0 ? (
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div className="bg-white/10 rounded-lg p-3">
-                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">{statsGroupOnly.points}</p>
+                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">
+                        {statsGroupOnly.points + (team?.bonusPoints ?? 0)}
+                        {(team?.bonusPoints ?? 0) > 0 && (
+                          <span className="ml-1 text-xs font-normal bg-amber-500/30 text-amber-300 px-1 rounded">+{team.bonusPoints}</span>
+                        )}
+                      </p>
                       <p className="text-xs text-white/60">Pontos</p>
                     </div>
                     <div className="bg-white/10 rounded-lg p-3">
@@ -255,7 +260,12 @@ export default function TimeDetail() {
                 ) : stats && (
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div className="bg-white/10 rounded-lg p-3">
-                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">{stats.points}</p>
+                      <p className="text-2xl md:text-3xl font-bold text-gold score-display">
+                        {stats.points + (team?.bonusPoints ?? 0)}
+                        {(team?.bonusPoints ?? 0) > 0 && (
+                          <span className="ml-1 text-xs font-normal bg-amber-500/30 text-amber-300 px-1 rounded">+{team.bonusPoints}</span>
+                        )}
+                      </p>
                       <p className="text-xs text-white/60">Pontos</p>
                     </div>
                     <div className="bg-white/10 rounded-lg p-3">
@@ -348,7 +358,12 @@ export default function TimeDetail() {
                 <CardContent>
                   <div className="grid grid-cols-4 md:grid-cols-8 gap-2">
                     <div className="text-center p-2 bg-gold-gradient-light rounded-lg">
-                      <p className="text-2xl font-bold text-gold-dark score-display">{statsGroupOnly.points}</p>
+                      <p className="text-2xl font-bold text-gold-dark score-display">
+                        {statsGroupOnly.points + (team?.bonusPoints ?? 0)}
+                        {(team?.bonusPoints ?? 0) > 0 && (
+                          <span className="ml-1 text-xs font-normal bg-amber-500/20 text-amber-700 px-1 rounded">+{team.bonusPoints}</span>
+                        )}
+                      </p>
                       <p className="text-xs text-muted-foreground">PTS</p>
                     </div>
                     <div className="text-center p-2 bg-muted rounded-lg">
