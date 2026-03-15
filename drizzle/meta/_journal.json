@@ -141,6 +141,13 @@
       "when": 1773256458216,
       "tag": "0019_icy_stark_industries",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1773587318796,
+      "tag": "0020_warm_punisher",
+      "breakpoints": true
     }
   ]
 }

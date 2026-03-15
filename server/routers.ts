@@ -476,6 +476,7 @@ export const appRouter = router({
         logoUrl: z.string().optional(),
         groupId: z.number().nullable().optional(),
         supportMessage: z.string().nullable().optional(),
+        bonusPoints: z.number().int().min(0).optional(),
       }))
       .mutation(async ({ input }) => {
         const { id, ...data } = input;

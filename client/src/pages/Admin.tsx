@@ -2622,6 +2622,16 @@ function AdminsTab({ campaignId }: { campaignId: number }) {
 // ==================== SETTINGS TAB ====================
 function SettingsTab({ campaignId }: { campaignId: number }) {
   const utils = trpc.useUtils();
+  const { data: allTeams } = trpc.teams.list.useQuery({ campaignId });
+  const [bonusInputs, setBonusInputs] = useState<Record<number, string>>({});
+  const updateTeamBonus = trpc.teams.update.useMutation({
+    onSuccess: () => {
+      utils.teams.list.invalidate();
+      utils.groups.standings.invalidate();
+      toast.success("Pontos avulsos salvos!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
   const { data: tournamentName } = trpc.settings.get.useQuery({ key: "tournamentName", campaignId });
   const { data: tournamentSubtitle } = trpc.settings.get.useQuery({ key: "tournamentSubtitle", campaignId });
   const { data: tournamentOrganizer } = trpc.settings.get.useQuery({ key: "tournamentOrganizer", campaignId });
@@ -2634,6 +2644,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
   const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType", campaignId });
   const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup", campaignId });
   const { data: knockoutSize } = trpc.settings.get.useQuery({ key: "knockoutSize", campaignId });
+  const { data: savedClassificationMessage } = trpc.settings.get.useQuery({ key: "classificationMessage", campaignId });
 
   const setSetting = trpc.settings.set.useMutation({
     onSuccess: () => {
@@ -2679,6 +2690,7 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
   const [selectedTournamentType, setSelectedTournamentType] = useState("groups_knockout");
   const [selectedTeamsQualify, setSelectedTeamsQualify] = useState("2");
   const [selectedKnockoutSize, setSelectedKnockoutSize] = useState("8");
+  const [classificationMessage, setClassificationMessage] = useState("");
 
   // Atualizar estados quando os dados carregam
   useEffect(() => {
@@ -2704,6 +2716,19 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
   useEffect(() => {
     if (knockoutSize) setSelectedKnockoutSize(knockoutSize);
   }, [knockoutSize]);
+
+  // Gerar mensagem padrão baseada no número de classificados
+  const defaultClassificationMessage = (n: string) => {
+    const num = parseInt(n) || 2;
+    const ordinal = num === 1 ? "1º" : `${num} primeiros`;
+    return `Os ${ordinal} de cada grupo se classificam para as semifinais.`;
+  };
+
+  useEffect(() => {
+    if (savedClassificationMessage !== undefined) {
+      setClassificationMessage(savedClassificationMessage || "");
+    }
+  }, [savedClassificationMessage]);
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -2959,6 +2984,37 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               >
                 Salvar Classificados
               </Button>
+
+              {/* Mensagem editável de classificação */}
+              <div className="mt-4">
+                <Label>Mensagem de Classificação</Label>
+                <p className="text-xs text-muted-foreground mb-2">
+                  Texto exibido na classificação, mata-mata e página do time. Se deixar em branco, usa o texto automático.
+                </p>
+                <textarea
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                  rows={3}
+                  value={classificationMessage}
+                  onChange={(e) => setClassificationMessage(e.target.value)}
+                  placeholder={defaultClassificationMessage(selectedTeamsQualify)}
+                />
+                <div className="flex gap-2 mt-2">
+                  <Button
+                    onClick={() => setSetting.mutate({ key: "classificationMessage", value: classificationMessage, campaignId })}
+                    disabled={setSetting.isPending}
+                    size="sm"
+                  >
+                    Salvar Mensagem
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setClassificationMessage(defaultClassificationMessage(selectedTeamsQualify))}
+                  >
+                    Restaurar Padrão
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -3017,6 +3073,59 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               )}
             </ul>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Seção Pontos Avulsos */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span>🎯</span> Pontos Avulsos (Bônus Pré-Campeonato)
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Lance pontos extras para times antes do campeonato. Eles aparecem somados na classificação com um indicador <span className="text-amber-600 font-semibold">+X</span>.
+          </p>
+        </CardHeader>
+        <CardContent>
+          {allTeams && allTeams.length > 0 ? (
+            <div className="space-y-3">
+              {allTeams.map(team => (
+                <div key={team.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm truncate">{team.name}</p>
+                    {team.lodge && <p className="text-xs text-muted-foreground truncate">{team.lodge}</p>}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground">Pts atuais: <strong>{team.bonusPoints || 0}</strong></span>
+                    <input
+                      type="number"
+                      min="0"
+                      className="w-20 rounded-md border border-input bg-background px-2 py-1 text-sm text-center"
+                      placeholder="0"
+                      value={bonusInputs[team.id] ?? ""}
+                      onChange={(e) => setBonusInputs(prev => ({ ...prev, [team.id]: e.target.value }))}
+                    />
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => {
+                        const val = parseInt(bonusInputs[team.id] || "0");
+                        if (!isNaN(val) && val >= 0) {
+                          updateTeamBonus.mutate({ id: team.id, bonusPoints: val });
+                          setBonusInputs(prev => ({ ...prev, [team.id]: "" }));
+                        }
+                      }}
+                      disabled={updateTeamBonus.isPending}
+                    >
+                      Salvar
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-4">Nenhum time cadastrado</p>
+          )}
         </CardContent>
       </Card>
     </div>

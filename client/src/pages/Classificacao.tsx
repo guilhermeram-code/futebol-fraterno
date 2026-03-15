@@ -18,10 +18,16 @@ export default function Classificacao() {
   const { data: groups, isLoading: loadingGroups } = trpc.groups.list.useQuery({ campaignId });
   const { data: tournamentType } = trpc.settings.get.useQuery({ key: "tournamentType", campaignId });
   const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup", campaignId });
+  const { data: savedClassificationMessage } = trpc.settings.get.useQuery({ key: "classificationMessage", campaignId });
   
   // Se é só mata-mata, esconder grupos
   const isKnockoutOnly = tournamentType === "knockout_only";
   const qualifyCount = parseInt(teamsQualifyPerGroup || "2");
+  const classificationBadgeText = savedClassificationMessage?.trim()
+    ? savedClassificationMessage
+    : qualifyCount === 1
+      ? "1º classificado avança para mata-mata"
+      : `${qualifyCount} primeiros classificam para mata-mata`;
 
   if (isKnockoutOnly) {
     return (
@@ -68,6 +74,7 @@ export default function Classificacao() {
                 groupName={group.name} 
                 qualifyCount={qualifyCount}
                 campaignId={campaignId}
+                classificationBadgeText={classificationBadgeText}
               />
             ))}
           </div>
@@ -85,7 +92,7 @@ export default function Classificacao() {
   );
 }
 
-function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { groupId: number; groupName: string; qualifyCount: number; campaignId: number }) {
+function GroupStandings({ groupId, groupName, qualifyCount, campaignId, classificationBadgeText }: { groupId: number; groupName: string; qualifyCount: number; campaignId: number; classificationBadgeText: string }) {
   const { slug } = useCampaign();
   const { data: standings, isLoading } = trpc.groups.standings.useQuery({ groupId, campaignId });
 
@@ -142,7 +149,12 @@ function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { grou
                           </div>
                         </Link>
                       </td>
-                      <td className="text-center py-2 px-1 font-bold text-gold-dark">{row.points}</td>
+                      <td className="text-center py-2 px-1 font-bold text-gold-dark">
+                        <span>{row.points}</span>
+                        {(row as any).bonusPoints > 0 && (
+                          <span className="ml-1 text-xs font-normal text-amber-600 bg-amber-50 border border-amber-200 rounded px-1">+{(row as any).bonusPoints}</span>
+                        )}
+                      </td>
                       <td className="text-center py-2 px-1">{row.played}</td>
                       <td className="text-center py-2 px-1 text-green-600">{row.wins}</td>
                       <td className="text-center py-2 px-1 text-yellow-600">{row.draws}</td>
@@ -167,9 +179,7 @@ function GroupStandings({ groupId, groupName, qualifyCount, campaignId }: { grou
         )}
         <div className="mt-2 text-xs text-muted-foreground">
           <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
-            {qualifyCount === 1 
-              ? "1º classificado avança para mata-mata" 
-              : `${qualifyCount} primeiros classificam para mata-mata`}
+            {classificationBadgeText}
           </Badge>
         </div>
       </CardContent>

@@ -1,0 +1,8 @@
+{
+  "query": "\nSELECT \n  t.name AS time_nome,\n  t.lodge AS time_loja,\n  p.name AS jogador_nome,\n  p.position AS posicao,\n  p.number AS numero\nFROM teams t\nLEFT JOIN players p ON p.team_id = t.id\nWHERE t.campaign_id = (SELECT id FROM campaigns WHERE slug = 'futebolfraterno2026')\nORDER BY t.name, p.name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  t.name AS time_nome,\n  t.lodge AS time_loja,\n  p.name AS jogador_nome,\n  p.position AS posicao,\n  p.number AS numero\nFROM teams t\nLEFT JOIN players p ON p.team_id = t.id\nWHERE t.campaign_id = (SELECT id FROM campaigns WHERE slug = 'futebolfraterno2026')\nORDER BY t.name, p.name;\n",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 2: Unknown column 'p.team_id' in 'on clause'"
+  ]
+}

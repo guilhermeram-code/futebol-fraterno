@@ -1,0 +1,1501 @@
+{
+  "query": "\nSELECT \n  t.name AS time_nome,\n  t.lodge AS time_loja,\n  p.name AS jogador_nome,\n  p.position AS posicao,\n  p.number AS numero\nFROM teams t\nLEFT JOIN players p ON p.teamId = t.id\nWHERE t.campaignId = (SELECT id FROM campaigns WHERE slug = 'futebolfraterno2026')\nORDER BY t.name, p.name;\n",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute \nSELECT \n  t.name AS time_nome,\n  t.lodge AS time_loja,\n  p.name AS jogador_nome,\n  p.position AS posicao,\n  p.number AS numero\nFROM teams t\nLEFT JOIN players p ON p.teamId = t.id\nWHERE t.campaignId = (SELECT id FROM campaigns WHERE slug = 'futebolfraterno2026')\nORDER BY t.name, p.name;\n",
+  "rows": [
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Agnaldo Suiyama Ogata",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Antônio Masami Nagai",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Aristóteles José da Silva de Almeida",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Santos Camillo",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Tomé Tavares da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Gustavo Lima Martins de Brito",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Hellington José Arrais Alves",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Joel Tavares",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Johny Herts dos Anjos",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "José Roberto da Conceição",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Luis Carlos Sales Valentim",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Luiz Cesar de Oliveira",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Rodolfo Antônio Fachiano",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Wagner Hizioka Fagundes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "3 de Maio",
+      "time_loja": "NULL",
+      "jogador_nome": "Wellington Handerson Tudisco",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Arivaldo Pazote",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Augusto César Mariano da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Carlos Alberto de Jesus",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "César Luiz da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Edson Danilo Pereira da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Felipe Ceravolo Lemos",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Hugo Bossolani",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Jorge Filipe Del Padre Gomes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "José Mauricio de Oliveira Leme Jr.",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "José Roberto Costa de Oliveira",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Kleber Júnior da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Leandro Moacir Zaupa",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Luciano Borges Garofalo",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Wilson Alexandre Salomão",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acácia/ Fraternidade Prudentina",
+      "time_loja": "NULL",
+      "jogador_nome": "Yuri Otani",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Anderson de Castro Dantas",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "DANIEL MERIZIO CASATI",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Jovelino Jose da Silva Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "julio henrique",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Lucas Vasconcelos Agostinho",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "MARCEL RODRIGO GARCIA SILVA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "rafael sapia",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Rodrigo Capelasso",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Rodrigo Tommazeli",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Rogério Fernando Ferreira Júnior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Sergio Previato Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Thiago Rodrigo Marques Caccia",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "Victor Hugo de Freitas Costa",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Acadêmica/ Fraternidade e Progresso/ Jaques Demolay ",
+      "time_loja": "NULL",
+      "jogador_nome": "VITOR HUGO PAIANO SIMÕES",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Alessando Bonfim de Oliveira",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Carlos Alberto Lima Boraschi",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Divaldo Stefano Caldeira Ceresini",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Douglas da Rocha Mourão",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Fabio Martinez Hungaro",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Luiz Carbonelli Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Flávio Takashi Miazaki",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Leonardo de Castilho",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Lucas Saab Fioravante",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcos Antonio de Carvalho Lucas",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcos Fábio de Almirante",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Mario Luiz Peretti",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Pedro Roberto Martins",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Ruan Manconi Milani",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Vandik Souza Fernandes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Arte Real/ Noboru Kasae",
+      "time_loja": "NULL",
+      "jogador_nome": "Wagner Marques Fioravante",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Allison Rodrigues de Assiz",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Anderson Barbosa da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Bruno Cesar de Souza",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "CLAUDIO OLIVEIRA DA SILVA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Denis Fernando de Oliveira Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Eduardo Gargantini Ferreira",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Erick Andre Soreto",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Fabiano Cruz",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Eduardo Valejo",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Jansen Franco Branco",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Jorge Pereira Machado Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Jose Robero Dias Matins",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "LEANDRO CANDIDO BASTOS",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcos Paulino Maciel",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Moacyr Accorsi Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Vitor Affonso Vieira Machado",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Cavaleiros da Liberdade",
+      "time_loja": "NULL",
+      "jogador_nome": "Yoshio Ussami",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "Alexandre Ferretti Najas",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "ALEXSANDRO SILVESTRE GONZAGA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "Antonio Cesar Martin",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "BRUNO RAFAEL PEREIRA DONÁ",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "ENEAS MASQUETE CALIXTI",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "João Alberto Artoni de Carvalho",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "Leandro Gomes Rodrigues",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "LUCAS PADOVAN DOS SANTOS PAVANI",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "MARCELO ALEXANDRE FAVARETO DA SILVA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "MICHEL SANTANA DE CARVALHO",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "MICHEL SILVA MARTINS",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "NICKOLAS ALEXANDRE AGOSTINHO",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Evolução e Dignidade/ Harmonia/ Fioravante",
+      "time_loja": "NULL",
+      "jogador_nome": "Rudnei Rena Rodrigues",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Ademir Luna",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "ADRIANO CAMPOS DE ALMEIDA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "CARLOS ALBERTO BARROSO DE FREITAS",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Charles Lourenço Aragão",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Cristiano Oliveira de Carvalho",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Diego Roberto Rampasso",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Evandro Carlos Martins da Costa",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "HERNANI AMARAL DE SOUZA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "JOÃO RICARDO DA SILVA ROTA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "LUCAS PIRES MACIEL",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "lucas teixeira pereira",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Luiz Fernando Aragao Rodrigues",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Luiz Moreto Vintin Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "MATHEUS CHAGAS SOARES",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "RAFAEL AUGUSTO MARTINS NICOLOSI",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gabriel/ Luz do Pontal/ 7 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "VICTOR MARIN SILVA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Arthur Giovane Gardim Lopes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Gilson da Silva Oliveira",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Higor Durante",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Ivan Luis Bornia",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "João Adolfo Ghinozzi",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Marco Antonio Batista",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Matheus aliança",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Murilo da Costa Delfim",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Nixon Roberto Moia Fanzine",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Paulo Roberto de Brito",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Rafael Giolo dos Santos",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Roberto Ronchi Redivo",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Robson Takahashi",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Rodrigo Bordinassi Galego",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Rodrigo Vizu Correia",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Gonçalves Ledo/ União Machadense/ Luz do Conclave",
+      "time_loja": "NULL",
+      "jogador_nome": "Rogerio Miranda da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "André Miranda",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Bruno Mendes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Fabiano Soares Dias Fernandes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Guilherme Ramos",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Gustavo Nunes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Leonardo Souza",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcelo Seixas Martins",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Marco Salem",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Osmar Aparecido Magoti",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Ricardo José Machado",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Rogério Aparecido Sales",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Rogério Martins Alves",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Theodoro Silingovschi",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "José Moreira/ São João de Jerusalém ",
+      "time_loja": "NULL",
+      "jogador_nome": "Vitor Clemente",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Alfredo Luis Martins",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Antonio Carlos Novaes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Edgar Lucas da Silva Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Evandro A Pontes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Fabio Ribeiro Nunes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Cesar Cristovam Alves",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Jefferson Martins da Costa Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Luciano Tadeu Tonetto Colnago",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcelo Cardoso",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcelo Palacio",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Marcelo Vinicius Creles Rosa",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Pedro Augusto Bueno",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "silvio Luís Perigrini",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Vanderlei Ramos Gimenez",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Luz e Perfeição/ Liberdade/ 27 de Setembro",
+      "time_loja": "NULL",
+      "jogador_nome": "Walber Rodrigues Ferreira da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Claudio Izumi Hirokado Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Fabricio Osti de Melo",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Acuio Pastore",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Guilherme Proença Geraldini",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Joao Matheus Honorato de Barros Chiavoloni",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "João Ricardo Sereguete de Freitas",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Leandro Sabino Vidal",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Leopoldo Marcelo Pardo Strelau",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Lucas de Oliveira Munhoz",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Martim Augusto Fabiam Munchen",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Matheus Pardo Lopes",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Paulo Henrique Uzeloto da Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Rafael Mendonça Daves",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Padre Feijó",
+      "time_loja": "NULL",
+      "jogador_nome": "Roque Teofilo da Cunha Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "ALEXANDRE PIRENEUS CARDOSO",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "Elias Nunes cavalheiro",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "FLAVIO AUGUSTO V. FERNANDES",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "GABRIEL C. RAMALHO NETO",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "GUSTAVO FREITAS LEONEL",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "JEFFERSON PRATES",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "LUIZ PAULO RAMOS GONÇALVES",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "Paulo Soares",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "RAFAEL VIDEIRA TROVÓ",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "RODRIGO DE OLIVEIRA RIBEIRO",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "RODRIGO MORAS",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "VALDEMIRO P. CARVALHO JUNIOR",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "VICTOR GERALDO ESPER JUNIOR",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Paulo Ribeiro/ Conciliação",
+      "time_loja": "NULL",
+      "jogador_nome": "WASHINGTON HENNIS DA SILVA",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Adilson Eduardo Guelfi",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Diego Pessôa Stécca",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Diórginne Pessôa Stécca",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Edson Domingos Dias",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Elton Luiz da Silva Galvan",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Evandro Junior Christovan Ribeiro",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Fabio de Oliveira Sarmento",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Fernando Gomes de Lima",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Flávio Vinicius Santos Quirino",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Gilberto Moreira Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "João Carlos Anzoatequi Cordeiro",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Kleber Ricardo de Almeida Silva",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Lucas Malaman Lara Campos",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Lucas Pessoa Brambilla",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "União Prudentina /João de Fátima do Monte",
+      "time_loja": "NULL",
+      "jogador_nome": "Sandro Ricardo Martines",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "André Luis Balbo Pavezi",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Breno Luís Erbella Casari",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Daniel Coraça Junior",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Danilo Calçado",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Diego Augusto Moreira Franchini",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Guilherme de Oliveira Dutra",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Júlio César Thoaldo Romeiro",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Marco Felipe F. H. de Barros",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Nilton Cesar Girotto",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Pablo Rodrigo França",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Paulo Vinícius Fuzeto",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Raí Montanholi Bueno",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Reginaldo César Trevisi Zanelato",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Renato Frederico Fernandes Picarelli",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Ricardo Marques Torelli",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Rodrigo Marques Torelli",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Ronald Ricci Florentino Santos",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Túlio De Moraes Berghella",
+      "posicao": "NULL",
+      "numero": "NULL"
+    },
+    {
+      "time_nome": "Vicente Neiva",
+      "time_loja": "NULL",
+      "jogador_nome": "Wilson Bezerra Maranhão",
+      "posicao": "NULL",
+      "numero": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "time_nome\ttime_loja\tjogador_nome\tposicao\tnumero\n3 de Maio\tNULL\tAgnaldo Suiyama Ogata\tNULL\tNULL\n3 de Maio\tNULL\tAntônio Masami Nagai\tNULL\tNULL\n3 de Maio\tNULL\tAristóteles José da Silva de Almeida\tNULL\tNULL\n3 de Maio\tNULL\tFernando Santos Camillo\tNULL\tNULL\n3 de Maio\tNULL\tFernando Tomé Tavares da Silva\tNULL\tNULL\n3 de Maio\tNULL\tGustavo Lima Martins de Brito\tNULL\tNULL\n3 de Maio\tNULL\tHellington José Arrais Alves\tNULL\tNULL\n3 de Maio\tNULL\tJoel Tavares\tNULL\tNULL\n3 de Maio\tNULL\tJohny Herts dos Anjos\tNULL\tNULL\n3 de Maio\tNULL\tJosé Roberto da Conceição\tNULL\tNULL\n3 de Maio\tNULL\tLuis Carlos Sales Valentim\tNULL\tNULL\n3 de Maio\tNULL\tLuiz Cesar de Oliveira\tNULL\tNULL\n3 de Maio\tNULL\tRodolfo Antônio Fachiano\tNULL\tNULL\n3 de Maio\tNULL\tWagner Hizioka Fagundes\tNULL\tNULL\n3 de Maio\tNULL\tWellington Handerson Tudisco\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tArivaldo Pazote\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tAugusto César Mariano da Silva\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tCarlos Alberto de Jesus\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tCésar Luiz da Silva\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tEdson Danilo Pereira da Silva\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tFelipe Ceravolo Lemos\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tHugo Bossolani\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tJorge Filipe Del Padre Gomes\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tJosé Mauricio de Oliveira Leme Jr.\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tJosé Roberto Costa de Oliveira\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tKleber Júnior da Silva\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tLeandro Moacir Zaupa\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tLuciano Borges Garofalo\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tWilson Alexandre Salomão\tNULL\tNULL\nAcácia/ Fraternidade Prudentina\tNULL\tYuri Otani\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tAnderson de Castro Dantas\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tDANIEL MERIZIO CASATI\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tJovelino Jose da Silva Junior\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tjulio henrique\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tLucas Vasconcelos Agostinho\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tMARCEL RODRIGO GARCIA SILVA\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\trafael sapia\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tRodrigo Capelasso\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tRodrigo Tommazeli\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tRogério Fernando Ferreira Júnior\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tSergio Previato Junior\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tThiago Rodrigo Marques Caccia\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tVictor Hugo de Freitas Costa\tNULL\tNULL\nAcadêmica/ Fraternidade e Progresso/ Jaques Demolay \tNULL\tVITOR HUGO PAIANO SIMÕES\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tAlessando Bonfim de Oliveira\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tCarlos Alberto Lima Boraschi\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tDivaldo Stefano Caldeira Ceresini\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tDouglas da Rocha Mourão\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tFabio Martinez Hungaro\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tFernando Luiz Carbonelli Junior\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tFlávio Takashi Miazaki\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tLeonardo de Castilho\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tLucas Saab Fioravante\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tMarcos Antonio de Carvalho Lucas\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tMarcos Fábio de Almirante\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tMario Luiz Peretti\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tPedro Roberto Martins\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tRuan Manconi Milani\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tVandik Souza Fernandes\tNULL\tNULL\nCavaleiros da Arte Real/ Noboru Kasae\tNULL\tWagner Marques Fioravante\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tAllison Rodrigues de Assiz\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tAnderson Barbosa da Silva\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tBruno Cesar de Souza\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tCLAUDIO OLIVEIRA DA SILVA\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tDenis Fernando de Oliveira Silva\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tEduardo Gargantini Ferreira\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tErick Andre Soreto\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tFabiano Cruz\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tFernando Eduardo Valejo\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tJansen Franco Branco\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tJorge Pereira Machado Junior\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tJose Robero Dias Matins\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tLEANDRO CANDIDO BASTOS\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tMarcos Paulino Maciel\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tMoacyr Accorsi Junior\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tVitor Affonso Vieira Machado\tNULL\tNULL\nCavaleiros da Liberdade\tNULL\tYoshio Ussami\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tAlexandre Ferretti Najas\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tALEXSANDRO SILVESTRE GONZAGA\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tAntonio Cesar Martin\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tBRUNO RAFAEL PEREIRA DONÁ\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tENEAS MASQUETE CALIXTI\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tJoão Alberto Artoni de Carvalho\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tLeandro Gomes Rodrigues\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tLUCAS PADOVAN DOS SANTOS PAVANI\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tMARCELO ALEXANDRE FAVARETO DA SILVA\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tMICHEL SANTANA DE CARVALHO\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tMICHEL SILVA MARTINS\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tNICKOLAS ALEXANDRE AGOSTINHO\tNULL\tNULL\nEvolução e Dignidade/ Harmonia/ Fioravante\tNULL\tRudnei Rena Rodrigues\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tAdemir Luna\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tADRIANO CAMPOS DE ALMEIDA\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tCARLOS ALBERTO BARROSO DE FREITAS\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tCharles Lourenço Aragão\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tCristiano Oliveira de Carvalho\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tDiego Roberto Rampasso\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tEvandro Carlos Martins da Costa\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tHERNANI AMARAL DE SOUZA\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tJOÃO RICARDO DA SILVA ROTA\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tLUCAS PIRES MACIEL\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tlucas teixeira pereira\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tLuiz Fernando Aragao Rodrigues\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tLuiz Moreto Vintin Junior\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tMATHEUS CHAGAS SOARES\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tRAFAEL AUGUSTO MARTINS NICOLOSI\tNULL\tNULL\nGabriel/ Luz do Pontal/ 7 de Setembro\tNULL\tVICTOR MARIN SILVA\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tArthur Giovane Gardim Lopes\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tGilson da Silva Oliveira\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tHigor Durante\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tIvan Luis Bornia\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tJoão Adolfo Ghinozzi\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tMarco Antonio Batista\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tMatheus aliança\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tMurilo da Costa Delfim\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tNixon Roberto Moia Fanzine\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tPaulo Roberto de Brito\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tRafael Giolo dos Santos\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tRoberto Ronchi Redivo\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tRobson Takahashi\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tRodrigo Bordinassi Galego\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tRodrigo Vizu Correia\tNULL\tNULL\nGonçalves Ledo/ União Machadense/ Luz do Conclave\tNULL\tRogerio Miranda da Silva\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tAndré Miranda\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tBruno Mendes\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tFabiano Soares Dias Fernandes\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tGuilherme Ramos\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tGustavo Nunes\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tLeonardo Souza\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tMarcelo Seixas Martins\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tMarco Salem\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tOsmar Aparecido Magoti\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tRicardo José Machado\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tRogério Aparecido Sales\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tRogério Martins Alves\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tTheodoro Silingovschi\tNULL\tNULL\nJosé Moreira/ São João de Jerusalém \tNULL\tVitor Clemente\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tAlfredo Luis Martins\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tAntonio Carlos Novaes\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tEdgar Lucas da Silva Junior\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tEvandro A Pontes\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tFabio Ribeiro Nunes\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tFernando Cesar Cristovam Alves\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tJefferson Martins da Costa Junior\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tLuciano Tadeu Tonetto Colnago\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tMarcelo Cardoso\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tMarcelo Palacio\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tMarcelo Vinicius Creles Rosa\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tPedro Augusto Bueno\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tsilvio Luís Perigrini\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tVanderlei Ramos Gimenez\tNULL\tNULL\nLuz e Perfeição/ Liberdade/ 27 de Setembro\tNULL\tWalber Rodrigues Ferreira da Silva\tNULL\tNULL\nPadre Feijó\tNULL\tClaudio Izumi Hirokado Junior\tNULL\tNULL\nPadre Feijó\tNULL\tFabricio Osti de Melo\tNULL\tNULL\nPadre Feijó\tNULL\tFernando Acuio Pastore\tNULL\tNULL\nPadre Feijó\tNULL\tGuilherme Proença Geraldini\tNULL\tNULL\nPadre Feijó\tNULL\tJoao Matheus Honorato de Barros Chiavoloni\tNULL\tNULL\nPadre Feijó\tNULL\tJoão Ricardo Sereguete de Freitas\tNULL\tNULL\nPadre Feijó\tNULL\tLeandro Sabino Vidal\tNULL\tNULL\nPadre Feijó\tNULL\tLeopoldo Marcelo Pardo Strelau\tNULL\tNULL\nPadre Feijó\tNULL\tLucas de Oliveira Munhoz\tNULL\tNULL\nPadre Feijó\tNULL\tMartim Augusto Fabiam Munchen\tNULL\tNULL\nPadre Feijó\tNULL\tMatheus Pardo Lopes\tNULL\tNULL\nPadre Feijó\tNULL\tPaulo Henrique Uzeloto da Silva\tNULL\tNULL\nPadre Feijó\tNULL\tRafael Mendonça Daves\tNULL\tNULL\nPadre Feijó\tNULL\tRoque Teofilo da Cunha Junior\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tALEXANDRE PIRENEUS CARDOSO\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tElias Nunes cavalheiro\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tFLAVIO AUGUSTO V. FERNANDES\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tGABRIEL C. RAMALHO NETO\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tGUSTAVO FREITAS LEONEL\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tJEFFERSON PRATES\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tLUIZ PAULO RAMOS GONÇALVES\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tPaulo Soares\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tRAFAEL VIDEIRA TROVÓ\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tRODRIGO DE OLIVEIRA RIBEIRO\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tRODRIGO MORAS\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tVALDEMIRO P. CARVALHO JUNIOR\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tVICTOR GERALDO ESPER JUNIOR\tNULL\tNULL\nPaulo Ribeiro/ Conciliação\tNULL\tWASHINGTON HENNIS DA SILVA\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tAdilson Eduardo Guelfi\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tDiego Pessôa Stécca\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tDiórginne Pessôa Stécca\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tEdson Domingos Dias\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tElton Luiz da Silva Galvan\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tEvandro Junior Christovan Ribeiro\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tFabio de Oliveira Sarmento\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tFernando Gomes de Lima\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tFlávio Vinicius Santos Quirino\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tGilberto Moreira Silva\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tJoão Carlos Anzoatequi Cordeiro\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tKleber Ricardo de Almeida Silva\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tLucas Malaman Lara Campos\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tLucas Pessoa Brambilla\tNULL\tNULL\nUnião Prudentina /João de Fátima do Monte\tNULL\tSandro Ricardo Martines\tNULL\tNULL\nVicente Neiva\tNULL\tAndré Luis Balbo Pavezi\tNULL\tNULL\nVicente Neiva\tNULL\tBreno Luís Erbella Casari\tNULL\tNULL\nVicente Neiva\tNULL\tDaniel Coraça Junior\tNULL\tNULL\nVicente Neiva\tNULL\tDanilo Calçado\tNULL\tNULL\nVicente Neiva\tNULL\tDiego Augusto Moreira Franchini\tNULL\tNULL\nVicente Neiva\tNULL\tGuilherme de Oliveira Dutra\tNULL\tNULL\nVicente Neiva\tNULL\tJúlio César Thoaldo Romeiro\tNULL\tNULL\nVicente Neiva\tNULL\tMarco Felipe F. H. de Barros\tNULL\tNULL\nVicente Neiva\tNULL\tNilton Cesar Girotto\tNULL\tNULL\nVicente Neiva\tNULL\tPablo Rodrigo França\tNULL\tNULL\nVicente Neiva\tNULL\tPaulo Vinícius Fuzeto\tNULL\tNULL\nVicente Neiva\tNULL\tRaí Montanholi Bueno\tNULL\tNULL\nVicente Neiva\tNULL\tReginaldo César Trevisi Zanelato\tNULL\tNULL\nVicente Neiva\tNULL\tRenato Frederico Fernandes Picarelli\tNULL\tNULL\nVicente Neiva\tNULL\tRicardo Marques Torelli\tNULL\tNULL\nVicente Neiva\tNULL\tRodrigo Marques Torelli\tNULL\tNULL\nVicente Neiva\tNULL\tRonald Ricci Florentino Santos\tNULL\tNULL\nVicente Neiva\tNULL\tTúlio De Moraes Berghella\tNULL\tNULL\nVicente Neiva\tNULL\tWilson Bezerra Maranhão\tNULL\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 71
+}

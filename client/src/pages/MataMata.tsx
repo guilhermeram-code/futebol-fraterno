@@ -18,6 +18,7 @@ export default function MataMata() {
   // Buscar configurações de settings (mesma fonte que Admin-Configurações)
   const { data: teamsQualifyPerGroup } = trpc.settings.get.useQuery({ key: "teamsQualifyPerGroup", campaignId });
   const { data: knockoutSizeSetting } = trpc.settings.get.useQuery({ key: "knockoutSize", campaignId });
+  const { data: savedClassificationMessage } = trpc.settings.get.useQuery({ key: "classificationMessage", campaignId });
   
   // Calcular texto dinâmico baseado nas configurações
   const teamsPerGroup = parseInt(teamsQualifyPerGroup || "2");
@@ -35,9 +36,11 @@ export default function MataMata() {
     }
   };
   
-  const qualificationText = teamsPerGroup === 1 
+  const defaultQualificationText = teamsPerGroup === 1 
     ? `O 1º colocado de cada grupo se classifica para as ${getKnockoutPhase()}.`
     : `Os ${teamsPerGroup} primeiros de cada grupo se classificam para as ${getKnockoutPhase()}.`;
+  
+  const qualificationText = savedClassificationMessage?.trim() || defaultQualificationText;
 
   const getTeamName = (teamId: number) => {
     return teams?.find(t => t.id === teamId)?.name || "A definir";

@@ -489,7 +489,7 @@ export async function getMatchesByTeam(campaignId: number, teamId: number) {
       eq(matches.campaignId, campaignId),
       sql`${matches.homeTeamId} = ${teamId} OR ${matches.awayTeamId} = ${teamId}`
     )
-  ).orderBy(desc(matches.matchDate));
+  ).orderBy(asc(matches.matchDate));
 }
 
 export async function getUpcomingMatches(campaignId: number, limit: number = 10) {
@@ -772,6 +772,7 @@ export async function getGroupStandings(campaignId: number, groupId: number) {
       }
     });
     
+    const bonusPoints = team.bonusPoints || 0;
     return {
       team,
       played: teamMatches.length,
@@ -781,7 +782,8 @@ export async function getGroupStandings(campaignId: number, groupId: number) {
       goalsFor,
       goalsAgainst,
       goalDifference: goalsFor - goalsAgainst,
-      points
+      points: points + bonusPoints,
+      bonusPoints
     };
   });
   

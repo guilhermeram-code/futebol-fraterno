@@ -20,6 +20,7 @@ export const campaigns = mysqlTable("campaigns", {
   tournamentType: mysqlEnum("tournamentType", ["groups_only", "knockout_only", "groups_and_knockout"]).default("groups_and_knockout"),
   teamsPerGroupAdvancing: int("teamsPerGroupAdvancing").default(2),
   knockoutSize: int("knockoutSize").default(4),
+  classificationMessage: text("classificationMessage"), // Mensagem editável de classificação
   isActive: boolean("isActive").default(true).notNull(),
   isDemo: boolean("isDemo").default(false).notNull(), // Campeonato demo
   purchaseId: int("purchaseId"), // Referência à compra (null para demo)
@@ -119,6 +120,7 @@ export const teams = mysqlTable("teams", {
   logoUrl: text("logoUrl"),
   groupId: int("groupId"),
   supportMessage: text("supportMessage"), // Mensagem de apoio ao time
+  bonusPoints: int("bonusPoints").default(0), // Pontos avulsos pré-campeonato
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
