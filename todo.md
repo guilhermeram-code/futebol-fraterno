@@ -2103,3 +2103,6 @@ const [username, setUsername] = useState("");
 - [x] Adicionar magic link (botão acesso direto) no email Day 2
 - [x] Adicionar magic link (botão acesso direto) no email Day 5
 - [ ] Email Day 7 e Day 14: sem magic link (trial já expirado, foco em venda)
+
+## WhatsApp no Email Day 7 (15/03/2026)
+- [x] Adicionar botão de WhatsApp com mensagem pré-preenchida no email Day 7 para iniciar venda após expiração do trial

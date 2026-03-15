@@ -809,6 +809,9 @@ export async function sendTrialDay5Email(data: TrialNurturingEmailData): Promise
  */
 export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise<boolean> {
   try {
+    // Montar URL do WhatsApp com mensagem pré-preenchida
+    const whatsappMsg = encodeURIComponent(`Olá! Fiz o trial do campeonato "${data.campaignName}" e quero continuar. Pode me ajudar?`);
+    const whatsappUrl = `https://wa.me/551151981694?text=${whatsappMsg}`;
 
     const transporter = nodemailer.createTransport({
       host: 'smtp.gmail.com',
@@ -869,11 +872,24 @@ export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise
                 </tr>
               </table>
 
+              <!-- Botão principal: WhatsApp com mensagem pré-preenchida -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 8px;">
+                <tr>
+                  <td align="center">
+                    <a href="${whatsappUrl}" style="display: inline-block; background-color: #25d366; color: #ffffff; text-decoration: none; padding: 18px 40px; border-radius: 8px; font-size: 17px; font-weight: bold; box-shadow: 0 4px 12px rgba(37,211,102,0.4);">
+                      💬 Quero Continuar com Meu Campeonato
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 0 0 24px 0;">Clique para abrir o WhatsApp — a mensagem já vem preenchida</p>
+
+              <!-- Botão secundário: site -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
                 <tr>
                   <td align="center">
-                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #ef4444; color: #ffffff; text-decoration: none; padding: 18px 50px; border-radius: 6px; font-size: 18px; font-weight: bold; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
-                      Criar Campeonato Oficial
+                    <a href="https://peladapro.com.br" style="display: inline-block; background-color: #f3f4f6; color: #374151; text-decoration: none; padding: 12px 32px; border-radius: 6px; font-size: 14px; font-weight: bold; border: 1px solid #d1d5db;">
+                      Ver Planos no Site
                     </a>
                   </td>
                 </tr>
@@ -893,10 +909,6 @@ export async function sendTrialDay7Email(data: TrialNurturingEmailData): Promise
                   </td>
                 </tr>
               </table>
-
-              <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 0;">
-                <strong>Precisa de ajuda?</strong> Entre em contato pelo WhatsApp <strong>+55 11 5198-1694</strong> ou responda este email.
-              </p>
             </td>
           </tr>
 
