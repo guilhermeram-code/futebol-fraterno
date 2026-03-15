@@ -1,0 +1,18 @@
+{
+  "query": "SELECT id, name, email, campaignSlug, status, createdAt FROM trial_signups WHERE email = 'contato@meucontomagico.com.br';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 4BVDFYYBjXPHJtC.709074b71e30 --database EvJULGQoHRNqTu98ru5T2m --execute SELECT id, name, email, campaignSlug, status, createdAt FROM trial_signups WHERE email = 'contato@meucontomagico.com.br';",
+  "rows": [
+    {
+      "id": "90001",
+      "name": "contato",
+      "email": "contato@meucontomagico.com.br",
+      "campaignSlug": "trial-2026-vnrmzr",
+      "status": "active",
+      "createdAt": "2026-02-08 21:13:42"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\tcampaignSlug\tstatus\tcreatedAt\n90001\tcontato\tcontato@meucontomagico.com.br\ttrial-2026-vnrmzr\tactive\t2026-02-08 21:13:42\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}

@@ -2092,3 +2092,9 @@ const [username, setUsername] = useState("");
 
 ## Correção - 15/03/2026
 - [x] Exibir bonusPoints somados na página do time (TimeDetail.tsx) - pontos avulsos não aparecem no card de pontos do time
+
+## Magic Link no Email de Boas-Vindas (15/03/2026)
+- [x] Gerar JWT token no momento do trial signup e incluir no email como magic link
+- [x] Atualizar template do email de boas-vindas com botão de acesso direto + senha para outros dispositivos
+- [x] Atualizar frontend (Admin.tsx) para processar ?token= na URL e autenticar automaticamente
+- [x] Criar trial de teste para contato@meucontomagico.com.br para validar fluxo completo

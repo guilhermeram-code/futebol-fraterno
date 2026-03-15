@@ -52,6 +52,20 @@ export default function Admin() {
   // Extrair slug da URL atual (formato: /{slug}/admin)
   const slug = useSlug();
 
+  // Magic link: processar ?token= na URL e salvar no localStorage
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlToken = params.get('token');
+    if (urlToken) {
+      localStorage.setItem('admin_token', urlToken);
+      // Limpar o token da URL sem recarregar a página
+      const cleanUrl = window.location.pathname;
+      window.history.replaceState({}, '', cleanUrl);
+      // Recarregar para que o useAdminAuth leia o token recém-salvo
+      window.location.reload();
+    }
+  }, []);
+
   // Verificar se precisa trocar senha (hook DEVE estar antes de qualquer return)
   const meQuery = trpc.adminUsers.me.useQuery(undefined, {
     enabled: isAuthenticated,

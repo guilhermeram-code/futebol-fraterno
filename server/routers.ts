@@ -1630,7 +1630,7 @@ export const appRouter = router({
         });
 
         // Criar admin user para o campeonato
-        await db.createAdminUser(campaign.id, {
+        const newAdminUser = await db.createAdminUser(campaign.id, {
           username: input.email,
           password: password,
           name,
@@ -1653,6 +1653,8 @@ export const appRouter = router({
             campaignSlug,
             password,
             expiresAt,
+            campaignId: campaign.id,
+            adminUserId: newAdminUser?.id,
           });
         } catch (emailError) {
           console.error('[Trial] Erro ao enviar email de boas-vindas:', emailError);

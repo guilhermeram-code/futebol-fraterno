@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import jwt from 'jsonwebtoken';
 
 interface PasswordResetEmailParams {
   to: string;
@@ -280,6 +281,8 @@ interface TrialWelcomeEmailData {
   campaignSlug: string;
   password: string;
   expiresAt: Date;
+  campaignId?: number;
+  adminUserId?: number;
 }
 
 /**
@@ -290,6 +293,21 @@ export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promis
     const campaignUrl = `https://peladapro.com.br/${data.campaignSlug}`;
     const adminUrl = `https://peladapro.com.br/${data.campaignSlug}/admin`;
     const expirationDate = new Date(data.expiresAt).toLocaleDateString('pt-BR');
+
+    // Gerar magic link JWT (válido por 30 dias)
+    const magicToken = jwt.sign(
+      {
+        adminUserId: data.adminUserId ?? -99,
+        username: data.email,
+        name: data.name,
+        isOwner: true,
+        campaignId: data.campaignId ?? 0,
+        needsPasswordChange: false,
+      },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '30d' }
+    );
+    const magicLinkUrl = `${adminUrl}?token=${magicToken}`;
 
     // Configurar transporte Gmail SMTP
     const transporter = nodemailer.createTransport({
@@ -310,111 +328,138 @@ export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promis
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bem-vindo ao PeladaPro - Trial Gratuito</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 40px 20px;">
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f0f4f8;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f0f4f8; padding: 40px 20px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-          
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); overflow: hidden;">
+
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: bold;">🎉 Bem-vindo ao PeladaPro!</h1>
-              <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 16px;">Seu campeonato está pronto para começar</p>
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center;">
+              <div style="font-size: 48px; margin-bottom: 12px;">⚽</div>
+              <h1 style="color: #ffffff; margin: 0; font-size: 26px; font-weight: bold; letter-spacing: -0.5px;">Bem-vindo ao PeladaPro!</h1>
+              <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 15px;">Seu campeonato <strong>"${data.campaignName}"</strong> está pronto</p>
             </td>
           </tr>
 
-          <!-- Conteúdo -->
+          <!-- Botão Magic Link -->
           <tr>
-            <td style="padding: 40px 30px;">
-              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Olá! 👋
-              </p>
-              
-              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 20px 0;">
-                Seu campeonato <strong>"${data.campaignName}"</strong> foi criado automaticamente com sucesso! 🎊
+            <td style="padding: 36px 30px 20px 30px; text-align: center;">
+              <p style="color: #374151; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0;">
+                Olá, <strong>${data.name}</strong>! 👋 Clique no botão abaixo para entrar direto no seu painel — <strong>sem precisar digitar senha</strong>:
               </p>
 
-              <p style="color: #333333; font-size: 16px; line-height: 1.6; margin: 0 0 30px 0;">
-                Você tem <strong>7 dias de acesso gratuito</strong> a todas as funcionalidades da plataforma. Aproveite para testar tudo e personalizar seu campeonato dentro do painel administrativo!
-              </p>
+              <a href="${magicLinkUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 18px 48px; border-radius: 8px; font-size: 17px; font-weight: bold; letter-spacing: 0.3px; box-shadow: 0 4px 12px rgba(16,185,129,0.4);">
+                ▶ ACESSAR MEU PAINEL AGORA
+              </a>
 
-              <!-- Box de Credenciais -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f0fdf4; border: 2px solid #10b981; border-radius: 8px; margin-bottom: 30px;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 12px 0 0 0;">
+                Link válido por 30 dias · Funciona em qualquer dispositivo
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divisor -->
+          <tr>
+            <td style="padding: 0 30px;">
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 0;">
+            </td>
+          </tr>
+
+          <!-- Credenciais para outros dispositivos -->
+          <tr>
+            <td style="padding: 24px 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
                 <tr>
-                  <td style="padding: 25px;">
-                    <h2 style="color: #059669; margin: 0 0 15px 0; font-size: 18px;">🔑 Suas Credenciais de Acesso</h2>
-                    
-                    <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;">
-                      <strong>Site do Campeonato:</strong><br>
-                      <a href="${campaignUrl}" style="color: #10b981; text-decoration: none; font-size: 16px;">${campaignUrl}</a>
-                    </p>
+                  <td style="padding: 20px 24px;">
+                    <h3 style="color: #374151; margin: 0 0 14px 0; font-size: 15px;">🔑 Acesso por outros dispositivos</h3>
+                    <p style="color: #6b7280; font-size: 13px; margin: 0 0 12px 0;">Se quiser entrar de outro celular ou computador, use:</p>
 
-                    <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;">
-                      <strong>Painel Administrativo:</strong><br>
-                      <a href="${adminUrl}" style="color: #10b981; text-decoration: none; font-size: 16px;">${adminUrl}</a>
-                    </p>
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding: 6px 0; border-bottom: 1px solid #e5e7eb;">
+                          <span style="color: #6b7280; font-size: 13px;">Site do painel:</span><br>
+                          <a href="${adminUrl}" style="color: #10b981; font-size: 14px; text-decoration: none; font-weight: 500;">${adminUrl}</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0; border-bottom: 1px solid #e5e7eb;">
+                          <span style="color: #6b7280; font-size: 13px;">Usuário:</span><br>
+                          <span style="color: #1f2937; font-size: 14px; font-weight: 500;">${data.email}</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 6px 0;">
+                          <span style="color: #6b7280; font-size: 13px;">Senha:</span><br>
+                          <span style="background-color: #ffffff; border: 1px solid #d1d5db; padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 15px; color: #059669; font-weight: bold; display: inline-block; margin-top: 4px;">${data.password}</span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
 
-                    <p style="color: #333333; margin: 0 0 10px 0; font-size: 14px;">
-                      <strong>Usuário:</strong> ${data.email}
-                    </p>
+          <!-- Divisor -->
+          <tr>
+            <td style="padding: 0 30px;">
+              <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 0;">
+            </td>
+          </tr>
 
-                    <p style="color: #333333; margin: 0; font-size: 14px;">
-                      <strong>Senha:</strong> <span style="background-color: #ffffff; padding: 5px 10px; border-radius: 4px; font-family: monospace; font-size: 16px; color: #059669; font-weight: bold;">${data.password}</span>
+          <!-- Próximos Passos -->
+          <tr>
+            <td style="padding: 24px 30px;">
+              <h3 style="color: #374151; margin: 0 0 16px 0; font-size: 15px;">📋 Por onde começar (3 passos):</h3>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                    <span style="background: #10b981; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-block; text-align: center; line-height: 22px; font-size: 12px; font-weight: bold; margin-right: 10px;">1</span>
+                    <span style="color: #374151; font-size: 14px;">Cadastre os times na aba <strong>"Times"</strong></span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                    <span style="background: #10b981; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-block; text-align: center; line-height: 22px; font-size: 12px; font-weight: bold; margin-right: 10px;">2</span>
+                    <span style="color: #374151; font-size: 14px;">Adicione os jogadores de cada time</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0;">
+                    <span style="background: #10b981; color: white; border-radius: 50%; width: 22px; height: 22px; display: inline-block; text-align: center; line-height: 22px; font-size: 12px; font-weight: bold; margin-right: 10px;">3</span>
+                    <span style="color: #374151; font-size: 14px;">Crie os jogos e registre os resultados</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Info Trial -->
+          <tr>
+            <td style="padding: 0 30px 24px 30px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #ecfdf5; border-left: 4px solid #10b981; border-radius: 0 6px 6px 0;">
+                <tr>
+                  <td style="padding: 14px 18px;">
+                    <p style="color: #065f46; margin: 0; font-size: 13px; line-height: 1.7;">
+                      ⏰ <strong>Trial expira em:</strong> ${expirationDate} &nbsp;·&nbsp; 💳 <strong>Sem cobranças automáticas</strong><br>
+                      💚 Planos a partir de <strong>R$ 31,21/mês</strong> se quiser continuar
                     </p>
                   </td>
                 </tr>
               </table>
-
-              <!-- Botão CTA -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
-                <tr>
-                  <td align="center">
-                    <a href="${adminUrl}" style="display: inline-block; background-color: #10b981; color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-                      Acessar Painel Admin
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Informações do Trial -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #d1fae5; border-left: 4px solid #10b981; padding: 20px; margin-bottom: 30px;">
-                <tr>
-                  <td>
-                    <p style="color: #065f46; margin: 0; font-size: 14px; line-height: 1.6;">
-                      ⏰ <strong>Seu trial expira em:</strong> ${expirationDate}<br>
-                      💳 <strong>Sem cobranças automáticas</strong> - você decide se quer continuar<br>
-                      💚 <strong>Preços transparentes:</strong> Planos a partir de R$ 31,21/mês
-                    </p>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Próximos Passos -->
-              <h3 style="color: #059669; margin: 0 0 15px 0; font-size: 18px;">📋 Próximos Passos:</h3>
-              <ol style="color: #333333; font-size: 14px; line-height: 1.8; margin: 0 0 30px 0; padding-left: 20px;">
-                <li>Acesse o painel administrativo com suas credenciais</li>
-                <li>Personalize o nome, logo e cores do seu campeonato</li>
-                <li>Cadastre os times e jogadores</li>
-                <li>Comece a registrar os jogos e resultados</li>
-                <li>Compartilhe o link do campeonato com os participantes</li>
-              </ol>
-
-              <!-- Suporte -->
-              <p style="color: #666666; font-size: 14px; line-height: 1.6; margin: 0;">
-                Precisa de ajuda? Responda este email ou entre em contato pelo WhatsApp: <strong>+55 11 5198-1694</strong>
-              </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 8px 8px;">
-              <p style="color: #6b7280; font-size: 12px; margin: 0 0 10px 0;">
-                © 2026 PeladaPro - Organize seu campeonato como um profissional
+            <td style="background-color: #f9fafb; padding: 24px 30px; text-align: center; border-top: 1px solid #e5e7eb;">
+              <p style="color: #9ca3af; font-size: 12px; margin: 0 0 6px 0;">
+                Dúvidas? Responda este email ou WhatsApp: <strong style="color: #6b7280;">+55 11 5198-1694</strong>
               </p>
-              <p style="color: #6b7280; font-size: 12px; margin: 0;">
-                <a href="https://peladapro.com.br" style="color: #10b981; text-decoration: none;">peladapro.com.br</a>
+              <p style="color: #9ca3af; font-size: 12px; margin: 0;">
+                © 2026 <a href="https://peladapro.com.br" style="color: #10b981; text-decoration: none;">PeladaPro</a> · Organize seu campeonato como um profissional
               </p>
             </td>
           </tr>
@@ -430,7 +475,7 @@ export async function sendTrialWelcomeEmail(data: TrialWelcomeEmailData): Promis
     await transporter.sendMail({
       from: '"PeladaPro" <contato@meucontomagico.com.br>',
       to: data.email,
-      subject: `🎉 Bem-vindo ao PeladaPro - Seu campeonato "${data.campaignName}" está pronto!`,
+      subject: `⚽ Seu campeonato "${data.campaignName}" está pronto — acesse agora em 1 clique`,
       html: htmlContent,
     });
 
