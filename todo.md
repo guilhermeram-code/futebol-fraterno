@@ -2111,3 +2111,8 @@ const [username, setUsername] = useState("");
 - [x] Adicionar botão de editar legenda em cada foto já enviada na galeria do painel admin
 - [x] Criar endpoint tRPC updatePhotoCaption no servidor
 - [x] Ao clicar na foto ou no ícone de editar, abrir campo inline para editar/salvar a legenda
+
+## Página de Jogos - Ordem Cronológica por Padrão (15/03/2026)
+- [x] Alterar exibição padrão da página Jogos para ordem cronológica (sem separação por grupo)
+- [x] Manter badge do grupo dentro de cada card de jogo
+- [x] Separar por grupo apenas quando filtro de grupo específico estiver ativo
