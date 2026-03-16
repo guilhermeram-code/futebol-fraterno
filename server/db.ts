@@ -84,6 +84,12 @@ export async function updateCampaign(id: number, data: Partial<InsertCampaign>):
   await db.update(campaigns).set(data).where(eq(campaigns.id, id));
 }
 
+export async function updateCampaignAccessPassword(id: number, password: string | null): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(campaigns).set({ accessPassword: password }).where(eq(campaigns.id, id));
+}
+
 // ==================== PURCHASES ====================
 export async function createPurchase(purchase: InsertPurchase): Promise<{ id: number }> {
   const db = await getDb();

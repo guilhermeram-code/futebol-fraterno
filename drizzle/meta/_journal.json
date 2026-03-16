@@ -148,6 +148,13 @@
       "when": 1773587318796,
       "tag": "0020_warm_punisher",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1773692120743,
+      "tag": "0021_natural_lethal_legion",
+      "breakpoints": true
     }
   ]
 }

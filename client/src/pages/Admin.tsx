@@ -38,7 +38,9 @@ import {
   Heart,
   KeyRound,
   Pencil,
-  X
+  X,
+  Eye,
+  EyeOff
 } from "lucide-react";
 
 import { ResultsRegistration } from "@/components/ResultsRegistration";
@@ -2909,6 +2911,22 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
     onError: (error) => toast.error(error.message)
   });
 
+  // Senha de acesso ao site público
+  const { data: campaignForPassword, refetch: refetchCampaignForPassword } = trpc.campaigns.getById.useQuery({ campaignId });
+  const [accessPasswordEnabled, setAccessPasswordEnabled] = useState(false);
+  const [accessPassword, setAccessPassword] = useState("");
+  const [accessPasswordConfirm, setAccessPasswordConfirm] = useState("");
+  const [showAccessPassword, setShowAccessPassword] = useState(false);
+  const setAccessPasswordMutation = trpc.campaigns.setAccessPassword.useMutation({
+    onSuccess: () => {
+      toast.success(accessPasswordEnabled ? "Senha de acesso salva!" : "Senha de acesso removida!");
+      refetchCampaignForPassword();
+    },
+    onError: (error) => toast.error(error.message)
+  });
+  // Sincronizar estado quando dados carregam
+  const [passwordInitialized, setPasswordInitialized] = useState(false);
+
   const [name, setName] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [organizer, setOrganizer] = useState("");
@@ -2920,6 +2938,22 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
   const [classificationMessage, setClassificationMessage] = useState("");
 
   // Atualizar estados quando os dados carregam
+  // Inicializar estado de senha quando dados do campeonato carregam
+  useEffect(() => {
+    if (campaignForPassword && !passwordInitialized) {
+      setPasswordInitialized(true);
+      if (campaignForPassword.accessPassword) {
+        setAccessPasswordEnabled(true);
+        setAccessPassword(campaignForPassword.accessPassword);
+        setAccessPasswordConfirm(campaignForPassword.accessPassword);
+      } else {
+        setAccessPasswordEnabled(false);
+        setAccessPassword("");
+        setAccessPasswordConfirm("");
+      }
+    }
+  }, [campaignForPassword, passwordInitialized]);
+
   useEffect(() => {
     if (tournamentName) setName(tournamentName);
   }, [tournamentName]);
@@ -3300,6 +3334,104 @@ function SettingsTab({ campaignId }: { campaignId: number }) {
               )}
             </ul>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Seção Senha de Acesso */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <span>🔒</span> Senha de Acesso ao Site
+          </CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Proteja o site do campeonato com uma senha. Visitantes precisarão digitar a senha para acessar qualquer página.
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="accessPasswordEnabled"
+              checked={accessPasswordEnabled}
+              onChange={(e) => {
+                setAccessPasswordEnabled(e.target.checked);
+                if (!e.target.checked) {
+                  setAccessPassword("");
+                  setAccessPasswordConfirm("");
+                }
+              }}
+              className="h-4 w-4 rounded border-gray-300 accent-amber-600 cursor-pointer"
+            />
+            <label htmlFor="accessPasswordEnabled" className="text-sm font-medium cursor-pointer">
+              Ativar senha de acesso ao site
+            </label>
+          </div>
+
+          {accessPasswordEnabled && (
+            <div className="space-y-3 pl-7">
+              <div>
+                <Label>Nova Senha</Label>
+                <div className="relative">
+                  <Input
+                    type={showAccessPassword ? "text" : "password"}
+                    value={accessPassword}
+                    onChange={(e) => setAccessPassword(e.target.value)}
+                    placeholder="Digite a senha de acesso"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAccessPassword(!showAccessPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  >
+                    {showAccessPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <Label>Confirmar Senha</Label>
+                <Input
+                  type={showAccessPassword ? "text" : "password"}
+                  value={accessPasswordConfirm}
+                  onChange={(e) => setAccessPasswordConfirm(e.target.value)}
+                  placeholder="Repita a senha"
+                />
+              </div>
+              {accessPassword && accessPasswordConfirm && accessPassword !== accessPasswordConfirm && (
+                <p className="text-sm text-red-500">As senhas não coincidem.</p>
+              )}
+              {campaignForPassword?.accessPassword && (
+                <p className="text-sm text-muted-foreground">
+                  Senha atual: <span className="font-mono font-medium">{campaignForPassword.accessPassword}</span>
+                </p>
+              )}
+              <Button
+                onClick={() => {
+                  if (!accessPassword) return toast.error("Digite uma senha.");
+                  if (accessPassword !== accessPasswordConfirm) return toast.error("As senhas não coincidem.");
+                  setAccessPasswordMutation.mutate({ campaignId, password: accessPassword });
+                }}
+                disabled={setAccessPasswordMutation.isPending || !accessPassword || accessPassword !== accessPasswordConfirm}
+                className="w-full"
+              >
+                {setAccessPasswordMutation.isPending ? "Salvando..." : "Salvar Senha"}
+              </Button>
+            </div>
+          )}
+
+          {!accessPasswordEnabled && campaignForPassword?.accessPassword && (
+            <div className="pl-7">
+              <p className="text-sm text-amber-600 mb-2">⚠️ Desmarque e salve para remover a senha atual.</p>
+              <Button
+                variant="outline"
+                onClick={() => setAccessPasswordMutation.mutate({ campaignId, password: null })}
+                disabled={setAccessPasswordMutation.isPending}
+                className="text-red-500 border-red-300 hover:bg-red-50"
+              >
+                {setAccessPasswordMutation.isPending ? "Removendo..." : "Remover Senha de Acesso"}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 

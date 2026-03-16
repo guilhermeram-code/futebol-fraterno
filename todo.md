@@ -2121,3 +2121,13 @@ const [username, setUsername] = useState("");
 - [x] Adicionar endpoint tRPC matches.update no servidor (já existia)
 - [x] Adicionar botão de editar (lápis) em cada jogo na aba Jogos do painel admin
 - [x] Modal de edição com campos: data/hora, local, time mandante, time visitante, grupo, rodada
+
+## Senha de Acesso ao Site Público (16/03/2026)
+- [x] Adicionar campo accessPassword (nullable) na tabela campaigns no schema
+- [x] Rodar migration pnpm db:push
+- [x] Endpoint campaigns.setAccessPassword (salvar/remover senha)
+- [x] Endpoint campaigns.verifyAccessPassword (verificar senha pública)
+- [x] Endpoint campaigns.getById (retornar dados do campeonato incluindo senha para o admin)
+- [x] Seção de senha nas Configurações do painel admin (checkbox + 2 campos de senha + botão salvar)
+- [x] Tela de senha no site público (sessionStorage para manter durante a sessão)
+- [x] Painel admin não é afetado pela senha do site público

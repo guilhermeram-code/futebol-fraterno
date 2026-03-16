@@ -355,6 +355,45 @@ export const appRouter = router({
         const available = await db.isSlugAvailable(input.slug);
         return { available };
       }),
+
+    // Buscar campeonato por ID (para o painel admin)
+    getById: campaignAdminProcedure
+      .input(z.object({ campaignId: z.number().optional() }))
+      .query(async ({ input }) => {
+        const campaignId = getCampaignId(input);
+        return db.getCampaignById(campaignId);
+      }),
+
+    // Verifica se o campeonato tem senha de acesso (sem expor a senha)
+    accessInfo: publicProcedure
+      .input(z.object({ slug: z.string() }))
+      .query(async ({ input }) => {
+        const campaign = await db.getCampaignBySlug(input.slug);
+        if (!campaign) return { hasPassword: false };
+        return { hasPassword: !!campaign.accessPassword };
+      }),
+
+    // Verifica se a senha está correta
+    verifyAccessPassword: publicProcedure
+      .input(z.object({ slug: z.string(), password: z.string() }))
+      .mutation(async ({ input }) => {
+        const campaign = await db.getCampaignBySlug(input.slug);
+        if (!campaign) throw new TRPCError({ code: 'NOT_FOUND', message: 'Campeonato não encontrado' });
+        if (!campaign.accessPassword) return { valid: true }; // sem senha, acesso livre
+        return { valid: campaign.accessPassword === input.password };
+      }),
+
+    // Salvar ou remover senha de acesso (apenas admin do campeonato)
+    setAccessPassword: campaignAdminProcedure
+      .input(z.object({
+        campaignId: z.number().optional(),
+        password: z.string().max(100).nullable(), // null = remover senha
+      }))
+      .mutation(async ({ input }) => {
+        const campaignId = getCampaignId(input);
+        await db.updateCampaignAccessPassword(campaignId, input.password ?? null);
+        return { success: true };
+      }),
   }),
 
   // ==================== PURCHASES ====================

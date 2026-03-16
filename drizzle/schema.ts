@@ -24,6 +24,7 @@ export const campaigns = mysqlTable("campaigns", {
   isActive: boolean("isActive").default(true).notNull(),
   isDemo: boolean("isDemo").default(false).notNull(), // Campeonato demo
   purchaseId: int("purchaseId"), // Referência à compra (null para demo)
+  accessPassword: varchar("accessPassword", { length: 100 }), // Senha de acesso ao site público (null = sem senha)
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

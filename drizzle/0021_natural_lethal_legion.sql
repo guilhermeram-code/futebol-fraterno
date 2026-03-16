@@ -1,0 +1,1 @@
+ALTER TABLE `campaigns` ADD `accessPassword` varchar(100);
