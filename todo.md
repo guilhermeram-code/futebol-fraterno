@@ -2116,3 +2116,8 @@ const [username, setUsername] = useState("");
 - [x] Alterar exibição padrão da página Jogos para ordem cronológica (sem separação por grupo)
 - [x] Manter badge do grupo dentro de cada card de jogo
 - [x] Separar por grupo apenas quando filtro de grupo específico estiver ativo
+
+## Edição de Jogo no Painel Admin (15/03/2026)
+- [x] Adicionar endpoint tRPC matches.update no servidor (já existia)
+- [x] Adicionar botão de editar (lápis) em cada jogo na aba Jogos do painel admin
+- [x] Modal de edição com campos: data/hora, local, time mandante, time visitante, grupo, rodada

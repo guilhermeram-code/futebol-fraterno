@@ -1531,8 +1531,59 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
     },
     onError: (error) => toast.error(error.message)
   });
+  const updateMatch = trpc.matches.update.useMutation({
+    onSuccess: () => {
+      utils.matches.list.invalidate();
+      toast.success("Jogo atualizado!");
+      setEditOpen(false);
+    },
+    onError: (error) => toast.error(error.message)
+  });
 
   const [open, setOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editingMatch, setEditingMatch] = useState<NonNullable<typeof matches>[0] | null>(null);
+  const [editHomeTeamId, setEditHomeTeamId] = useState("");
+  const [editAwayTeamId, setEditAwayTeamId] = useState("");
+  const [editPhase, setEditPhase] = useState("groups");
+  const [editGroupId, setEditGroupId] = useState("");
+  const [editRound, setEditRound] = useState("");
+  const [editMatchDate, setEditMatchDate] = useState("");
+  const [editLocation, setEditLocation] = useState("");
+
+  const openEditModal = (match: NonNullable<typeof matches>[0]) => {
+    setEditingMatch(match);
+    setEditHomeTeamId(match.homeTeamId.toString());
+    setEditAwayTeamId(match.awayTeamId.toString());
+    setEditPhase(match.phase);
+    setEditGroupId(match.groupId?.toString() || "");
+    setEditRound(match.round?.toString() || "");
+    // Converter UTC para local datetime-local
+    if (match.matchDate) {
+      const d = new Date(match.matchDate);
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      setEditMatchDate(`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
+    } else {
+      setEditMatchDate("");
+    }
+    setEditLocation(match.location || "");
+    setEditOpen(true);
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingMatch) return;
+    updateMatch.mutate({
+      id: editingMatch.id,
+      homeTeamId: parseInt(editHomeTeamId),
+      awayTeamId: parseInt(editAwayTeamId),
+      phase: editPhase as any,
+      groupId: editGroupId ? parseInt(editGroupId) : null,
+      round: editRound ? parseInt(editRound) : undefined,
+      matchDate: editMatchDate || undefined,
+      location: editLocation || undefined,
+    });
+  };
   const [homeTeamId, setHomeTeamId] = useState("");
   const [awayTeamId, setAwayTeamId] = useState("");
   const [phase, setPhase] = useState<string>("groups");
@@ -1742,13 +1793,24 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
                     </p>
                   )}
                 </div>
-                <ConfirmDeleteDialog
-                  title="Excluir Jogo"
-                  description={`Você está prestes a excluir o jogo "${getTeamNameWithLodge(match.homeTeamId)} vs ${getTeamNameWithLodge(match.awayTeamId)}". Resultados, gols e cartões registrados serão removidos.`}
-                  requireTyping={false}
-                  onConfirm={() => deleteMatch.mutate({ id: match.id })}
-                  isDeleting={deleteMatch.isPending}
-                />
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                    title="Editar jogo"
+                    onClick={() => openEditModal(match)}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <ConfirmDeleteDialog
+                    title="Excluir Jogo"
+                    description={`Você está prestes a excluir o jogo "${getTeamNameWithLodge(match.homeTeamId)} vs ${getTeamNameWithLodge(match.awayTeamId)}". Resultados, gols e cartões registrados serão removidos.`}
+                    requireTyping={false}
+                    onConfirm={() => deleteMatch.mutate({ id: match.id })}
+                    isDeleting={deleteMatch.isPending}
+                  />
+                </div>
               </div>
             ))}
           </div>
@@ -1756,6 +1818,87 @@ function MatchesTab({ campaignId }: { campaignId: number }) {
           <p className="text-center text-muted-foreground py-8">Nenhum jogo cadastrado</p>
         )}
       </CardContent>
+
+      {/* Modal de Edição de Jogo */}
+      <Dialog open={editOpen} onOpenChange={setEditOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar Jogo</DialogTitle>
+          </DialogHeader>
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Time Casa *</Label>
+                <Select value={editHomeTeamId} onValueChange={setEditHomeTeamId}>
+                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectContent>
+                    {teams?.map(t => (
+                      <SelectItem key={t.id} value={t.id.toString()}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Time Visitante *</Label>
+                <Select value={editAwayTeamId} onValueChange={setEditAwayTeamId}>
+                  <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                  <SelectContent>
+                    {teams?.map(t => (
+                      <SelectItem key={t.id} value={t.id.toString()}>{t.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Fase *</Label>
+                <Select value={editPhase} onValueChange={setEditPhase}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="groups">Fase de Grupos</SelectItem>
+                    <SelectItem value="round16">Oitavas de Final</SelectItem>
+                    <SelectItem value="quarters">Quartas de Final</SelectItem>
+                    <SelectItem value="semis">Semifinal</SelectItem>
+                    <SelectItem value="final">Final</SelectItem>
+                    <SelectItem value="third_place">Disputa 3º e 4º Lugar</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {editPhase === "groups" && (
+                <div>
+                  <Label>Grupo</Label>
+                  <Select value={editGroupId} onValueChange={setEditGroupId}>
+                    <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+                    <SelectContent>
+                      {groups?.map(g => (
+                        <SelectItem key={g.id} value={g.id.toString()}>{g.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label>Rodada</Label>
+                <Input type="number" value={editRound} onChange={(e) => setEditRound(e.target.value)} placeholder="1, 2, 3..." />
+              </div>
+              <div>
+                <Label>Data/Hora</Label>
+                <Input type="datetime-local" value={editMatchDate} onChange={(e) => setEditMatchDate(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <Label>Local</Label>
+              <Input value={editLocation} onChange={(e) => setEditLocation(e.target.value)} placeholder="Nome do campo/quadra" />
+            </div>
+            <Button type="submit" className="w-full" disabled={updateMatch.isPending || !editHomeTeamId || !editAwayTeamId}>
+              {updateMatch.isPending ? "Salvando..." : "Salvar Alterações"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }
