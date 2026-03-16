@@ -956,6 +956,15 @@ export const appRouter = router({
         await db.deletePhoto(input.id);
         return { success: true };
       }),
+
+    updateCaption: campaignAdminProcedure
+      .input(z.object({
+        id: z.number(),
+        caption: z.string().nullable(),
+      }))
+      .mutation(async ({ input }) => {
+        return db.updatePhotoCaption(input.id, input.caption);
+      }),
   }),
 
   // ==================== UPLOAD GENÉRICO ====================

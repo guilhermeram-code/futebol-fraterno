@@ -36,7 +36,9 @@ import {
   LogOut,
   Star,
   Heart,
-  KeyRound
+  KeyRound,
+  Pencil,
+  X
 } from "lucide-react";
 
 import { ResultsRegistration } from "@/components/ResultsRegistration";
@@ -2118,9 +2120,18 @@ function PhotosTab({ campaignId }: { campaignId: number }) {
     },
     onError: (error) => toast.error(error.message)
   });
+  const updateCaption = trpc.photos.updateCaption.useMutation({
+    onSuccess: () => {
+      utils.photos.list.invalidate();
+      toast.success("Legenda atualizada!");
+    },
+    onError: (error) => toast.error(error.message)
+  });
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [caption, setCaption] = useState("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingCaption, setEditingCaption] = useState("");
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -2182,7 +2193,20 @@ function PhotosTab({ campaignId }: { campaignId: number }) {
                   alt={photo.caption || "Foto"}
                   className="w-full aspect-square object-cover rounded-lg"
                 />
-                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                {/* Botões de ação no hover */}
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="h-7 w-7 bg-white/90 hover:bg-white"
+                    title="Editar legenda"
+                    onClick={() => {
+                      setEditingId(photo.id);
+                      setEditingCaption(photo.caption || "");
+                    }}
+                  >
+                    <Pencil className="h-3.5 w-3.5" />
+                  </Button>
                   <ConfirmDeleteDialog
                     title="Excluir Foto"
                     description="Você está prestes a excluir esta foto da galeria. Esta ação não pode ser desfeita."
@@ -2192,8 +2216,54 @@ function PhotosTab({ campaignId }: { campaignId: number }) {
                     variant="destructive"
                   />
                 </div>
-                {photo.caption && (
-                  <p className="text-xs text-muted-foreground mt-1 truncate">{photo.caption}</p>
+                {/* Legenda ou campo de edição inline */}
+                {editingId === photo.id ? (
+                  <div className="mt-1 flex gap-1">
+                    <Input
+                      value={editingCaption}
+                      onChange={(e) => setEditingCaption(e.target.value)}
+                      placeholder="Legenda..."
+                      className="h-7 text-xs"
+                      autoFocus
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          updateCaption.mutate({ id: photo.id, caption: editingCaption || null });
+                          setEditingId(null);
+                        }
+                        if (e.key === 'Escape') setEditingId(null);
+                      }}
+                    />
+                    <Button
+                      size="icon"
+                      className="h-7 w-7 shrink-0"
+                      disabled={updateCaption.isPending}
+                      onClick={() => {
+                        updateCaption.mutate({ id: photo.id, caption: editingCaption || null });
+                        setEditingId(null);
+                      }}
+                    >
+                      <Check className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-7 w-7 shrink-0"
+                      onClick={() => setEditingId(null)}
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                ) : (
+                  <p
+                    className="text-xs text-muted-foreground mt-1 truncate cursor-pointer hover:text-foreground transition-colors"
+                    title="Clique para editar legenda"
+                    onClick={() => {
+                      setEditingId(photo.id);
+                      setEditingCaption(photo.caption || "");
+                    }}
+                  >
+                    {photo.caption || <span className="italic opacity-50">sem legenda</span>}
+                  </p>
                 )}
               </div>
             ))}

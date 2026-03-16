@@ -679,6 +679,13 @@ export async function deletePhoto(id: number) {
   await db.delete(photos).where(eq(photos.id, id));
 }
 
+export async function updatePhotoCaption(id: number, caption: string | null) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(photos).set({ caption: caption || null }).where(eq(photos.id, id));
+  return { success: true };
+}
+
 export async function getAllPhotos(campaignId: number, limit: number = 100) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");

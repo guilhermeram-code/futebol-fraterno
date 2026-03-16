@@ -2106,3 +2106,8 @@ const [username, setUsername] = useState("");
 
 ## WhatsApp no Email Day 7 (15/03/2026)
 - [x] Adicionar botão de WhatsApp com mensagem pré-preenchida no email Day 7 para iniciar venda após expiração do trial
+
+## Edição de Legenda de Fotos (15/03/2026)
+- [x] Adicionar botão de editar legenda em cada foto já enviada na galeria do painel admin
+- [x] Criar endpoint tRPC updatePhotoCaption no servidor
+- [x] Ao clicar na foto ou no ícone de editar, abrir campo inline para editar/salvar a legenda
