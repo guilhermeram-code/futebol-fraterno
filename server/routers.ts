@@ -806,6 +806,32 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+
+    // Editar resultado: limpa gols e cartões antigos antes de re-registrar
+    editResult: campaignAdminProcedure
+      .input(z.object({
+        matchId: z.number(),
+        homeScore: z.number(),
+        awayScore: z.number(),
+        penalties: z.boolean().optional(),
+        homePenalties: z.number().optional(),
+        awayPenalties: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        // Limpar gols e cartões antigos
+        await db.deleteGoalsByMatch(input.matchId);
+        await db.deleteCardsByMatch(input.matchId);
+        // Atualizar resultado
+        await db.updateMatch(input.matchId, {
+          homeScore: input.homeScore,
+          awayScore: input.awayScore,
+          played: true,
+          penalties: input.penalties,
+          homePenalties: input.homePenalties,
+          awayPenalties: input.awayPenalties,
+        });
+        return { success: true };
+      }),
   }),
 
   // ==================== GOALS ====================

@@ -2131,3 +2131,9 @@ const [username, setUsername] = useState("");
 - [x] Seção de senha nas Configurações do painel admin (checkbox + 2 campos de senha + botão salvar)
 - [x] Tela de senha no site público (sessionStorage para manter durante a sessão)
 - [x] Painel admin não é afetado pela senha do site público
+
+## Edição de Resultados Já Lançados (22/03/2026)
+- [x] Mostrar jogos já realizados (com resultado) abaixo dos pendentes na aba Resultados do admin
+- [x] Botão de editar em cada jogo realizado que reabre o fluxo de 4 etapas com dados pré-preenchidos
+- [x] Permitir alterar placar, gols (jogadores), e cartões de jogos já lançados
+- [x] Endpoint editResult que limpa gols/cartões antigos antes de regravar

@@ -544,6 +544,12 @@ export async function deleteGoal(id: number) {
   await db.delete(goals).where(eq(goals.id, id));
 }
 
+export async function deleteGoalsByMatch(matchId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(goals).where(eq(goals.matchId, matchId));
+}
+
 export async function getGoalsByMatch(campaignId: number, matchId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -594,6 +600,12 @@ export async function deleteCard(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(cards).where(eq(cards.id, id));
+}
+
+export async function deleteCardsByMatch(matchId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.delete(cards).where(eq(cards.matchId, matchId));
 }
 
 export async function getCardsByMatch(campaignId: number, matchId: number) {

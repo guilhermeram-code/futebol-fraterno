@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Target, AlertTriangle, Check, X } from "lucide-react";
+import { Target, AlertTriangle, Check, X, Pencil } from "lucide-react";
 
 interface GoalEntry {
   playerId: string;
@@ -32,6 +32,13 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
     },
     onError: (error) => toast.error(error.message)
   });
+
+  const editResult = trpc.matches.editResult.useMutation({
+    onSuccess: () => {
+      utils.matches.list.invalidate();
+    },
+    onError: (error) => toast.error(error.message)
+  });
   
   const createGoal = trpc.goals.create.useMutation({
     onSuccess: () => {
@@ -48,6 +55,7 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
   });
 
   const [selectedMatch, setSelectedMatch] = useState<number | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [homeScore, setHomeScore] = useState("");
   const [awayScore, setAwayScore] = useState("");
   const [penalties, setPenalties] = useState(false);
@@ -66,6 +74,9 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
   const [newCardPlayerId, setNewCardPlayerId] = useState("");
   const [newCardTeamId, setNewCardTeamId] = useState("");
   const [newCardType, setNewCardType] = useState<"yellow" | "red">("yellow");
+
+  // Show/hide completed matches
+  const [showCompleted, setShowCompleted] = useState(false);
 
   const getTeamById = (id: number) => teams?.find(t => t.id === id);
   const getTeamName = (id: number) => getTeamById(id)?.name || "Time";
@@ -94,6 +105,12 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
   };
   
   const pendingMatches = matches?.filter(m => !m.played) || [];
+  const completedMatches = matches?.filter(m => m.played)?.sort((a, b) => {
+    // Mais recentes primeiro
+    const dateA = a.matchDate ? new Date(a.matchDate).getTime() : 0;
+    const dateB = b.matchDate ? new Date(b.matchDate).getTime() : 0;
+    return dateB - dateA;
+  }) || [];
   const selectedMatchData = matches?.find(m => m.id === selectedMatch);
 
   // Initialize goal entries when score is set
@@ -102,17 +119,64 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
       const homeCount = parseInt(homeScore) || 0;
       const awayCount = parseInt(awayScore) || 0;
       
-      setHomeGoals(Array(homeCount).fill(null).map(() => ({ 
-        playerId: "", 
-        teamId: selectedMatchData.homeTeamId 
-      })));
-      
-      setAwayGoals(Array(awayCount).fill(null).map(() => ({ 
-        playerId: "", 
-        teamId: selectedMatchData.awayTeamId 
-      })));
+      // Only re-initialize if not editing (editing pre-fills from existing data)
+      if (!isEditing || step === "result") {
+        setHomeGoals(Array(homeCount).fill(null).map(() => ({ 
+          playerId: "", 
+          teamId: selectedMatchData.homeTeamId 
+        })));
+        
+        setAwayGoals(Array(awayCount).fill(null).map(() => ({ 
+          playerId: "", 
+          teamId: selectedMatchData.awayTeamId 
+        })));
+      }
     }
-  }, [homeScore, awayScore, selectedMatchData]);
+  }, [homeScore, awayScore, selectedMatchData?.id]);
+
+  const resetForm = () => {
+    setSelectedMatch(null);
+    setIsEditing(false);
+    setHomeScore("");
+    setAwayScore("");
+    setPenalties(false);
+    setHomePenalties("");
+    setAwayPenalties("");
+    setHomeGoals([]);
+    setAwayGoals([]);
+    setCards([]);
+    setStep("result");
+    setNewCardPlayerId("");
+    setNewCardTeamId("");
+    setNewCardType("yellow");
+  };
+
+  const handleSelectPendingMatch = (matchId: number) => {
+    if (step !== "result") return;
+    setIsEditing(false);
+    setSelectedMatch(matchId);
+    setHomeScore("");
+    setAwayScore("");
+    setPenalties(false);
+    setHomeGoals([]);
+    setAwayGoals([]);
+    setCards([]);
+  };
+
+  const handleEditCompletedMatch = (match: any) => {
+    setIsEditing(true);
+    setSelectedMatch(match.id);
+    setHomeScore(match.homeScore?.toString() || "0");
+    setAwayScore(match.awayScore?.toString() || "0");
+    setPenalties(match.penalties || false);
+    setHomePenalties(match.homePenalties?.toString() || "");
+    setAwayPenalties(match.awayPenalties?.toString() || "");
+    setStep("result");
+    setCards([]);
+    setHomeGoals([]);
+    setAwayGoals([]);
+    setShowCompleted(true);
+  };
 
   const handleSaveResult = () => {
     if (!selectedMatch) return;
@@ -125,6 +189,17 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
       setStep("cards");
     } else {
       // Has goals - go to goals step
+      // Re-initialize goal entries for the new score
+      if (selectedMatchData) {
+        setHomeGoals(Array(homeCount).fill(null).map(() => ({ 
+          playerId: "", 
+          teamId: selectedMatchData.homeTeamId 
+        })));
+        setAwayGoals(Array(awayCount).fill(null).map(() => ({ 
+          playerId: "", 
+          teamId: selectedMatchData.awayTeamId 
+        })));
+      }
       setStep("goals");
     }
   };
@@ -178,17 +253,29 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
     if (!selectedMatch) return;
     
     try {
-      // 1. Register result
-      await registerResult.mutateAsync({
-        matchId: selectedMatch,
-        homeScore: parseInt(homeScore),
-        awayScore: parseInt(awayScore),
-        penalties: penalties || undefined,
-        homePenalties: penalties ? parseInt(homePenalties) : undefined,
-        awayPenalties: penalties ? parseInt(awayPenalties) : undefined
-      });
+      if (isEditing) {
+        // Editing: use editResult which clears old goals/cards first
+        await editResult.mutateAsync({
+          matchId: selectedMatch,
+          homeScore: parseInt(homeScore),
+          awayScore: parseInt(awayScore),
+          penalties: penalties || undefined,
+          homePenalties: penalties ? parseInt(homePenalties) : undefined,
+          awayPenalties: penalties ? parseInt(awayPenalties) : undefined
+        });
+      } else {
+        // New result
+        await registerResult.mutateAsync({
+          matchId: selectedMatch,
+          homeScore: parseInt(homeScore),
+          awayScore: parseInt(awayScore),
+          penalties: penalties || undefined,
+          homePenalties: penalties ? parseInt(homePenalties) : undefined,
+          awayPenalties: penalties ? parseInt(awayPenalties) : undefined
+        });
+      }
       
-      // 2. Register all goals
+      // Register all goals
       for (const goal of [...homeGoals, ...awayGoals]) {
         if (goal.playerId) {
           await createGoal.mutateAsync({
@@ -200,7 +287,7 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
         }
       }
       
-      // 3. Register all cards
+      // Register all cards
       for (const card of cards) {
         await createCard.mutateAsync({
           matchId: selectedMatch,
@@ -211,21 +298,18 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
         });
       }
       
-      toast.success("Resultado registrado com sucesso!");
+      toast.success(isEditing ? "Resultado editado com sucesso!" : "Resultado registrado com sucesso!");
       setStep("done");
+      
+      // Invalidate all related queries
+      utils.goals.byMatch.invalidate();
+      utils.cards.byMatch.invalidate();
+      utils.goals.topScorers.invalidate();
+      utils.cards.topCarded.invalidate();
       
       // Reset form
       setTimeout(() => {
-        setSelectedMatch(null);
-        setHomeScore("");
-        setAwayScore("");
-        setPenalties(false);
-        setHomePenalties("");
-        setAwayPenalties("");
-        setHomeGoals([]);
-        setAwayGoals([]);
-        setCards([]);
-        setStep("result");
+        resetForm();
       }, 2000);
       
     } catch (error) {
@@ -238,10 +322,15 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
     return player ? `${player.number ? player.number + " - " : ""}${player.name}` : "";
   };
 
+  const isSaving = registerResult.isPending || editResult.isPending || createGoal.isPending || createCard.isPending;
+
   return (
     <div className="space-y-6">
       {/* Step indicator */}
       <div className="flex items-center justify-center gap-2">
+        {isEditing && (
+          <Badge variant="destructive" className="mr-2">Editando</Badge>
+        )}
         <Badge variant={step === "result" ? "default" : "outline"}>1. Resultado</Badge>
         <span className="text-muted-foreground">→</span>
         <Badge variant={step === "goals" ? "default" : "outline"}>2. Gols</Badge>
@@ -251,13 +340,25 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
         <Badge variant={step === "done" ? "default" : "outline"}>4. Concluído</Badge>
       </div>
 
+      {/* Cancel editing button */}
+      {isEditing && step !== "done" && (
+        <div className="flex justify-center">
+          <Button variant="outline" size="sm" onClick={resetForm}>
+            <X className="h-4 w-4 mr-1" /> Cancelar Edição
+          </Button>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Select Match */}
         <Card>
           <CardHeader>
-            <CardTitle>Selecionar Jogo</CardTitle>
+            <CardTitle>
+              {isEditing ? "Editando Jogo" : "Selecionar Jogo"}
+            </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* Pending matches */}
             <div className="space-y-2 max-h-[400px] overflow-y-auto">
               {pendingMatches.length > 0 ? (
                 pendingMatches.map(match => {
@@ -270,17 +371,7 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
                           ? "bg-primary text-primary-foreground border-l-primary" 
                           : "bg-muted hover:bg-muted/80 border-l-amber-500"
                       }`}
-                      onClick={() => {
-                        if (step === "result") {
-                          setSelectedMatch(match.id);
-                          setHomeScore("");
-                          setAwayScore("");
-                          setPenalties(false);
-                          setHomeGoals([]);
-                          setAwayGoals([]);
-                          setCards([]);
-                        }
-                      }}
+                      onClick={() => handleSelectPendingMatch(match.id)}
                     >
                       <div className="flex items-center justify-between mb-1">
                         <span className={`text-xs font-medium ${
@@ -318,6 +409,86 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
                 </p>
               )}
             </div>
+
+            {/* Completed matches section */}
+            {completedMatches.length > 0 && (
+              <div className="mt-6 border-t pt-4">
+                <button
+                  onClick={() => setShowCompleted(!showCompleted)}
+                  className="w-full flex items-center justify-between text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <span>Jogos Realizados ({completedMatches.length})</span>
+                  <span className="text-xs">{showCompleted ? "▲ Ocultar" : "▼ Mostrar"}</span>
+                </button>
+                
+                {showCompleted && (
+                  <div className="space-y-2 mt-3 max-h-[400px] overflow-y-auto">
+                    {completedMatches.map(match => {
+                      const isSelected = selectedMatch === match.id && isEditing;
+                      return (
+                        <div 
+                          key={match.id} 
+                          className={`p-3 rounded-lg transition-colors border-l-4 ${
+                            isSelected 
+                              ? "bg-primary text-primary-foreground border-l-primary" 
+                              : "bg-muted/50 border-l-green-500"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={`text-xs font-medium ${
+                              isSelected ? "text-primary-foreground/80" : "text-muted-foreground"
+                            }`}>
+                              {getPhaseLabel(match.phase)} {match.round && `- R${match.round}`}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              {match.matchDate && (
+                                <span className={`text-xs ${
+                                  isSelected ? "text-primary-foreground/80" : "text-muted-foreground"
+                                }`}>
+                                  {formatMatchDate(match.matchDate)}
+                                </span>
+                              )}
+                              <button
+                                onClick={() => handleEditCompletedMatch(match)}
+                                className={`p-1 rounded hover:bg-black/10 transition-colors ${
+                                  isSelected ? "text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                                }`}
+                                title="Editar resultado"
+                              >
+                                <Pencil className="h-3.5 w-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <p className="font-medium flex-1">
+                              {getTeamName(match.homeTeamId)}
+                            </p>
+                            <span className={`font-bold text-lg ${
+                              isSelected ? "text-primary-foreground" : ""
+                            }`}>
+                              {match.homeScore} x {match.awayScore}
+                            </span>
+                            <p className="font-medium flex-1 text-right">
+                              {getTeamName(match.awayTeamId)}
+                            </p>
+                          </div>
+                          {match.penalties && (
+                            <p className={`text-xs text-center mt-1 ${
+                              isSelected ? "text-primary-foreground/80" : "text-muted-foreground"
+                            }`}>
+                              Pênaltis: {match.homePenalties} x {match.awayPenalties}
+                            </p>
+                          )}
+                          <Badge variant="outline" className="mt-2 bg-green-100 text-green-800 border-green-300">
+                            Realizado
+                          </Badge>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -328,7 +499,9 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
             {step === "result" && (
               <Card>
                 <CardHeader>
-                  <CardTitle>Registrar Resultado</CardTitle>
+                  <CardTitle>
+                    {isEditing ? "Editar Resultado" : "Registrar Resultado"}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-3 gap-4 items-center">
@@ -385,6 +558,12 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
                           min="0"
                         />
                       </div>
+                    </div>
+                  )}
+
+                  {isEditing && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800">
+                      ⚠️ Ao editar, os gols e cartões anteriores serão substituídos. Preencha novamente nas próximas etapas.
                     </div>
                   )}
 
@@ -563,11 +742,13 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
                   <Button 
                     onClick={handleFinalize}
                     className="w-full mt-4"
-                    disabled={registerResult.isPending || createGoal.isPending || createCard.isPending}
+                    disabled={isSaving}
                   >
-                    {(registerResult.isPending || createGoal.isPending || createCard.isPending) 
+                    {isSaving 
                       ? "Salvando..." 
-                      : "✓ Finalizar e Salvar Tudo"}
+                      : isEditing 
+                        ? "✓ Salvar Alterações" 
+                        : "✓ Finalizar e Salvar Tudo"}
                   </Button>
                 </CardContent>
               </Card>
@@ -578,7 +759,9 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
               <Card>
                 <CardContent className="py-8 text-center">
                   <Check className="h-16 w-16 mx-auto text-green-500 mb-4" />
-                  <h3 className="text-xl font-bold mb-2">Resultado Registrado!</h3>
+                  <h3 className="text-xl font-bold mb-2">
+                    {isEditing ? "Resultado Editado!" : "Resultado Registrado!"}
+                  </h3>
                   <p className="text-muted-foreground">
                     {getTeamName(selectedMatchData.homeTeamId)} {homeScore} x {awayScore} {getTeamName(selectedMatchData.awayTeamId)}
                   </p>
