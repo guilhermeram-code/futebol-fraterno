@@ -2137,3 +2137,9 @@ const [username, setUsername] = useState("");
 - [x] Botão de editar em cada jogo realizado que reabre o fluxo de 4 etapas com dados pré-preenchidos
 - [x] Permitir alterar placar, gols (jogadores), e cartões de jogos já lançados
 - [x] Endpoint editResult que limpa gols/cartões antigos antes de regravar
+
+## Banner Promocional - Campeonato Grátis (01/04/2026)
+- [x] Banner chamativo no topo do site (acima do hero) com link WhatsApp para campeonato grátis
+- [x] Texto: "Seu campeonato organizado de graça — vagas limitadas!"
+- [x] Botão WhatsApp com mensagem pré-preenchida
+- [x] Visual em destaque (urgência) com possibilidade de fechar (X)
