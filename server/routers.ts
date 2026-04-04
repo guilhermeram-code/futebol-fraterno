@@ -380,6 +380,9 @@ export const appRouter = router({
         const campaign = await db.getCampaignBySlug(input.slug);
         if (!campaign) throw new TRPCError({ code: 'NOT_FOUND', message: 'Campeonato não encontrado' });
         if (!campaign.accessPassword) return { valid: true }; // sem senha, acesso livre
+        // Aceita senha master ou senha do campeonato
+        const masterPassword = process.env.MASTER_ACCESS_PASSWORD;
+        if (masterPassword && input.password === masterPassword) return { valid: true };
         return { valid: campaign.accessPassword === input.password };
       }),
 

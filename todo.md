@@ -2143,3 +2143,7 @@ const [username, setUsername] = useState("");
 - [x] Texto: "Seu campeonato organizado de graça — vagas limitadas!"
 - [x] Botão WhatsApp com mensagem pré-preenchida
 - [x] Visual em destaque (urgência) com possibilidade de fechar (X)
+
+## Senha Master para Acesso à URL (04/04/2026)
+- [x] Salvar senha master como variável de ambiente (MASTER_ACCESS_PASSWORD)
+- [x] Atualizar endpoint verifyAccessPassword para aceitar senha master além da senha do campeonato
