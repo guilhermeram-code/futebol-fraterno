@@ -33,7 +33,6 @@ export default function TimeDetail() {
   const { data: topScorers } = trpc.goals.topScorers.useQuery({ limit: 100, campaignId });
   const { data: allPlayers } = trpc.players.list.useQuery({ campaignId });
   const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 100, campaignId });
-  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 100, campaignId });
   const { data: supportMessages, refetch: refetchMessages } = trpc.supportMessages.byTeam.useQuery({ teamId, campaignId });
 
   const [showMessageForm, setShowMessageForm] = useState(false);
@@ -118,11 +117,6 @@ export default function TimeDetail() {
     return bestDefenses[0].team?.id === teamId;
   }, [bestDefenses, teamId]);
 
-  // Verificar se o time é a pior defesa do campeonato (frangueiro)
-  const isWorstDefense = useMemo(() => {
-    if (!worstDefenses || worstDefenses.length === 0) return false;
-    return worstDefenses[0].team?.id === teamId;
-  }, [worstDefenses, teamId]);
 
   // Verificar se o artilheiro do time é o artilheiro do campeonato
   const isTopScorerOfChampionship = useMemo(() => {
@@ -146,11 +140,6 @@ export default function TimeDetail() {
     return `🛡️ MELHOR DEFESA DO CAMPEONATO! Apenas ${goalsAgainst} gol${goalsAgainst !== 1 ? 's' : ''} sofrido${goalsAgainst !== 1 ? 's' : ''}. Muralha impenetrável!`;
   };
 
-  const getWorstDefenseMessage = () => {
-    if (!isWorstDefense) return null;
-    const goalsAgainst = worstDefenses?.[0]?.goalsAgainst || 0;
-    return `🥅 Ops... ${goalsAgainst} gols sofridos. O goleiro está precisando de óculos! 👓`;
-  };
 
   if (loadingTeam) {
     return (
@@ -178,7 +167,7 @@ export default function TimeDetail() {
     );
   }
 
-  const hasAchievements = teamTopScorer || isBestDefense || isWorstDefense;
+  const hasAchievements = teamTopScorer || isBestDefense;
 
   return (
     <div className="min-h-screen bg-background masonic-pattern">

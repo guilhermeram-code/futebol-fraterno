@@ -2147,3 +2147,8 @@ const [username, setUsername] = useState("");
 ## Senha Master para Acesso à URL (04/04/2026)
 - [x] Salvar senha master como variável de ambiente (MASTER_ACCESS_PASSWORD)
 - [x] Atualizar endpoint verifyAccessPassword para aceitar senha master além da senha do campeonato
+
+## Remover Frangueiro da Página de Times (13/04/2026)
+- [x] Remover badge "Frangueiro! (X gols sofridos)" dos cards de time na página de Times
+- [x] Remover badge "Frangueiro" da página individual do time (TimeDetail.tsx)
+- [x] Limpar queries e código residual de worstDefenses em Times.tsx e TimeDetail.tsx

@@ -22,7 +22,6 @@ export default function Times() {
   const { data: allMatches } = trpc.matches.list.useQuery({ campaignId });
   const { data: topScorers } = trpc.stats.topScorers.useQuery({ limit: 1, campaignId });
   const { data: bestDefenses } = trpc.stats.bestDefenses.useQuery({ limit: 1, campaignId });
-  const { data: worstDefenses } = trpc.stats.worstDefenses.useQuery({ limit: 1, campaignId });
   
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string>("all");
@@ -127,18 +126,7 @@ export default function Times() {
         });
       }
     }
-    
-    // Verifica pior defesa (frangueiro)
-    if (worstDefenses && worstDefenses.length > 0) {
-      const piorDefesa = worstDefenses[0];
-      if (piorDefesa.team.id === teamId) {
-        messages.push({
-          emoji: '🐔',
-          text: `Frangueiro! (${piorDefesa.goalsAgainst} gols sofridos)`,
-          color: 'bg-red-100 text-red-800 border-red-300'
-        });
-      }
-    }
+
     
     return messages;
   };
