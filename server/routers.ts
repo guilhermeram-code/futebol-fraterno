@@ -860,14 +860,21 @@ export const appRouter = router({
     create: campaignAdminProcedure
       .input(z.object({
         matchId: z.number(),
-        playerId: z.number(),
+        playerId: z.number().nullable().optional(),
         teamId: z.number(),
+        isOwnGoal: z.boolean().optional(),
         minute: z.number().optional(),
         campaignId: z.number().optional(),
       }))
       .mutation(async ({ input }) => {
         const { campaignId, ...goalData } = input;
-        return db.createGoal(getCampaignId(input), goalData);
+        return db.createGoal(getCampaignId(input), {
+          matchId: goalData.matchId,
+          playerId: goalData.isOwnGoal ? null : (goalData.playerId ?? null),
+          teamId: goalData.teamId,
+          isOwnGoal: goalData.isOwnGoal || false,
+          minute: goalData.minute,
+        });
       }),
     
     delete: campaignAdminProcedure

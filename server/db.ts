@@ -534,7 +534,14 @@ export async function getHeadToHead(campaignId: number, team1Id: number, team2Id
 export async function createGoal(campaignId: number, goal: Omit<InsertGoal, 'campaignId'>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const result = await db.insert(goals).values({ ...goal, campaignId });
+  const result = await db.insert(goals).values({
+    campaignId,
+    matchId: goal.matchId,
+    playerId: goal.playerId ?? null,
+    teamId: goal.teamId,
+    isOwnGoal: goal.isOwnGoal ?? false,
+    minute: goal.minute,
+  });
   return { id: result[0].insertId };
 }
 
@@ -567,7 +574,11 @@ export async function getTopScorers(campaignId: number, limit: number = 10) {
     goalCount: sql<number>`COUNT(*)`.as('goalCount')
   })
     .from(goals)
-    .where(eq(goals.campaignId, campaignId))
+    .where(and(
+      eq(goals.campaignId, campaignId),
+      eq(goals.isOwnGoal, false),
+      sql`${goals.playerId} IS NOT NULL`
+    ))
     .groupBy(goals.playerId, goals.teamId)
     .orderBy(desc(sql`goalCount`))
     .limit(limit);

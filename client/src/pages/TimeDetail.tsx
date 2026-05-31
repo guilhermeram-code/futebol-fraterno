@@ -95,7 +95,7 @@ export default function TimeDetail() {
     
     // Filtrar apenas jogadores deste time
     const teamPlayerIds = players.map(p => p.id);
-    const teamScorers = topScorers.filter(s => teamPlayerIds.includes(s.playerId));
+    const teamScorers = topScorers.filter(s => s.playerId != null && teamPlayerIds.includes(s.playerId));
     
     if (teamScorers.length === 0) return null;
     

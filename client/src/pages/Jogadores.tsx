@@ -34,8 +34,8 @@ export default function Jogadores() {
       stats[p.id] = { goals: 0, yellowCards: 0, redCards: 0 };
     });
     
-    goals?.forEach((g: { playerId: number | null }) => {
-      if (g.playerId && stats[g.playerId]) {
+    goals?.forEach((g: { playerId: number | null; isOwnGoal?: boolean }) => {
+      if (g.playerId && !g.isOwnGoal && stats[g.playerId]) {
         stats[g.playerId].goals++;
       }
     });

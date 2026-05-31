@@ -43,7 +43,8 @@ export default function Home() {
     return teams?.find(t => t.id === teamId)?.name || "Time";
   };
 
-  const getPlayerName = (playerId: number) => {
+  const getPlayerName = (playerId: number | null) => {
+    if (!playerId) return "Jogador";
     return players?.find(p => p.id === playerId)?.name || "Jogador";
   };
 

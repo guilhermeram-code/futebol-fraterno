@@ -2152,3 +2152,15 @@ const [username, setUsername] = useState("");
 - [x] Remover badge "Frangueiro! (X gols sofridos)" dos cards de time na página de Times
 - [x] Remover badge "Frangueiro" da página individual do time (TimeDetail.tsx)
 - [x] Limpar queries e código residual de worstDefenses em Times.tsx e TimeDetail.tsx
+
+## Gol Contra - Sistema sem jogador associado (31/05/2026)
+- [x] Adicionar campo isOwnGoal (boolean) na tabela goals do schema
+- [x] Tornar playerId nullable na tabela goals (gol contra não tem jogador)
+- [x] Rodar migration pnpm db:push
+- [x] Atualizar endpoints de registro de gols para aceitar gol contra
+- [x] Atualizar endpoint editResult para lidar com gols contra
+- [x] Adicionar botão "Gol Contra" no fluxo de registro de resultado (etapa 2)
+- [x] Gol contra: selecionar time beneficiado, sem selecionar jogador
+- [x] Exibição pública: mostrar "Gol Contra" com ícone diferenciado nos resultados
+- [x] Artilharia: excluir gols contra da contagem de artilheiros
+- [x] Edição de resultado: gols contra aparecem para editar/remover

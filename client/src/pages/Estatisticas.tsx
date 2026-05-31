@@ -32,12 +32,14 @@ export default function Estatisticas() {
     return team.lodge ? `${team.name} (${team.lodge})` : team.name;
   };
 
-  const getPlayerName = (playerId: number) => {
+  const getPlayerName = (playerId: number | null) => {
+    if (!playerId) return "Jogador";
     return players?.find(p => p.id === playerId)?.name || "Jogador";
   };
 
   // Filter functions
-  const filterByPlayerName = (playerId: number) => {
+  const filterByPlayerName = (playerId: number | null) => {
+    if (!playerId) return false;
     if (!searchTerm) return true;
     const playerName = getPlayerName(playerId).toLowerCase();
     return playerName.includes(searchTerm.toLowerCase());

@@ -12,6 +12,7 @@ import { Target, AlertTriangle, Check, X, Pencil } from "lucide-react";
 interface GoalEntry {
   playerId: string;
   teamId: number;
+  isOwnGoal?: boolean;
 }
 
 interface CardEntry {
@@ -216,9 +217,23 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
     setAwayGoals(newGoals);
   };
 
+  const toggleOwnGoal = (side: 'home' | 'away', index: number) => {
+    if (side === 'home') {
+      const newGoals = [...homeGoals];
+      const isOwn = !newGoals[index].isOwnGoal;
+      newGoals[index] = { ...newGoals[index], isOwnGoal: isOwn, playerId: isOwn ? "__own_goal__" : "" };
+      setHomeGoals(newGoals);
+    } else {
+      const newGoals = [...awayGoals];
+      const isOwn = !newGoals[index].isOwnGoal;
+      newGoals[index] = { ...newGoals[index], isOwnGoal: isOwn, playerId: isOwn ? "__own_goal__" : "" };
+      setAwayGoals(newGoals);
+    }
+  };
+
   const allGoalsFilled = () => {
-    const homeOk = homeGoals.every(g => g.playerId !== "");
-    const awayOk = awayGoals.every(g => g.playerId !== "");
+    const homeOk = homeGoals.every(g => g.isOwnGoal || g.playerId !== "");
+    const awayOk = awayGoals.every(g => g.isOwnGoal || g.playerId !== "");
     return homeOk && awayOk;
   };
 
@@ -277,11 +292,21 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
       
       // Register all goals
       for (const goal of [...homeGoals, ...awayGoals]) {
-        if (goal.playerId) {
+        if (goal.isOwnGoal) {
+          // Gol contra: sem jogador, time beneficiado
+          await createGoal.mutateAsync({
+            matchId: selectedMatch,
+            playerId: null,
+            teamId: goal.teamId,
+            isOwnGoal: true,
+            campaignId
+          });
+        } else if (goal.playerId && goal.playerId !== "__own_goal__") {
           await createGoal.mutateAsync({
             matchId: selectedMatch,
             playerId: parseInt(goal.playerId),
             teamId: goal.teamId,
+            isOwnGoal: false,
             campaignId
           });
         }
@@ -596,24 +621,42 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
                       </h4>
                       <div className="space-y-2">
                         {homeGoals.map((goal, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <Badge variant="outline">{index + 1}º gol</Badge>
-                            <Select 
-                              value={goal.playerId} 
-                              onValueChange={(v) => updateHomeGoal(index, v)}
-                            >
-                              <SelectTrigger className="flex-1">
-                                <SelectValue placeholder="Quem fez o gol?" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {getPlayersByTeam(selectedMatchData.homeTeamId).map(p => (
-                                  <SelectItem key={p.id} value={p.id.toString()}>
-                                    {p.number && `${p.number} - `}{p.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {goal.playerId && <Check className="h-5 w-5 text-green-500" />}
+                          <div key={index} className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline">{index + 1}º gol</Badge>
+                              {goal.isOwnGoal ? (
+                                <div className="flex-1 flex items-center gap-2 px-3 py-2 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm">
+                                  ⚽↗️ Gol Contra (sem jogador)
+                                </div>
+                              ) : (
+                                <Select 
+                                  value={goal.playerId} 
+                                  onValueChange={(v) => updateHomeGoal(index, v)}
+                                >
+                                  <SelectTrigger className="flex-1">
+                                    <SelectValue placeholder="Quem fez o gol?" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {getPlayersByTeam(selectedMatchData.homeTeamId).map(p => (
+                                      <SelectItem key={p.id} value={p.id.toString()}>
+                                        {p.number && `${p.number} - `}{p.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                              <Button
+                                type="button"
+                                variant={goal.isOwnGoal ? "destructive" : "outline"}
+                                size="sm"
+                                onClick={() => toggleOwnGoal('home', index)}
+                                title={goal.isOwnGoal ? "Desfazer gol contra" : "Marcar como gol contra"}
+                              >
+                                {goal.isOwnGoal ? "Desfazer" : "GC"}
+                              </Button>
+                              {(goal.playerId && !goal.isOwnGoal) && <Check className="h-5 w-5 text-green-500" />}
+                              {goal.isOwnGoal && <Check className="h-5 w-5 text-red-500" />}
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -628,24 +671,42 @@ export function ResultsRegistration({ campaignId }: { campaignId: number }) {
                       </h4>
                       <div className="space-y-2">
                         {awayGoals.map((goal, index) => (
-                          <div key={index} className="flex items-center gap-2">
-                            <Badge variant="outline">{index + 1}º gol</Badge>
-                            <Select 
-                              value={goal.playerId} 
-                              onValueChange={(v) => updateAwayGoal(index, v)}
-                            >
-                              <SelectTrigger className="flex-1">
-                                <SelectValue placeholder="Quem fez o gol?" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {getPlayersByTeam(selectedMatchData.awayTeamId).map(p => (
-                                  <SelectItem key={p.id} value={p.id.toString()}>
-                                    {p.number && `${p.number} - `}{p.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            {goal.playerId && <Check className="h-5 w-5 text-green-500" />}
+                          <div key={index} className="flex flex-col gap-1">
+                            <div className="flex items-center gap-2">
+                              <Badge variant="outline">{index + 1}º gol</Badge>
+                              {goal.isOwnGoal ? (
+                                <div className="flex-1 flex items-center gap-2 px-3 py-2 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm">
+                                  ⚽↗️ Gol Contra (sem jogador)
+                                </div>
+                              ) : (
+                                <Select 
+                                  value={goal.playerId} 
+                                  onValueChange={(v) => updateAwayGoal(index, v)}
+                                >
+                                  <SelectTrigger className="flex-1">
+                                    <SelectValue placeholder="Quem fez o gol?" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {getPlayersByTeam(selectedMatchData.awayTeamId).map(p => (
+                                      <SelectItem key={p.id} value={p.id.toString()}>
+                                        {p.number && `${p.number} - `}{p.name}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                              <Button
+                                type="button"
+                                variant={goal.isOwnGoal ? "destructive" : "outline"}
+                                size="sm"
+                                onClick={() => toggleOwnGoal('away', index)}
+                                title={goal.isOwnGoal ? "Desfazer gol contra" : "Marcar como gol contra"}
+                              >
+                                {goal.isOwnGoal ? "Desfazer" : "GC"}
+                              </Button>
+                              {(goal.playerId && !goal.isOwnGoal) && <Check className="h-5 w-5 text-green-500" />}
+                              {goal.isOwnGoal && <Check className="h-5 w-5 text-red-500" />}
+                            </div>
                           </div>
                         ))}
                       </div>

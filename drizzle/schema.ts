@@ -186,8 +186,9 @@ export const goals = mysqlTable("goals", {
   id: int("id").autoincrement().primaryKey(),
   campaignId: int("campaignId").notNull(), // Multi-tenant
   matchId: int("matchId").notNull(),
-  playerId: int("playerId").notNull(),
-  teamId: int("teamId").notNull(),
+  playerId: int("playerId"), // Nullable: gol contra não tem jogador
+  teamId: int("teamId").notNull(), // Time que marcou o gol (ou time beneficiado no gol contra)
+  isOwnGoal: boolean("isOwnGoal").default(false).notNull(), // Gol contra
   minute: int("minute"), // Minuto do gol (opcional)
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
